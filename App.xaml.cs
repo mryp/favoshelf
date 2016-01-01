@@ -46,20 +46,20 @@ namespace favoshelf
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+                //this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
 
-            Frame rootFrame = Window.Current.Content as Frame;
+            AppShell shell = Window.Current.Content as AppShell;
 
             // ウィンドウに既にコンテンツが表示されている場合は、アプリケーションの初期化を繰り返さずに、
             // ウィンドウがアクティブであることだけを確認してください
-            if (rootFrame == null)
+            if (shell == null)
             {
                 // ナビゲーション コンテキストとして動作するフレームを作成し、最初のページに移動します
-                rootFrame = new Frame();
-
-                rootFrame.NavigationFailed += OnNavigationFailed;
+                shell = new AppShell();
+                shell.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
+                shell.AppFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
@@ -67,15 +67,15 @@ namespace favoshelf
                 }
 
                 // フレームを現在のウィンドウに配置します
-                Window.Current.Content = rootFrame;
+                Window.Current.Content = shell;
             }
 
-            if (rootFrame.Content == null)
+            if (shell.AppFrame.Content == null)
             {
                 // ナビゲーション スタックが復元されない場合は、最初のページに移動します。
                 // このとき、必要な情報をナビゲーション パラメーターとして渡して、新しいページを
                 //構成します
-                rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                shell.AppFrame.Navigate(typeof(MainPage), e.Arguments);
             }
             // 現在のウィンドウがアクティブであることを確認します
             Window.Current.Activate();
