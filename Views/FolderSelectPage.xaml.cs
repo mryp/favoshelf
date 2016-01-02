@@ -39,7 +39,7 @@ namespace favoshelf.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedFrom(e);
+            base.OnNavigatedTo(e);
             Debug.WriteLine("FolderSelectPage#OnNavigatedFrom");
             FolderListItem item = e.Parameter as FolderListItem;
             if (item == null)
@@ -104,9 +104,13 @@ namespace favoshelf.Views
             {
                 this.Frame.Navigate(typeof(FolderSelectPage), item);
             }
+            else if (item.Type == FolderListItem.FileType.ImageFolder)
+            {
+                this.Frame.Navigate(typeof(ImageMainPage), item);
+            }
             else
             {
-                Debug.WriteLine("ファイル選択 name=" + item.Name);
+                this.Frame.Navigate(typeof(ImageMainPage), item);
             }
         }
     }

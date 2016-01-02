@@ -43,12 +43,13 @@ namespace favoshelf.Views
                     if (folder != null)
                     {
                         Debug.WriteLine("有効トークン token=" + token + " folder=" + folder.Path);
+                        FolderListItem.FileType fileType = await getFileType(folder);
                         itemList.Add(new FolderListItem()
                         {
                             Name = folder.DisplayName,
                             Path = folder.Path,
                             Token = token,
-                            Type = FolderListItem.FileType.Folder
+                            Type = fileType
                         });
                     }
                 }

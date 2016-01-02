@@ -1,0 +1,52 @@
+﻿<Page
+    x:Class="favoshelf.Views.ImageMainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:favoshelf.Views"
+    xmlns:ctl="using:favoshelf.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
+            <AppBarButton Icon="Favorite" Label="お気に入り"/>
+            <AppBarButton Icon="Tag" Label="ラベル"/>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Menu Item 1"/>
+                <AppBarButton Label="Menu Item 2"/>
+                <AppBarButton Label="Menu Item 3"/>
+            </CommandBar.SecondaryCommands>
+            <CommandBar.Content>
+                <ctl:PageHeader>
+                    <ctl:PageHeader.HeaderContent>
+                        <TextBlock Text="イメージ" Style="{ThemeResource PageTitleTextBlockStyle}" TextWrapping="NoWrap"/>
+                    </ctl:PageHeader.HeaderContent>
+                </ctl:PageHeader>
+            </CommandBar.Content>
+        </CommandBar>
+
+        <Grid x:Name="mainGrid" Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True">
+            <Image x:Name="imageView"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- 2:1の割合 -->
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="0" Grid.Column="0" x:Name="touchPanelTopLeft" Background="Transparent" Margin="0" PointerPressed="imageView_PointerPressed" PointerWheelChanged="touchPanel_PointerWheelChanged"/>
+                <Border Grid.Row="0" Grid.Column="1" x:Name="touchPanelTopRight" Background="Transparent" Margin="0" PointerPressed="imageView_PointerPressed" PointerWheelChanged="touchPanel_PointerWheelChanged"/>
+                <Border Grid.Row="1" Grid.Column="0" x:Name="touchPanelBottomLeft" Background="Transparent" Margin="0" PointerPressed="imageView_PointerPressed" PointerWheelChanged="touchPanel_PointerWheelChanged"/>
+                <Border Grid.Row="1" Grid.Column="1" x:Name="touchPanelBottomRight" Background="Transparent" Margin="0" PointerPressed="imageView_PointerPressed" PointerWheelChanged="touchPanel_PointerWheelChanged"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

@@ -117,6 +117,10 @@
       <DependentUpon>FolderSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FolderSelectViewModel.cs" />
+    <Compile Include="Views\ImageMainPage.xaml.cs">
+      <DependentUpon>ImageMainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImageFolderViewModel.cs" />
     <Compile Include="Views\QuickAccessPage.xaml.cs">
       <DependentUpon>QuickAccessPage.xaml</DependentUpon>
     </Compile>
@@ -159,6 +163,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FolderSelectPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ImageMainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
