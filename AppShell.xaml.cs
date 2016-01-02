@@ -21,7 +21,8 @@ using Windows.UI.Xaml.Navigation;
 namespace favoshelf
 {
     /// <summary>
-    /// それ自体で使用できる空白ページまたはフレーム内に移動できる空白ページ。
+    /// ナビゲーションメニュー表示ページ
+    /// 参考：https://github.com/Microsoft/Windows-universal-samples/tree/master/Samples/XamlNavigation
     /// </summary>
     public sealed partial class AppShell : Page
     {
