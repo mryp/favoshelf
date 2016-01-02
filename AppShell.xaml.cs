@@ -39,13 +39,13 @@ namespace favoshelf
                 {
                     Symbol = Symbol.Favorite,
                     Label = "お気に入り",
-                    DestPage = typeof(MainPage)
+                    DestPage = typeof(Views.FavoritePage)
                 },
                 new NavMenuItem()
                 {
                     Symbol = Symbol.Folder,
                     Label = "フォルダー",
-                    DestPage = typeof(MainPage)
+                    DestPage = typeof(Views.FolderSelectPage)
                 },
             });
 
