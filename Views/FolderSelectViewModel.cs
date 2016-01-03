@@ -112,13 +112,15 @@ namespace favoshelf.Views
                 IReadOnlyList<StorageFile> fileList = await folder.GetFilesAsync();
                 foreach (StorageFile file in fileList)
                 {
-                    ItemList.Add(new FolderListItem()
+                    FolderListItem item = new FolderListItem()
                     {
                         Name = file.DisplayName,
                         Path = file.Path,
                         Token = "",
                         Type = getFileType(file)
-                    });
+                    };
+                    item.UpdateThumImage();
+                    ItemList.Add(item);
                 }
             }
         }
