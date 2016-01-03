@@ -17,17 +17,33 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-// 空白ページのアイテム テンプレートについては、http://go.microsoft.com/fwlink/?LinkId=234238 を参照してください
-
 namespace favoshelf.Views
 {
     /// <summary>
-    /// それ自体で使用できる空白ページまたはフレーム内に移動できる空白ページ。
+    /// 画像表示用ページ
     /// </summary>
     public sealed partial class ImageMainPage : Page
     {
+        /// <summary>
+        /// タッチ場所定義
+        /// </summary>
+        private enum TouchPosition
+        {
+            None,
+            TopLeft,
+            TopRight,
+            BottomLeft,
+            BottomRight,
+        }
+
+        /// <summary>
+        /// ビューモデル
+        /// </summary>
         private ImageFolderViewModel m_viewModel;
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public ImageMainPage()
         {
             this.InitializeComponent();
@@ -36,6 +52,10 @@ namespace favoshelf.Views
             m_viewModel = new ImageFolderViewModel();
         }
 
+        /// <summary>
+        /// 画面遷移してきたときの処理
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -52,44 +72,57 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// ウィンドウでキャッチするキー入力イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
         {
             switch (args.VirtualKey)
             {
                 case Windows.System.VirtualKey.Left:
+                case Windows.System.VirtualKey.Down:
                     setNextImage();
                     break;
                 case Windows.System.VirtualKey.Right:
+                case Windows.System.VirtualKey.Up:
                     setPrevImage();
                     break;
             }
         }
         
+        /// <summary>
+        /// 最初の画面を表示する
+        /// </summary>
+        /// <param name="item"></param>
         private async void setFirstImage(FolderListItem item)
         {
             await m_viewModel.Init(item);
             imageView.Source = await m_viewModel.GetImage();
         }
 
+        /// <summary>
+        /// 次の画像を表示する
+        /// </summary>
         private async void setNextImage()
         {
             imageView.Source = await m_viewModel.GetNextImage();
         }
 
+        /// <summary>
+        /// 前の画像を表示する
+        /// </summary>
         private async void setPrevImage()
         {
             imageView.Source = await m_viewModel.GetPrevImage();
         }
-
-        private enum TouchPosition
-        {
-            None,
-            TopLeft,
-            TopRight,
-            BottomLeft,
-            BottomRight,
-        }
         
+        /// <summary>
+        /// タッチ・クリック検知イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void touchPanel_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             Pointer pointer = e.Pointer;
@@ -111,6 +144,11 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// タッチされたパネルからタッチ位置を取得する
+        /// </summary>
+        /// <param name="touchControl"></param>
+        /// <returns></returns>
         private TouchPosition getTouchPosition(UIElement touchControl)
         {
             if (touchControl == this.touchPanelTopLeft)
@@ -133,6 +171,11 @@ namespace favoshelf.Views
             return TouchPosition.None;
         }
 
+        /// <summary>
+        /// マウスホイールイベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void touchPanel_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             Pointer pointer = e.Pointer;

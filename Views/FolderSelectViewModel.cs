@@ -13,10 +13,19 @@ using Windows.Storage.AccessCache;
 
 namespace favoshelf.Views
 {
+    /// <summary>
+    /// フォルダ一覧画面のビューモデル
+    /// </summary>
     public class FolderSelectViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// フォルダ・ファイルリスト
+        /// </summary>
         private ObservableCollection<FolderListItem> m_itemList = new ObservableCollection<FolderListItem>();
 
+        /// <summary>
+        /// フォルダ・ファイルリスト
+        /// </summary>
         public ObservableCollection<FolderListItem> ItemList
         {
             get
@@ -33,6 +42,10 @@ namespace favoshelf.Views
             }
         }
         
+        /// <summary>
+        /// 初期化（トークン用）
+        /// </summary>
+        /// <param name="tokenList"></param>
         public async void Init(string[] tokenList)
         {
             ItemList.Clear();
@@ -60,6 +73,10 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// 無効トークン削除
+        /// </summary>
+        /// <param name="token"></param>
         private void removeToken(string token)
         {
             Debug.WriteLine("無効トークン token=" + token);
@@ -71,6 +88,10 @@ namespace favoshelf.Views
             }
         }
         
+        /// <summary>
+        /// 初期化（フォルダパス用）
+        /// </summary>
+        /// <param name="folderPath"></param>
         public async void InitFromFolderPath(string folderPath)
         {
             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(folderPath);
@@ -102,6 +123,11 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// 指定したファイルのタイプを取得する
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         private FolderListItem.FileType getFileType(StorageFile file)
         {
             FolderListItem.FileType resultType = FolderListItem.FileType.OtherFile;

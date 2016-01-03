@@ -11,6 +11,9 @@ namespace favoshelf
     /// </summary>
     public class FolderListItem
     {
+        /// <summary>
+        /// ファイルタイプ
+        /// </summary>
         public enum FileType
         {
             Folder,
@@ -19,30 +22,45 @@ namespace favoshelf
             OtherFile
         }
 
+        /// <summary>
+        /// 表示名
+        /// </summary>
         public string Name
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// フルパス（ある場合のみ
+        /// </summary>
         public string Path
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 権限ありトークン（ある場合のみ）
+        /// </summary>
         public string Token
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// ファイルタイプ
+        /// </summary>
         public FileType Type
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// タイプによる背景色
+        /// </summary>
         public string BackgroundColor
         {
             get

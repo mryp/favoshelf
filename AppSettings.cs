@@ -20,11 +20,17 @@ namespace favoshelf
         {
         }
 
+        /// <summary>
+        /// 共通で使用するカレントオブジェクト
+        /// </summary>
         public static AppSettings Current
         {
             get { return _current; }
         }
         
+        /// <summary>
+        /// フォルダ一覧で表示するフォルダトークンリスト
+        /// </summary>
         public string[] FolderTokenList
         {
             get

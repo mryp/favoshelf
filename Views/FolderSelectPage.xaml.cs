@@ -26,6 +26,9 @@ namespace favoshelf.Views
     /// </summary>
     public sealed partial class FolderSelectPage : Page
     {
+        /// <summary>
+        /// データモデル
+        /// </summary>
         private FolderSelectViewModel m_viewModel;
 
         /// <summary>
@@ -37,6 +40,10 @@ namespace favoshelf.Views
             m_viewModel = new FolderSelectViewModel();
         }
 
+        /// <summary>
+        /// 画面遷移されてきたときの処理
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -92,6 +99,11 @@ namespace favoshelf.Views
             return folder;
         }
 
+        /// <summary>
+        /// アイテムを選択したとき
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             FolderListItem item = e.ClickedItem as FolderListItem;

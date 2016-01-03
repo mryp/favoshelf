@@ -15,11 +15,24 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace favoshelf.Views
 {
+    /// <summary>
+    /// 画像表示ページのビューモデル
+    /// </summary>
     public class ImageFolderViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// 画像ファイルリスト
+        /// </summary>
         private IReadOnlyList<StorageFile> m_fileList = null;
+
+        /// <summary>
+        /// 現在表示している画像の位置
+        /// </summary>
         private int m_index = 0;
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public ImageFolderViewModel()
         {
         }
