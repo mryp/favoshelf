@@ -14,9 +14,9 @@ namespace favoshelf
         public enum FileType
         {
             Folder,
-            ImageFolder,
             Archive,
-            File
+            ImageFile,
+            OtherFile
         }
 
         public string Name
@@ -50,16 +50,14 @@ namespace favoshelf
                 string color = "#FFFFFF";
                 switch (this.Type)
                 {
+                    case FileType.Archive:
+                    case FileType.ImageFile:
+                        color = "#E0FFFF";
+                        break;
                     case FileType.Folder:
                         color = "#FFFACD";
                         break;
-                    case FileType.ImageFolder:
-                        color = "#E0FFFF";
-                        break;
-                    case FileType.Archive:
-                        color = "#F0F8FF";
-                        break;
-                    case FileType.File:
+                    case FileType.OtherFile:
                     default:
                         color = "#FFFFFF";
                         break;
@@ -67,6 +65,5 @@ namespace favoshelf
                 return color;
             }
         }
-
     }
 }

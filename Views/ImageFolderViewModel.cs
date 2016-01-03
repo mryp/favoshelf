@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.Storage.Search;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -15,7 +17,6 @@ namespace favoshelf.Views
 {
     public class ImageFolderViewModel : INotifyPropertyChanged
     {
-        //private List<string> m_filePathList = new List<string>();
         private IReadOnlyList<StorageFile> m_fileList = null;
         private int m_index = 0;
 
@@ -23,27 +24,45 @@ namespace favoshelf.Views
         {
         }
 
+        /// <summary>
+        /// 指定ファイルにある画像一覧をリストにセットする
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public async Task Init(FolderListItem item)
         {
-            StorageFolder folder = null;
-            if (item.Token == "")
+            StorageFile imageFile = await StorageFile.GetFileFromPathAsync(item.Path);
+            StorageFolder folder = await imageFile.GetParentAsync();
+            m_fileList = await getImageFilesAsync(folder);
+
+            //選択した画像位置をデフォルトとしてセットする
+            for (int i = 0; i < m_fileList.Count; i++)
             {
-                folder = await StorageFolder.GetFolderFromPathAsync(item.Path);
-            }
-            else
-            {
-                if (StorageApplicationPermissions.FutureAccessList.ContainsItem(item.Token))
+                if (m_fileList[i].Name == imageFile.Name)
                 {
-                    folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(item.Token);
+                    m_index = i;
+                    break;
                 }
             }
-            
-            if (folder != null)
-            {
-                m_fileList = await folder.GetFilesAsync();
-            }
+        }
+        
+        /// <summary>
+        /// 指定フォルダ以下にある画像ファイルのみを抽出して返す
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
+        private async Task<IReadOnlyList<StorageFile>> getImageFilesAsync(StorageFolder folder)
+        {
+            QueryOptions queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, FileKind.GetImageFilterList());
+            StorageFileQueryResult queryResult = folder.CreateFileQueryWithOptions(queryOptions);
+            return await queryResult.GetFilesAsync();
         }
 
+        /// <summary>
+        /// 指定した位置の画像を取得する
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public async Task<BitmapImage> GetImage(int index)
         {
             if (m_fileList == null)
@@ -58,16 +77,24 @@ namespace favoshelf.Views
             //StorageFile file = await StorageFile.GetFileFromPathAsync(m_filePathList[index]);
             IRandomAccessStream stream = await m_fileList[index].OpenReadAsync();
             var bitmap = new BitmapImage();
-            bitmap.SetSource(stream);
+            await bitmap.SetSourceAsync(stream);
 
             return bitmap;
         }
 
+        /// <summary>
+        /// 現在位置の画像を取得する
+        /// </summary>
+        /// <returns></returns>
         public async Task<BitmapImage> GetImage()
         {
             return await GetImage(m_index);
         }
 
+        /// <summary>
+        /// 次の画像を取得する
+        /// </summary>
+        /// <returns></returns>
         public async Task<BitmapImage> GetNextImage()
         {
             if (m_index < m_fileList.Count-1)
@@ -77,6 +104,10 @@ namespace favoshelf.Views
             return await GetImage(m_index);
         }
 
+        /// <summary>
+        /// 前の画像を取得する
+        /// </summary>
+        /// <returns></returns>
         public async Task<BitmapImage> GetPrevImage()
         {
             if (m_index > 0)

@@ -46,12 +46,25 @@ namespace favoshelf.Views
                 return;
             }
 
-            if (item.Type == FolderListItem.FileType.ImageFolder)
+            if (item.Type == FolderListItem.FileType.ImageFile)
             {
                 setFirstImage(item);
             }
         }
 
+        private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
+        {
+            switch (args.VirtualKey)
+            {
+                case Windows.System.VirtualKey.Left:
+                    setNextImage();
+                    break;
+                case Windows.System.VirtualKey.Right:
+                    setPrevImage();
+                    break;
+            }
+        }
+        
         private async void setFirstImage(FolderListItem item)
         {
             await m_viewModel.Init(item);
@@ -68,19 +81,6 @@ namespace favoshelf.Views
             imageView.Source = await m_viewModel.GetPrevImage();
         }
 
-        private void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
-        {
-            switch (args.VirtualKey)
-            {
-                case Windows.System.VirtualKey.Left:
-                    setNextImage();
-                    break;
-                case Windows.System.VirtualKey.Right:
-                    setPrevImage();
-                    break;
-            }
-        }
-
         private enum TouchPosition
         {
             None,
@@ -89,15 +89,15 @@ namespace favoshelf.Views
             BottomLeft,
             BottomRight,
         }
-
-        private void imageView_PointerPressed(object sender, PointerRoutedEventArgs e)
+        
+        private void touchPanel_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             Pointer pointer = e.Pointer;
             PointerPoint point = e.GetCurrentPoint(this.mainGrid);
             TouchPosition touchPos = getTouchPosition(sender as UIElement);
             if (pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
-                if (point.Properties.IsLeftButtonPressed)
+                if (point.Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
                 {
                     if (touchPos == TouchPosition.TopLeft || touchPos == TouchPosition.BottomLeft)
                     {
@@ -107,14 +107,6 @@ namespace favoshelf.Views
                     {
                         setPrevImage();
                     }
-                }
-                if (point.Properties.IsRightButtonPressed)
-                {
-                    //未実装
-                }
-                if (point.Properties.IsMiddleButtonPressed)
-                {
-                    //未実装
                 }
             }
         }

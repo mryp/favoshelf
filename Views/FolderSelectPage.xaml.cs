@@ -100,17 +100,19 @@ namespace favoshelf.Views
                 return;
             }
 
-            if (item.Type == FolderListItem.FileType.Folder)
+            switch (item.Type)
             {
-                this.Frame.Navigate(typeof(FolderSelectPage), item);
-            }
-            else if (item.Type == FolderListItem.FileType.ImageFolder)
-            {
-                this.Frame.Navigate(typeof(ImageMainPage), item);
-            }
-            else
-            {
-                this.Frame.Navigate(typeof(ImageMainPage), item);
+                case FolderListItem.FileType.Folder:
+                    this.Frame.Navigate(typeof(FolderSelectPage), item);
+                    break;
+                case FolderListItem.FileType.ImageFile:
+                case FolderListItem.FileType.Archive:
+                    this.Frame.Navigate(typeof(ImageMainPage), item);
+                    break;
+                case FolderListItem.FileType.OtherFile:
+                default:
+                    //何もしない
+                    break;
             }
         }
     }

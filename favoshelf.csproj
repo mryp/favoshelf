@@ -107,6 +107,7 @@
       <DependentUpon>HeaderContent.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NavMenuListView.cs" />
+    <Compile Include="FileKind.cs" />
     <Compile Include="FolderListItem.cs" />
     <Compile Include="NavMenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -14,9 +15,9 @@ namespace favoshelf.Views
 {
     public class FolderSelectViewModel : INotifyPropertyChanged
     {
-        private List<FolderListItem> m_itemList = new List<FolderListItem>();
+        private ObservableCollection<FolderListItem> m_itemList = new ObservableCollection<FolderListItem>();
 
-        public List<FolderListItem> ItemList
+        public ObservableCollection<FolderListItem> ItemList
         {
             get
             {
@@ -34,7 +35,7 @@ namespace favoshelf.Views
         
         public async void Init(string[] tokenList)
         {
-            List<FolderListItem> itemList = new List<FolderListItem>();
+            ItemList.Clear();
             foreach (string token in tokenList)
             {
                 if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
@@ -43,13 +44,12 @@ namespace favoshelf.Views
                     if (folder != null)
                     {
                         Debug.WriteLine("有効トークン token=" + token + " folder=" + folder.Path);
-                        FolderListItem.FileType fileType = await getFileType(folder);
-                        itemList.Add(new FolderListItem()
+                        ItemList.Add(new FolderListItem()
                         {
                             Name = folder.DisplayName,
                             Path = folder.Path,
                             Token = token,
-                            Type = fileType
+                            Type = FolderListItem.FileType.Folder
                         });
                     }
                 }
@@ -58,7 +58,6 @@ namespace favoshelf.Views
                     removeToken(token);
                 }
             }
-            ItemList = itemList;
         }
 
         private void removeToken(string token)
@@ -74,27 +73,25 @@ namespace favoshelf.Views
         
         public async void InitFromFolderPath(string folderPath)
         {
-            List<FolderListItem> itemList = new List<FolderListItem>();
             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(folderPath);
             if (folder != null)
             {
                 IReadOnlyList<StorageFolder> subFolderList = await folder.GetFoldersAsync();
                 foreach (StorageFolder subFolder in subFolderList)
                 {
-                    FolderListItem.FileType fileType = await getFileType(subFolder);
-                    itemList.Add(new FolderListItem()
+                    ItemList.Add(new FolderListItem()
                     {
                         Name = subFolder.DisplayName,
                         Path = subFolder.Path,
                         Token = "",
-                        Type = fileType
+                        Type = FolderListItem.FileType.Folder
                     });
                 }
 
                 IReadOnlyList<StorageFile> fileList = await folder.GetFilesAsync();
                 foreach (StorageFile file in fileList)
                 {
-                    itemList.Add(new FolderListItem()
+                    ItemList.Add(new FolderListItem()
                     {
                         Name = file.DisplayName,
                         Path = file.Path,
@@ -103,40 +100,23 @@ namespace favoshelf.Views
                     });
                 }
             }
-
-            ItemList = itemList;
         }
 
         private FolderListItem.FileType getFileType(StorageFile file)
         {
-            FolderListItem.FileType resultType = FolderListItem.FileType.File;
-            switch (Path.GetExtension(file.Path))
+            FolderListItem.FileType resultType = FolderListItem.FileType.OtherFile;
+            if (FileKind.IsImageFile(file.Path))
             {
-                case ".zip":
-                    resultType = FolderListItem.FileType.Archive;
-                    break;
+                resultType = FolderListItem.FileType.ImageFile;
+            }
+            else if (FileKind.IsArchiveFile(file.Path))
+            {
+                resultType = FolderListItem.FileType.Archive;
             }
 
             return resultType;
         }
-
-        private async Task<FolderListItem.FileType> getFileType(StorageFolder folder)
-        {
-            IReadOnlyList<StorageFile> fileList = await folder.GetFilesAsync();
-            foreach (StorageFile file in fileList)
-            {
-                switch (Path.GetExtension(file.Path))
-                {
-                    case ".jpg":
-                    case ".jpeg":
-                    case ".png":
-                        return FolderListItem.FileType.ImageFolder;
-                }
-            }
-
-            return FolderListItem.FileType.Folder;
-        }
-
+        
         #region INotifyPropertyChanged member
 
         public event PropertyChangedEventHandler PropertyChanged;
