@@ -7,12 +7,14 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -130,30 +132,18 @@ namespace favoshelf.Views
             }
         }
 
-        private async void testZip(string filePath)
+        private void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            StorageFile zipFile = await StorageFile.GetFileFromPathAsync(filePath);
-            IRandomAccessStream randomStream = await zipFile.OpenReadAsync();
-            using (Stream stream = randomStream.AsStreamForRead())
+            Pointer pointer = e.Pointer;
+            PointerPoint point = e.GetCurrentPoint(this.Frame);
+            if (pointer.PointerDeviceType == PointerDeviceType.Mouse)
             {
-                ZipArchive zipArchive = new ZipArchive(stream);
-                foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                if (point.Properties.PointerUpdateKind == PointerUpdateKind.XButton1Released)
                 {
-                    Debug.WriteLine("name=" + entry.Name + " fileSize=" + entry.Length.ToString() + " compSize=" + entry.CompressedLength.ToString());
-                    using (Stream entryStream = entry.Open())
+                    //戻る
+                    if (this.Frame.CanGoBack)
                     {
-                        using (IInputStream inputStream = entryStream.AsInputStream())
-                        {
-                            byte[] buffBytes = new byte[entry.Length];
-                            await inputStream.ReadAsync(buffBytes.AsBuffer(), (uint)buffBytes.Length, InputStreamOptions.None);
-
-                            /*
-                            using (DataReader reader = new DataReader(inputStream))
-                            {
-                                break;
-                            }
-                            */
-                        }
+                        this.Frame.GoBack();
                     }
                 }
             }

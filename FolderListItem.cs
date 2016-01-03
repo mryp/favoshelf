@@ -65,19 +65,19 @@ namespace favoshelf
         {
             get
             {
-                string color = "#FFFFFF";
+                string color = "#111111";
                 switch (this.Type)
                 {
                     case FileType.Archive:
                     case FileType.ImageFile:
-                        color = "#E0FFFF";
+                        color = "#0D47A1";
                         break;
                     case FileType.Folder:
-                        color = "#FFFACD";
+                        color = "#827717";
                         break;
                     case FileType.OtherFile:
                     default:
-                        color = "#FFFFFF";
+                        color = "#212121";
                         break;
                 }
                 return color;

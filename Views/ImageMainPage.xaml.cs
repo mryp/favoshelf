@@ -137,6 +137,7 @@ namespace favoshelf.Views
             {
                 if (point.Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
                 {
+                    //画像切り替え
                     if (touchPos == TouchPosition.TopLeft || touchPos == TouchPosition.BottomLeft)
                     {
                         setNextImage();
@@ -144,6 +145,14 @@ namespace favoshelf.Views
                     else if (touchPos == TouchPosition.TopRight || touchPos == TouchPosition.BottomRight)
                     {
                         setPrevImage();
+                    }
+                }
+                else if (point.Properties.PointerUpdateKind == PointerUpdateKind.XButton1Released)
+                {
+                    //戻る
+                    if (this.Frame.CanGoBack)
+                    {
+                        this.Frame.GoBack();
                     }
                 }
             }

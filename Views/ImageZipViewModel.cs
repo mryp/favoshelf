@@ -42,7 +42,10 @@ namespace favoshelf.Views
             m_zipArchive = new ZipArchive(stream);
             foreach (ZipArchiveEntry entry in m_zipArchive.Entries)
             {
-                this.DataList.Add(entry);
+                if (FileKind.IsImageFile(entry.FullName))
+                {
+                    this.DataList.Add(entry);
+                }
             }
 
             this.CommandTitle = item.Name;
