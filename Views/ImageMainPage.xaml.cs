@@ -39,7 +39,7 @@ namespace favoshelf.Views
         /// <summary>
         /// ビューモデル
         /// </summary>
-        private IImageAccess m_imageAccess;
+        private ImageViewModelBase m_viewModel;
 
         /// <summary>
         /// コンストラクタ
@@ -66,18 +66,16 @@ namespace favoshelf.Views
 
             if (item.Type == FolderListItem.FileType.ImageFile)
             {
-                ImageFolderViewModel viewModel = new ImageFolderViewModel();
-                await viewModel.Init(item);
-                m_imageAccess = viewModel;
-                setFirstImage(item);
+                m_viewModel = new ImageFolderViewModel();
             }
             else if (item.Type == FolderListItem.FileType.Archive)
             {
-                ImageZipViewModel viewModel = new ImageZipViewModel();
-                await viewModel.Init(item);
-                m_imageAccess = viewModel;
-                setFirstImage(item);
+                m_viewModel = new ImageZipViewModel();
             }
+
+            await m_viewModel.Init(item);
+            this.DataContext = m_viewModel;
+            setFirstImage(item);
         }
 
         /// <summary>
@@ -104,25 +102,25 @@ namespace favoshelf.Views
         /// 最初の画面を表示する
         /// </summary>
         /// <param name="item"></param>
-        private async void setFirstImage(FolderListItem item)
+        private void setFirstImage(FolderListItem item)
         {
-            imageView.Source = await m_imageAccess.GetImage();
+            m_viewModel.GetImage();
         }
 
         /// <summary>
         /// 次の画像を表示する
         /// </summary>
-        private async void setNextImage()
+        private void setNextImage()
         {
-            imageView.Source = await m_imageAccess.GetNextImage();
+            m_viewModel.GetNextImage();
         }
 
         /// <summary>
         /// 前の画像を表示する
         /// </summary>
-        private async void setPrevImage()
+        private void setPrevImage()
         {
-            imageView.Source = await m_imageAccess.GetPrevImage();
+            m_viewModel.GetPrevImage();
         }
         
         /// <summary>
@@ -190,7 +188,6 @@ namespace favoshelf.Views
             {
                 PointerPoint point = e.GetCurrentPoint(this.imageView);
                 int mouseWheelDelta = point.Properties.MouseWheelDelta;
-                Debug.WriteLine("WHEEL Delta=" + mouseWheelDelta);
                 if (mouseWheelDelta > 0)    //上
                 {
                     setPrevImage();

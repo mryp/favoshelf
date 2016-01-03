@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
@@ -17,33 +18,10 @@ namespace favoshelf.Views
     /// <summary>
     /// ZIPファイルを表示するビューモデル
     /// </summary>
-    public class ImageZipViewModel : ImageViewModelBase<ZipArchiveEntry>
+    public class ImageZipViewModel : ImageViewModelBase
     {
         private ZipArchive m_zipArchive;
-
-        /// <summary>
-        /// Bitmapを生成する
-        /// </summary>
-        /// <param name="entry"></param>
-        /// <returns></returns>
-        protected override async Task<BitmapImage> createBitmap(ZipArchiveEntry entry)
-        {
-            var bitmap = new BitmapImage();
-            using (Stream entryStream = entry.Open())
-            {
-                using (IInputStream inputStream = entryStream.AsInputStream())
-                {
-                    byte[] buffBytes = new byte[entry.Length];
-                    await inputStream.ReadAsync(buffBytes.AsBuffer(), (uint)buffBytes.Length, InputStreamOptions.None);
-                    using (MemoryStream memStream = new MemoryStream(buffBytes))
-                    {
-                        await bitmap.SetSourceAsync(memStream.AsRandomAccessStream());
-                    }
-                }
-            }
-
-            return bitmap;
-        }
+        private static AsyncLock m_asyncLock = new AsyncLock();
 
         /// <summary>
         /// フィールドを初期化する
@@ -67,7 +45,45 @@ namespace favoshelf.Views
                 this.DataList.Add(entry);
             }
 
+            this.CommandTitle = item.Name;
             this.Index = 0;
+        }
+
+        /// <summary>
+        /// Bitmapを生成する
+        /// </summary>
+        /// <param name="entry"></param>
+        /// <returns></returns>
+        protected override async Task<BitmapImage> createBitmap(object data)
+        {
+            ZipArchiveEntry entry = data as ZipArchiveEntry;
+            if (entry == null)
+            {
+                Debug.WriteLine("対象外オブジェクト data=" + data.ToString());
+                return null;
+            }
+            BitmapImage bitmap = null;
+            using (await m_asyncLock.LockAsync())
+            {
+                Debug.WriteLine("ImageZipViewModel#createBitmap call name=" + entry.Name);
+                using (Stream entryStream = entry.Open())
+                {
+                    using (IInputStream inputStream = entryStream.AsInputStream())
+                    {
+                        byte[] buffBytes = new byte[entry.Length];
+                        await inputStream.ReadAsync(buffBytes.AsBuffer(), (uint)buffBytes.Length, InputStreamOptions.None);
+                        using (MemoryStream memStream = new MemoryStream(buffBytes))
+                        {
+                            bitmap = new BitmapImage();
+                            await bitmap.SetSourceAsync(memStream.AsRandomAccessStream());
+                        }
+                    }
+                }
+
+                Debug.WriteLine("ImageZipViewModel#createBitmap finish");
+            }
+
+            return bitmap;
         }
         
         /// <summary>

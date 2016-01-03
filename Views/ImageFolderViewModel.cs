@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -18,8 +19,13 @@ namespace favoshelf.Views
     /// <summary>
     /// 画像表示ページのビューモデル
     /// </summary>
-    public class ImageFolderViewModel : ImageViewModelBase<StorageFile>
+    public class ImageFolderViewModel : ImageViewModelBase
     {
+        /// <summary>
+        /// 排他制御用ロック
+        /// </summary>
+        private static AsyncLock m_asyncLock = new AsyncLock();
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -45,14 +51,15 @@ namespace favoshelf.Views
             }
 
             //選択した画像位置をデフォルトとしてセットする
-            for (int i = 0; i < this.DataList.Count; i++)
+            for (int i = 0; i < fileList.Count; i++)
             {
-                if (this.DataList[i].Name == imageFile.Name)
+                if (fileList[i].Name == imageFile.Name)
                 {
                     this.Index = i;
                     break;
                 }
             }
+            this.CommandTitle = folder.DisplayName;
         }
 
         /// <summary>
@@ -60,12 +67,21 @@ namespace favoshelf.Views
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected override async Task<BitmapImage> createBitmap(StorageFile data)
+        protected override async Task<BitmapImage> createBitmap(object data)
         {
-            //StorageFile file = await StorageFile.GetFileFromPathAsync(m_filePathList[index]);
-            IRandomAccessStream stream = await data.OpenReadAsync();
-            var bitmap = new BitmapImage();
-            await bitmap.SetSourceAsync(stream);
+            StorageFile storage = data as StorageFile;
+            if (storage == null)
+            {
+                Debug.WriteLine("対象外のオブジェクト data=" + data);
+                return null;
+            }
+            BitmapImage bitmap = null;
+            using (await m_asyncLock.LockAsync())
+            {
+                IRandomAccessStream stream = await storage.OpenReadAsync();
+                bitmap = new BitmapImage();
+                await bitmap.SetSourceAsync(stream);
+            }
 
             return bitmap;
         }

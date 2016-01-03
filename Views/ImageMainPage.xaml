@@ -24,14 +24,14 @@
             <CommandBar.Content>
                 <ctl:PageHeader>
                     <ctl:PageHeader.HeaderContent>
-                        <TextBlock Text="イメージ" Style="{ThemeResource PageTitleTextBlockStyle}" TextWrapping="NoWrap"/>
+                        <TextBlock x:Name="commandTitle" Text="{Binding CommandTitle}" Style="{ThemeResource PageTitleTextBlockStyle}" TextWrapping="NoWrap"/>
                     </ctl:PageHeader.HeaderContent>
                 </ctl:PageHeader>
             </CommandBar.Content>
         </CommandBar>
 
         <Grid x:Name="mainGrid" Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True">
-            <Image x:Name="imageView"/>
+            <Image x:Name="imageView" Source="{Binding IndexImage}" />
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />

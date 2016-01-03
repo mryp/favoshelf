@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,23 +14,21 @@ namespace favoshelf.Views
     /// 画像表示ページのデータビューの共通部分
     /// </summary>
     /// <typeparam name="T">データリスト（画像読み込み元情報）の型</typeparam>
-    public abstract class ImageViewModelBase<T> : INotifyPropertyChanged, IImageAccess, IDisposable
+    public abstract class ImageViewModelBase : INotifyPropertyChanged, IImageAccess, IDisposable
     {
-        /// <summary>
-        /// 最初のファイル情報
-        /// </summary>
+        #region 定数
+        private const string NOT_FOUND_IMAGE_URI = "ms-appx:///Assets/NotFoundImage.png";
+        #endregion
+
+        #region フィールド
         private FolderListItem m_selectFileItem = null;
-
-        /// <summary>
-        /// 現在表示している画像の位置
-        /// </summary>
         private int m_index = 0;
+        private ObservableCollection<object> m_dataList = new ObservableCollection<object>();
+        private BitmapImage m_indexImage;
+        private string m_comanndTitle;
+        #endregion
 
-        /// <summary>
-        /// データリスト
-        /// </summary>
-        private ObservableCollection<T> m_dataList = new ObservableCollection<T>();
-
+        #region プロパティ
         /// <summary>
         /// 画像表示時に選択したファイル情報
         /// </summary>
@@ -71,7 +70,7 @@ namespace favoshelf.Views
         /// <summary>
         /// データリスト（画像読み込み元情報保持）
         /// </summary>
-        public ObservableCollection<T> DataList
+        public ObservableCollection<object> DataList
         {
             get
             {
@@ -86,6 +85,45 @@ namespace favoshelf.Views
                 }
             }
         }
+
+        /// <summary>
+        /// 表示する画像データ
+        /// </summary>
+        public BitmapImage IndexImage
+        {
+            get
+            {
+                return m_indexImage;
+            }
+            set
+            {
+                if (value != m_indexImage)
+                {
+                    m_indexImage = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// コマンドバータイトル
+        /// </summary>
+        public string CommandTitle
+        {
+            get
+            {
+                return m_comanndTitle;
+            }
+            set
+            {
+                if (value != m_comanndTitle)
+                {
+                    m_comanndTitle = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        #endregion
 
         /// <summary>
         /// コンストラクタ
@@ -134,6 +172,11 @@ namespace favoshelf.Views
             }
 
             BitmapImage bitmap = await createBitmap(m_dataList[index]);
+            if (bitmap == null)
+            {
+                Debug.WriteLine("Bitmap null index=" + index);
+                bitmap = new BitmapImage(new Uri(NOT_FOUND_IMAGE_URI));
+            }
             return bitmap;
         }
 
@@ -142,41 +185,43 @@ namespace favoshelf.Views
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected abstract Task<BitmapImage> createBitmap(T data);
+        protected abstract Task<BitmapImage> createBitmap(object data);
 
         /// <summary>
         /// 現在位置の画像を取得する
         /// </summary>
         /// <returns></returns>
-        public async Task<BitmapImage> GetImage()
+        public async void GetImage()
         {
-            return await GetImage(m_index);
+            this.IndexImage = await GetImage(this.Index);
         }
 
         /// <summary>
         /// 次の画像を取得する
         /// </summary>
         /// <returns></returns>
-        public async Task<BitmapImage> GetNextImage()
+        public async void GetNextImage()
         {
-            if (m_index < m_dataList.Count - 1)
+            if (this.Index >= m_dataList.Count - 1)
             {
-                m_index++;
+                return;
             }
-            return await GetImage(m_index);
+            this.Index++;
+            this.IndexImage = await GetImage(this.Index);
         }
 
         /// <summary>
         /// 前の画像を取得する
         /// </summary>
         /// <returns></returns>
-        public async Task<BitmapImage> GetPrevImage()
+        public async void GetPrevImage()
         {
-            if (m_index > 0)
+            if (this.Index == 0)
             {
-                m_index--;
+                return;
             }
-            return await GetImage(m_index);
+            this.Index--;
+            this.IndexImage = await GetImage(this.Index);
         }
 
         #region INotifyPropertyChanged member

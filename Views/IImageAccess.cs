@@ -13,18 +13,18 @@ namespace favoshelf.Views
         /// 現在位置の画像を取得する
         /// </summary>
         /// <returns></returns>
-        Task<BitmapImage> GetImage();
+        void GetImage();
 
         /// <summary>
         /// 次の画像を取得する
         /// </summary>
         /// <returns></returns>
-        Task<BitmapImage> GetNextImage();
+        void GetNextImage();
 
         /// <summary>
         /// 前の画像を取得する
         /// </summary>
         /// <returns></returns>
-        Task<BitmapImage> GetPrevImage();
+        void GetPrevImage();
     }
 }

@@ -103,6 +103,7 @@
     <Compile Include="AppShell.xaml.cs">
       <DependentUpon>AppShell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AsyncLock.cs" />
     <Compile Include="Controls\HeaderContent.xaml.cs">
       <DependentUpon>HeaderContent.xaml</DependentUpon>
     </Compile>
@@ -136,6 +137,7 @@
     <None Include="favoshelf_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\NotFoundImage.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
