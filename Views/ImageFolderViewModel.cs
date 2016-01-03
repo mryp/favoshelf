@@ -18,47 +18,59 @@ namespace favoshelf.Views
     /// <summary>
     /// 画像表示ページのビューモデル
     /// </summary>
-    public class ImageFolderViewModel : INotifyPropertyChanged
+    public class ImageFolderViewModel : ImageViewModelBase<StorageFile>
     {
-        /// <summary>
-        /// 画像ファイルリスト
-        /// </summary>
-        private IReadOnlyList<StorageFile> m_fileList = null;
-
-        /// <summary>
-        /// 現在表示している画像の位置
-        /// </summary>
-        private int m_index = 0;
-
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public ImageFolderViewModel()
         {
         }
-
+        
         /// <summary>
-        /// 指定ファイルにある画像一覧をリストにセットする
+        /// フィールドを初期化する
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public async Task Init(FolderListItem item)
+        protected override async Task initField(FolderListItem item)
         {
             StorageFile imageFile = await StorageFile.GetFileFromPathAsync(item.Path);
             StorageFolder folder = await imageFile.GetParentAsync();
-            m_fileList = await getImageFilesAsync(folder);
+
+            IReadOnlyList<StorageFile> fileList = await getImageFilesAsync(folder);
+            this.DataList.Clear();
+            foreach (StorageFile file in fileList)
+            {
+                this.DataList.Add(file);
+            }
 
             //選択した画像位置をデフォルトとしてセットする
-            for (int i = 0; i < m_fileList.Count; i++)
+            for (int i = 0; i < this.DataList.Count; i++)
             {
-                if (m_fileList[i].Name == imageFile.Name)
+                if (this.DataList[i].Name == imageFile.Name)
                 {
-                    m_index = i;
+                    this.Index = i;
                     break;
                 }
             }
         }
-        
+
+        /// <summary>
+        /// 指定したデータからビットマップデータを生成する
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override async Task<BitmapImage> createBitmap(StorageFile data)
+        {
+            //StorageFile file = await StorageFile.GetFileFromPathAsync(m_filePathList[index]);
+            IRandomAccessStream stream = await data.OpenReadAsync();
+            var bitmap = new BitmapImage();
+            await bitmap.SetSourceAsync(stream);
+
+            return bitmap;
+        }
+
+
         /// <summary>
         /// 指定フォルダ以下にある画像ファイルのみを抽出して返す
         /// </summary>
@@ -71,76 +83,9 @@ namespace favoshelf.Views
             return await queryResult.GetFilesAsync();
         }
 
-        /// <summary>
-        /// 指定した位置の画像を取得する
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public async Task<BitmapImage> GetImage(int index)
+        public override void Dispose()
         {
-            if (m_fileList == null)
-            {
-                return null;
-            }
-            if (index < 0 || index >= m_fileList.Count)
-            {
-                return null;
-            }
-            
-            //StorageFile file = await StorageFile.GetFileFromPathAsync(m_filePathList[index]);
-            IRandomAccessStream stream = await m_fileList[index].OpenReadAsync();
-            var bitmap = new BitmapImage();
-            await bitmap.SetSourceAsync(stream);
-
-            return bitmap;
+            //なし
         }
-
-        /// <summary>
-        /// 現在位置の画像を取得する
-        /// </summary>
-        /// <returns></returns>
-        public async Task<BitmapImage> GetImage()
-        {
-            return await GetImage(m_index);
-        }
-
-        /// <summary>
-        /// 次の画像を取得する
-        /// </summary>
-        /// <returns></returns>
-        public async Task<BitmapImage> GetNextImage()
-        {
-            if (m_index < m_fileList.Count-1)
-            {
-                m_index++;
-            }
-            return await GetImage(m_index);
-        }
-
-        /// <summary>
-        /// 前の画像を取得する
-        /// </summary>
-        /// <returns></returns>
-        public async Task<BitmapImage> GetPrevImage()
-        {
-            if (m_index > 0)
-            {
-                m_index--;
-            }
-            return await GetImage(m_index);
-        }
-
-        #region INotifyPropertyChanged member
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 }

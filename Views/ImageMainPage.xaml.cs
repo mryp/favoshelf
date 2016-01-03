@@ -39,7 +39,7 @@ namespace favoshelf.Views
         /// <summary>
         /// ビューモデル
         /// </summary>
-        private ImageFolderViewModel m_viewModel;
+        private IImageAccess m_imageAccess;
 
         /// <summary>
         /// コンストラクタ
@@ -48,15 +48,13 @@ namespace favoshelf.Views
         {
             this.InitializeComponent();
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
-
-            m_viewModel = new ImageFolderViewModel();
         }
 
         /// <summary>
         /// 画面遷移してきたときの処理
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             
@@ -68,6 +66,16 @@ namespace favoshelf.Views
 
             if (item.Type == FolderListItem.FileType.ImageFile)
             {
+                ImageFolderViewModel viewModel = new ImageFolderViewModel();
+                await viewModel.Init(item);
+                m_imageAccess = viewModel;
+                setFirstImage(item);
+            }
+            else if (item.Type == FolderListItem.FileType.Archive)
+            {
+                ImageZipViewModel viewModel = new ImageZipViewModel();
+                await viewModel.Init(item);
+                m_imageAccess = viewModel;
                 setFirstImage(item);
             }
         }
@@ -98,8 +106,7 @@ namespace favoshelf.Views
         /// <param name="item"></param>
         private async void setFirstImage(FolderListItem item)
         {
-            await m_viewModel.Init(item);
-            imageView.Source = await m_viewModel.GetImage();
+            imageView.Source = await m_imageAccess.GetImage();
         }
 
         /// <summary>
@@ -107,7 +114,7 @@ namespace favoshelf.Views
         /// </summary>
         private async void setNextImage()
         {
-            imageView.Source = await m_viewModel.GetNextImage();
+            imageView.Source = await m_imageAccess.GetNextImage();
         }
 
         /// <summary>
@@ -115,7 +122,7 @@ namespace favoshelf.Views
         /// </summary>
         private async void setPrevImage()
         {
-            imageView.Source = await m_viewModel.GetPrevImage();
+            imageView.Source = await m_imageAccess.GetPrevImage();
         }
         
         /// <summary>

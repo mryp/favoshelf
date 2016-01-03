@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -11,6 +12,7 @@ using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -117,14 +119,43 @@ namespace favoshelf.Views
                 case FolderListItem.FileType.Folder:
                     this.Frame.Navigate(typeof(FolderSelectPage), item);
                     break;
-                case FolderListItem.FileType.ImageFile:
                 case FolderListItem.FileType.Archive:
+                case FolderListItem.FileType.ImageFile:
                     this.Frame.Navigate(typeof(ImageMainPage), item);
                     break;
                 case FolderListItem.FileType.OtherFile:
                 default:
                     //何もしない
                     break;
+            }
+        }
+
+        private async void testZip(string filePath)
+        {
+            StorageFile zipFile = await StorageFile.GetFileFromPathAsync(filePath);
+            IRandomAccessStream randomStream = await zipFile.OpenReadAsync();
+            using (Stream stream = randomStream.AsStreamForRead())
+            {
+                ZipArchive zipArchive = new ZipArchive(stream);
+                foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                {
+                    Debug.WriteLine("name=" + entry.Name + " fileSize=" + entry.Length.ToString() + " compSize=" + entry.CompressedLength.ToString());
+                    using (Stream entryStream = entry.Open())
+                    {
+                        using (IInputStream inputStream = entryStream.AsInputStream())
+                        {
+                            byte[] buffBytes = new byte[entry.Length];
+                            await inputStream.ReadAsync(buffBytes.AsBuffer(), (uint)buffBytes.Length, InputStreamOptions.None);
+
+                            /*
+                            using (DataReader reader = new DataReader(inputStream))
+                            {
+                                break;
+                            }
+                            */
+                        }
+                    }
+                }
             }
         }
     }

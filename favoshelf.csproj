@@ -118,10 +118,13 @@
       <DependentUpon>FolderSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FolderSelectViewModel.cs" />
+    <Compile Include="Views\IImageAccess.cs" />
     <Compile Include="Views\ImageMainPage.xaml.cs">
       <DependentUpon>ImageMainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ImageFolderViewModel.cs" />
+    <Compile Include="Views\ImageViewModelBase.cs" />
+    <Compile Include="Views\ImageZipViewModel.cs" />
     <Compile Include="Views\QuickAccessPage.xaml.cs">
       <DependentUpon>QuickAccessPage.xaml</DependentUpon>
     </Compile>
