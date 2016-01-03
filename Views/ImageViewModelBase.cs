@@ -15,6 +15,9 @@ namespace favoshelf.Views
     /// <typeparam name="T">データリスト（画像読み込み元情報）の型</typeparam>
     public abstract class ImageViewModelBase<T> : INotifyPropertyChanged, IImageAccess, IDisposable
     {
+        /// <summary>
+        /// 最初のファイル情報
+        /// </summary>
         private FolderListItem m_selectFileItem = null;
 
         /// <summary>
@@ -27,6 +30,9 @@ namespace favoshelf.Views
         /// </summary>
         private ObservableCollection<T> m_dataList = new ObservableCollection<T>();
 
+        /// <summary>
+        /// 画像表示時に選択したファイル情報
+        /// </summary>
         public FolderListItem SelectFileItem
         {
             get
