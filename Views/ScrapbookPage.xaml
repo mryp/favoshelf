@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="favoshelf.Views.FavoritePage"
+    x:Class="favoshelf.Views.ScrapbookPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:favoshelf.Views"
@@ -26,14 +26,14 @@
             <CommandBar.Content>
                 <ctl:PageHeader>
                     <ctl:PageHeader.HeaderContent>
-                        <TextBlock Text="お気に入り" Style="{ThemeResource PageTitleTextBlockStyle}" TextWrapping="NoWrap"/>
+                        <TextBlock Text="スクラップブック" Style="{ThemeResource PageTitleTextBlockStyle}" TextWrapping="NoWrap"/>
                     </ctl:PageHeader.HeaderContent>
                 </ctl:PageHeader>
             </CommandBar.Content>
         </CommandBar>
 
         <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True">
-            <TextBlock Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Favorite"/>
+            <TextBlock Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Scrapbook"/>
         </Grid>
     </Grid>
 </Page>

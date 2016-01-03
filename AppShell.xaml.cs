@@ -32,19 +32,25 @@ namespace favoshelf
             {
                 new NavMenuItem()
                 {
-                    Symbol = Symbol.Home,
+                    Symbol = Symbol.Clock,
                     Label = "クイックアクセス",
                     DestPage = typeof(Views.QuickAccessPage)
                 },
                 new NavMenuItem()
                 {
                     Symbol = Symbol.Favorite,
-                    Label = "お気に入り",
-                    DestPage = typeof(Views.FavoritePage)
+                    Label = "スクラップブック",
+                    DestPage = typeof(Views.ScrapbookPage)
                 },
                 new NavMenuItem()
                 {
-                    Symbol = Symbol.Folder,
+                    Symbol = Symbol.Tag,
+                    Label = "本棚",
+                    DestPage = typeof(Views.BookshelfPage)
+                },
+                new NavMenuItem()
+                {
+                    Symbol = Symbol.MoveToFolder,
                     Label = "フォルダー",
                     DestPage = typeof(Views.FolderSelectPage)
                 },

@@ -14,8 +14,8 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
-            <AppBarButton Icon="Favorite" Label="お気に入り"/>
-            <AppBarButton Icon="Tag" Label="ラベル"/>
+            <AppBarButton Icon="Favorite" Label="スクラップブックに登録"/>
+            <AppBarButton Icon="Tag" Label="本棚に登録"/>
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="Menu Item 1"/>
                 <AppBarButton Label="Menu Item 2"/>
