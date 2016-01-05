@@ -14,15 +14,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
-            <AppBarButton Icon="Edit" Label="Edit"/>
-            <AppBarButton Icon="Delete" Label="Delete"/>
-            <AppBarSeparator/>
-            <AppBarToggleButton Icon="Sort" Label="Sort"/>
-            <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Menu Item 1"/>
-                <AppBarButton Label="Menu Item 2"/>
-                <AppBarButton Label="Menu Item 3"/>
-            </CommandBar.SecondaryCommands>
+            <AppBarButton Icon="Delete" Label="履歴全削除"/>
             <CommandBar.Content>
                 <ctl:PageHeader>
                     <ctl:PageHeader.HeaderContent>
@@ -32,8 +24,28 @@
             </CommandBar.Content>
         </CommandBar>
 
-        <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True">
-            <TextBlock Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Quick Access"/>
+        <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True" PointerReleased="Grid_PointerReleased">
+            <GridView  x:Name="gridView"
+                       ItemsSource="{Binding Path=ItemList}" 
+                       Margin="8" 
+                       IsItemClickEnabled="True"
+                       ItemClick="gridView_ItemClick">
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Background="{Binding BackgroundColor, Mode=OneWay}">
+                            <Image Source="{Binding PreviewImage}" 
+                                   Width="{Binding ThumWidth}" 
+                                   Height="{Binding ThumHeight}"/>
+                            <TextBlock Text="{Binding Name}" 
+                                       Style="{StaticResource BaseTextBlockStyle}" 
+                                       Width="{Binding ThumWidth}"
+                                       Height="50"
+                                       Margin="8,2,0,0"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
         </Grid>
 
     </Grid>

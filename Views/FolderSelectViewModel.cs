@@ -46,48 +46,25 @@ namespace favoshelf.Views
         /// 初期化（トークン用）
         /// </summary>
         /// <param name="tokenList"></param>
-        public async void Init(string[] tokenList)
+        public async void Init(List<string> tokenList)
         {
             ItemList.Clear();
             foreach (string token in tokenList)
             {
-                if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+                StorageFolder folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(token);
+                if (folder != null)
                 {
-                    StorageFolder folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(token);
-                    if (folder != null)
+                    ItemList.Add(new FolderListItem()
                     {
-                        Debug.WriteLine("有効トークン token=" + token + " folder=" + folder.Path);
-                        ItemList.Add(new FolderListItem()
-                        {
-                            Name = folder.DisplayName,
-                            Path = folder.Path,
-                            Token = token,
-                            Type = FolderListItem.FileType.Folder
-                        });
-                    }
-                }
-                else
-                {
-                    removeToken(token);
+                        Name = folder.DisplayName,
+                        Path = folder.Path,
+                        Token = token,
+                        Type = FolderListItem.FileType.Folder
+                    });
                 }
             }
         }
-
-        /// <summary>
-        /// 無効トークン削除
-        /// </summary>
-        /// <param name="token"></param>
-        private void removeToken(string token)
-        {
-            Debug.WriteLine("無効トークン token=" + token);
-            if (AppSettings.Current.FolderTokenList.Contains(token))
-            {
-                List<string> folderTokenList = new List<string>(AppSettings.Current.FolderTokenList);
-                folderTokenList.Remove(token);
-                AppSettings.Current.FolderTokenList = folderTokenList.ToArray();
-            }
-        }
-        
+                
         /// <summary>
         /// 初期化（フォルダパス用）
         /// </summary>
@@ -124,6 +101,51 @@ namespace favoshelf.Views
                 }
             }
         }
+
+        public async void InitFromToken(List<string> tokenList)
+        {
+            ItemList.Clear();
+            foreach (string token in tokenList)
+            {
+                IStorageItem storageItem = null;
+                if (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(token))
+                {
+                    storageItem = await StorageApplicationPermissions.MostRecentlyUsedList.GetItemAsync(token);
+
+                }
+                else if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+                {
+                    storageItem = await StorageApplicationPermissions.FutureAccessList.GetItemAsync(token);
+                }
+                else
+                {
+                    continue;
+                }
+                if (storageItem.IsOfType(StorageItemTypes.Folder))
+                {
+                    ItemList.Add(new FolderListItem()
+                    {
+                        Name = storageItem.Name,
+                        Path = storageItem.Path,
+                        Token = token,
+                        Type = FolderListItem.FileType.Folder
+                    });
+                }
+                else
+                {
+                    FolderListItem item = new FolderListItem()
+                    {
+                        Name = storageItem.Name,
+                        Path = storageItem.Path,
+                        Token = token,
+                        Type = getFileType((StorageFile)storageItem)
+                    };
+                    item.UpdateThumImage();
+                    ItemList.Add(item);
+                }
+            }
+        }
+
 
         /// <summary>
         /// 指定したファイルのタイプを取得する

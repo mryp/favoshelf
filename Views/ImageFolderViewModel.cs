@@ -22,11 +22,6 @@ namespace favoshelf.Views
     public class ImageFolderViewModel : ImageViewModelBase
     {
         /// <summary>
-        /// 排他制御用ロック
-        /// </summary>
-        private static AsyncLock m_asyncLock = new AsyncLock();
-
-        /// <summary>
         /// コンストラクタ
         /// </summary>
         public ImageFolderViewModel()
@@ -42,6 +37,7 @@ namespace favoshelf.Views
         {
             StorageFile imageFile = await StorageFile.GetFileFromPathAsync(item.Path);
             StorageFolder folder = await imageFile.GetParentAsync();
+            StorageHistoryManager.AddStorage(folder, StorageHistoryManager.DataType.Latest);
 
             IReadOnlyList<StorageFile> fileList = await getImageFilesAsync(folder);
             this.DataList.Clear();
@@ -75,14 +71,8 @@ namespace favoshelf.Views
                 Debug.WriteLine("対象外のオブジェクト data=" + data);
                 return null;
             }
-            BitmapImage bitmap = null;
-            using (await m_asyncLock.LockAsync())
-            {
-                IRandomAccessStream stream = await storage.OpenReadAsync();
-                bitmap = new BitmapImage();
-                await bitmap.SetSourceAsync(stream);
-            }
-
+            
+            BitmapImage bitmap = await BitmapUtils.CreateBitmap(storage);
             return bitmap;
         }
 

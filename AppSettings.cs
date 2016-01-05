@@ -28,25 +28,5 @@ namespace favoshelf
             get { return _current; }
         }
         
-        /// <summary>
-        /// フォルダ一覧で表示するフォルダトークンリスト
-        /// </summary>
-        public string[] FolderTokenList
-        {
-            get
-            {
-                string[] result = GetValue<string[]>(ContainerType.Roaming);
-                if (result == null)
-                {
-                    return new string[0];
-                }
-                return result;
-            }
-            set
-            {
-                SetValue(value, ContainerType.Roaming);
-                OnPropertyChanged();
-            }
-        }
     }
 }

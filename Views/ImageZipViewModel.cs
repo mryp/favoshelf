@@ -37,6 +37,8 @@ namespace favoshelf.Views
             this.DataList.Clear();
 
             StorageFile zipFile = await StorageFile.GetFileFromPathAsync(item.Path);
+            StorageHistoryManager.AddStorage(zipFile, StorageHistoryManager.DataType.Latest);
+
             IRandomAccessStream randomStream = await zipFile.OpenReadAsync();
             Stream stream = randomStream.AsStreamForRead();
             m_zipArchive = new ZipArchive(stream);
@@ -65,27 +67,8 @@ namespace favoshelf.Views
                 Debug.WriteLine("対象外オブジェクト data=" + data.ToString());
                 return null;
             }
-            BitmapImage bitmap = null;
-            using (await m_asyncLock.LockAsync())
-            {
-                Debug.WriteLine("ImageZipViewModel#createBitmap call name=" + entry.Name);
-                using (Stream entryStream = entry.Open())
-                {
-                    using (IInputStream inputStream = entryStream.AsInputStream())
-                    {
-                        byte[] buffBytes = new byte[entry.Length];
-                        await inputStream.ReadAsync(buffBytes.AsBuffer(), (uint)buffBytes.Length, InputStreamOptions.None);
-                        using (MemoryStream memStream = new MemoryStream(buffBytes))
-                        {
-                            bitmap = new BitmapImage();
-                            await bitmap.SetSourceAsync(memStream.AsRandomAccessStream());
-                        }
-                    }
-                }
-
-                Debug.WriteLine("ImageZipViewModel#createBitmap finish");
-            }
-
+            
+            BitmapImage bitmap = await BitmapUtils.CreateBitmap(entry);
             return bitmap;
         }
         

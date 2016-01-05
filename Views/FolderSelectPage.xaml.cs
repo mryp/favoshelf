@@ -51,11 +51,10 @@ namespace favoshelf.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Debug.WriteLine("FolderSelectPage#OnNavigatedFrom");
             FolderListItem item = e.Parameter as FolderListItem;
             if (item == null)
             {
-                m_viewModel.Init(AppSettings.Current.FolderTokenList);
+                m_viewModel.Init(StorageHistoryManager.GetTokenList(StorageHistoryManager.DataType.Folder));
             }
             else
             {
@@ -78,11 +77,7 @@ namespace favoshelf.Views
                 return; //未選択
             }
 
-            string token = StorageApplicationPermissions.FutureAccessList.Add(folder);
-            Debug.WriteLine("フォルダアクセストークン：" + token);
-            List<string> folderTokenList = new List<string>(AppSettings.Current.FolderTokenList);
-            folderTokenList.Add(token);
-            AppSettings.Current.FolderTokenList = folderTokenList.ToArray();
+            StorageHistoryManager.AddStorage(folder, StorageHistoryManager.DataType.Folder);
         }
 
         /// <summary>

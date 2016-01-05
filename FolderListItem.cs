@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -28,16 +30,18 @@ namespace favoshelf
             ImageFile,
             OtherFile
         }
+
+        private const int THUM_IMAGE_WIDTH = 150;
+        private const int THUM_IMAGE_HEIGHT = 200;
         #endregion
 
         #region フィールド
-        private static AsyncLock m_asyncLock = new AsyncLock();
         private string m_name = "";
         private string m_path = "";
         private string m_token = "";
         private FileType m_type = FileType.OtherFile;
-        private int m_thumWidth = 230;
-        private int m_thumHeight = 250;
+        private int m_thumWidth = THUM_IMAGE_WIDTH;
+        private int m_thumHeight = THUM_IMAGE_HEIGHT;
         private BitmapImage m_prevImage;
         #endregion
 
@@ -168,6 +172,11 @@ namespace favoshelf
             get { return convertFileTypeToBackColor(this.Type); }
         }
 
+        /// <summary>
+        /// タイルの背景色
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         private string convertFileTypeToBackColor(FileType type)
         {
             string color = "#111111";
@@ -188,27 +197,48 @@ namespace favoshelf
             return color;
         }
 
+        /// <summary>
+        /// サムネイル画像を取得する
+        /// </summary>
         public async void UpdateThumImage()
         {
             if (this.Type == FileType.ImageFile)
             {
-                //PreviewImage = await createBitmapFromImageFile(Path);
+                PreviewImage = await BitmapUtils.CreateBitmap(Path, ThumWidth);
+            }
+            else if (this.Type == FileType.Archive)
+            {
+                PreviewImage = await getFirstImageFromArchive(Path, ThumWidth);
             }
         }
 
-        private async Task<BitmapImage> createBitmapFromImageFile(string filePath)
+        /// <summary>
+        /// アーカイブファイルからサムネイル用画像データを取得する
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="thumWidth"></param>
+        /// <returns></returns>
+        private async Task<BitmapImage> getFirstImageFromArchive(string path, int thumWidth)
         {
-            StorageFile storage = await StorageFile.GetFileFromPathAsync(filePath);
             BitmapImage bitmap = null;
-            using (await m_asyncLock.LockAsync())
+            StorageFile zipFile = await StorageFile.GetFileFromPathAsync(path);
+            IRandomAccessStream randomStream = await zipFile.OpenReadAsync();
+            Stream stream = randomStream.AsStreamForRead();
+            using (ZipArchive zipArchive = new ZipArchive(stream))
             {
-                IRandomAccessStream stream = await storage.OpenReadAsync();
-                bitmap = new BitmapImage();
-                await bitmap.SetSourceAsync(stream);
+                foreach (ZipArchiveEntry entry in zipArchive.Entries)
+                {
+                    if (FileKind.IsImageFile(entry.FullName))
+                    {
+                        bitmap = await BitmapUtils.CreateBitmap(entry, thumWidth);
+                        break;
+                    }
+                }
             }
 
             return bitmap;
         }
+        
 
         #region INotifyPropertyChanged member
 
