@@ -41,29 +41,6 @@ namespace favoshelf.Views
                 }
             }
         }
-        
-        /// <summary>
-        /// 初期化（トークン用）
-        /// </summary>
-        /// <param name="tokenList"></param>
-        public async void Init(List<string> tokenList)
-        {
-            ItemList.Clear();
-            foreach (string token in tokenList)
-            {
-                StorageFolder folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(token);
-                if (folder != null)
-                {
-                    ItemList.Add(new FolderListItem()
-                    {
-                        Name = folder.DisplayName,
-                        Path = folder.Path,
-                        Token = token,
-                        Type = FolderListItem.FileType.Folder
-                    });
-                }
-            }
-        }
                 
         /// <summary>
         /// 初期化（フォルダパス用）
@@ -102,6 +79,10 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// 初期化（トークン用）
+        /// </summary>
+        /// <param name="tokenList"></param>
         public async void InitFromToken(List<string> tokenList)
         {
             ItemList.Clear();

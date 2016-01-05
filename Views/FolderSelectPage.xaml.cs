@@ -54,7 +54,7 @@ namespace favoshelf.Views
             FolderListItem item = e.Parameter as FolderListItem;
             if (item == null)
             {
-                m_viewModel.Init(StorageHistoryManager.GetTokenList(StorageHistoryManager.DataType.Folder));
+                m_viewModel.InitFromToken(StorageHistoryManager.GetTokenList(StorageHistoryManager.DataType.Folder));
             }
             else
             {
