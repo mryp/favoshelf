@@ -41,7 +41,11 @@ namespace favoshelf.Views
                 }
             }
         }
-                
+
+        public FolderSelectViewModel()
+        {
+        }
+        
         /// <summary>
         /// 初期化（フォルダパス用）
         /// </summary>
@@ -73,7 +77,6 @@ namespace favoshelf.Views
                         Token = "",
                         Type = getFileType(file)
                     };
-                    item.UpdateThumImage();
                     ItemList.Add(item);
                 }
             }
@@ -121,7 +124,6 @@ namespace favoshelf.Views
                         Token = token,
                         Type = getFileType((StorageFile)storageItem)
                     };
-                    item.UpdateThumImage();
                     ItemList.Add(item);
                 }
             }

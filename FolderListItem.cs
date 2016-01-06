@@ -213,6 +213,17 @@ namespace favoshelf
         }
 
         /// <summary>
+        /// サムネイル画像を削除する
+        /// </summary>
+        public void ReleaseThumImage()
+        {
+            if (PreviewImage != null)
+            {
+                PreviewImage = null;
+            }
+        }
+
+        /// <summary>
         /// アーカイブファイルからサムネイル用画像データを取得する
         /// </summary>
         /// <param name="path"></param>

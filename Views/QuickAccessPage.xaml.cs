@@ -48,7 +48,27 @@ namespace favoshelf.Views
             m_viewModel.InitFromToken(StorageHistoryManager.GetTokenList(StorageHistoryManager.DataType.Latest));
             this.gridView.DataContext = m_viewModel;
         }
-
+        
+        /// <summary>
+        /// グリッドビューのアイテム変更状態変更イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void gridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            FolderListItem listItem = args.Item as FolderListItem;
+            if (listItem != null)
+            {
+                if (args.InRecycleQueue)
+                {
+                    listItem.ReleaseThumImage();
+                }
+                else
+                {
+                    listItem.UpdateThumImage();
+                }
+            }
+        }
 
         /// <summary>
         /// アイテムを選択したとき
@@ -74,7 +94,12 @@ namespace favoshelf.Views
                     break;
             }
         }
-
+        
+        /// <summary>
+        /// 全画面グリッドでタッチ・マウスボタンを離したとき
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             Pointer pointer = e.Pointer;

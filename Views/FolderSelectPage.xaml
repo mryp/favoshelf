@@ -30,6 +30,7 @@
                        ItemsSource="{Binding Path=ItemList}" 
                        Margin="8" 
                        IsItemClickEnabled="True"
+                       ContainerContentChanging="gridView_ContainerContentChanging"
                        ItemClick="gridView_ItemClick">
                 <GridView.ItemTemplate>
                     <DataTemplate>
