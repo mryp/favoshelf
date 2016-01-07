@@ -31,8 +31,6 @@ namespace favoshelf
             OtherFile
         }
 
-        private const int THUM_IMAGE_WIDTH = 150;
-        private const int THUM_IMAGE_HEIGHT = 200;
         #endregion
 
         #region フィールド
@@ -40,8 +38,8 @@ namespace favoshelf
         private string m_path = "";
         private string m_token = "";
         private FileType m_type = FileType.OtherFile;
-        private int m_thumWidth = THUM_IMAGE_WIDTH;
-        private int m_thumHeight = THUM_IMAGE_HEIGHT;
+        private int m_thumWidth = 100;
+        private int m_thumHeight = 133;
         private BitmapImage m_prevImage;
         #endregion
 

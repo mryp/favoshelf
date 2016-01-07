@@ -66,6 +66,7 @@ namespace favoshelf
                 bitmap = new BitmapImage();
                 if (decodePixelWidth > 0)
                 {
+                    bitmap.DecodePixelType = DecodePixelType.Logical;
                     bitmap.DecodePixelWidth = decodePixelWidth;
                 }
                 await bitmap.SetSourceAsync(stream);
@@ -106,6 +107,7 @@ namespace favoshelf
                             bitmap = new BitmapImage();
                             if (decodePixelWidth > 0)
                             {
+                                bitmap.DecodePixelType = DecodePixelType.Logical;
                                 bitmap.DecodePixelWidth = decodePixelWidth;
                             }
                             await bitmap.SetSourceAsync(memStream.AsRandomAccessStream());

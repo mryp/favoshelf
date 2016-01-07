@@ -133,28 +133,21 @@ namespace favoshelf.Views
             Pointer pointer = e.Pointer;
             PointerPoint point = e.GetCurrentPoint(this.mainGrid);
             TouchPosition touchPos = getTouchPosition(sender as UIElement);
-            if (pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            
+            if (point.Properties.PointerUpdateKind == PointerUpdateKind.XButton1Released)
             {
-                if (point.Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
+                if (this.Frame.CanGoBack)
                 {
-                    //画像切り替え
-                    if (touchPos == TouchPosition.TopLeft || touchPos == TouchPosition.BottomLeft)
-                    {
-                        setNextImage();
-                    }
-                    else if (touchPos == TouchPosition.TopRight || touchPos == TouchPosition.BottomRight)
-                    {
-                        setPrevImage();
-                    }
+                    this.Frame.GoBack();
                 }
-                else if (point.Properties.PointerUpdateKind == PointerUpdateKind.XButton1Released)
-                {
-                    //戻る
-                    if (this.Frame.CanGoBack)
-                    {
-                        this.Frame.GoBack();
-                    }
-                }
+            }
+            else if (touchPos == TouchPosition.TopLeft || touchPos == TouchPosition.BottomLeft)
+            {
+                setNextImage();
+            }
+            else if (touchPos == TouchPosition.TopRight || touchPos == TouchPosition.BottomRight)
+            {
+                setPrevImage();
             }
         }
 

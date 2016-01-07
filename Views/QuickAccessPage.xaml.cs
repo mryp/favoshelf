@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -90,6 +91,10 @@ namespace favoshelf.Views
             {
                 StorageHistoryManager.RemoveAll(StorageHistoryManager.DataType.Latest);
             }
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
         }
     }
 }

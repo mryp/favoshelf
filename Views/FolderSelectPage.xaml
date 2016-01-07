@@ -29,7 +29,7 @@
             <GridView  x:Name="gridView"
                        ItemsSource="{Binding Path=ItemList}" 
                        ItemTemplate="{StaticResource FolderGridItemTemplate}"
-                       Margin="8" 
+                       Margin="4" 
                        IsItemClickEnabled="True"
                        ContainerContentChanging="gridView_ContainerContentChanging"
                        ItemClick="gridView_ItemClick">

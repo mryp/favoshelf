@@ -15,6 +15,7 @@
             <DataTemplate x:Key="FolderGridItemTemplate">
                 <StackPanel Background="{Binding BackgroundColor, Mode=OneWay}">
                     <Image Source="{Binding PreviewImage}" 
+                           Stretch="Uniform"
                            Width="{Binding ThumWidth}" 
                            Height="{Binding ThumHeight}"/>
                     <TextBlock Text="{Binding Name}" 

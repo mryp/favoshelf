@@ -15,10 +15,24 @@ namespace favoshelf
     public class StorageHistoryManager
     {
         #region 定数/定義
+        /// <summary>
+        /// 履歴データ種別
+        /// </summary>
         public enum DataType
         {
+            /// <summary>
+            /// フォルダ一覧
+            /// </summary>
             Folder,
+
+            /// <summary>
+            /// 本棚
+            /// </summary>
             Bookshelf,
+
+            /// <summary>
+            /// クイックアクセス
+            /// </summary>
             Latest,
         }
         #endregion
@@ -82,18 +96,19 @@ namespace favoshelf
         public static void RemoveAll(DataType type)
         {
             AccessListEntryView entries = getEntryFromType(type);
-            foreach (AccessListEntry entry in entries)
+            if (type == DataType.Latest)
             {
-                if (entry.Metadata == type.ToString())
+                foreach (AccessListEntry entry in entries)
                 {
-                    if (type == DataType.Latest)
-                    {
-                        StorageApplicationPermissions.MostRecentlyUsedList.Remove(entry.Token);
-                    }
-                    else
-                    {
-                        StorageApplicationPermissions.FutureAccessList.Remove(entry.Token);
-                    }
+                    StorageApplicationPermissions.MostRecentlyUsedList.Remove(entry.Token);
+                }
+            }
+            else
+            {
+                AccessListEntry[] filterList = entries.Where(entry => entry.Metadata == type.ToString()).ToArray();
+                foreach (AccessListEntry entry in filterList)
+                {
+                    StorageApplicationPermissions.FutureAccessList.Remove(entry.Token);
                 }
             }
         }

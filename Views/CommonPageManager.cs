@@ -10,6 +10,9 @@ using Windows.UI.Xaml.Input;
 
 namespace favoshelf.Views
 {
+    /// <summary>
+    /// フォルダページ共通化管理クラス
+    /// </summary>
     public class CommonPageManager
     {
 
@@ -38,12 +41,12 @@ namespace favoshelf.Views
 
             return result;
         }
-
-
+        
         public static void OnGridContentChanging(FolderListItem listItem, bool inRecycleQueue)
         {
             if (listItem != null)
             {
+                //画像を遅延読み込みする
                 if (inRecycleQueue)
                 {
                     listItem.ReleaseThumImage();
