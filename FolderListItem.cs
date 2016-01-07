@@ -249,7 +249,6 @@ namespace favoshelf
 
             return bitmap;
         }
-        
 
         #region INotifyPropertyChanged member
 

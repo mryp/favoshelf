@@ -34,7 +34,8 @@ namespace favoshelf
                 {
                     Symbol = Symbol.Clock,
                     Label = "クイックアクセス",
-                    DestPage = typeof(Views.QuickAccessPage)
+                    DestPage = typeof(Views.QuickAccessPage),
+                    Arguments = StorageHistoryManager.DataType.Latest.ToString()
                 },
                 new NavMenuItem()
                 {
@@ -46,13 +47,15 @@ namespace favoshelf
                 {
                     Symbol = Symbol.Tag,
                     Label = "本棚",
-                    DestPage = typeof(Views.BookshelfPage)
+                    DestPage = typeof(Views.BookshelfPage),
+                    Arguments = StorageHistoryManager.DataType.Bookshelf.ToString()
                 },
                 new NavMenuItem()
                 {
                     Symbol = Symbol.MoveToFolder,
                     Label = "フォルダー",
-                    DestPage = typeof(Views.FolderSelectPage)
+                    DestPage = typeof(Views.FolderSelectPage),
+                    Arguments = StorageHistoryManager.DataType.Folder.ToString()
                 },
             });
 

@@ -99,53 +99,23 @@ namespace favoshelf.Views
         }
 
         /// <summary>
-        /// グリッドビューのアイテム変更状態変更イベント
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void gridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            FolderListItem listItem = args.Item as FolderListItem;
-            if (listItem != null)
-            {
-                if (args.InRecycleQueue)
-                {
-                    listItem.ReleaseThumImage();
-                }
-                else
-                {
-                    listItem.UpdateThumImage();
-                }
-            }
-        }
-
-        /// <summary>
         /// アイテムを選択したとき
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void gridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            FolderListItem item = e.ClickedItem as FolderListItem;
-            if (item == null)
-            {
-                return;
-            }
+            CommonPageManager.OnGridViewItemClick(this.Frame, e.ClickedItem as FolderListItem);
+        }
 
-            switch (item.Type)
-            {
-                case FolderListItem.FileType.Folder:
-                    this.Frame.Navigate(typeof(FolderSelectPage), item);
-                    break;
-                case FolderListItem.FileType.Archive:
-                case FolderListItem.FileType.ImageFile:
-                    this.Frame.Navigate(typeof(ImageMainPage), item);
-                    break;
-                case FolderListItem.FileType.OtherFile:
-                default:
-                    //何もしない
-                    break;
-            }
+        /// <summary>
+        /// グリッドビューのアイテム変更状態変更イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void gridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            CommonPageManager.OnGridContentChanging(args.Item as FolderListItem, args.InRecycleQueue);
         }
 
         /// <summary>
@@ -155,19 +125,7 @@ namespace favoshelf.Views
         /// <param name="e"></param>
         private void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            Pointer pointer = e.Pointer;
-            PointerPoint point = e.GetCurrentPoint(this.Frame);
-            if (pointer.PointerDeviceType == PointerDeviceType.Mouse)
-            {
-                if (point.Properties.PointerUpdateKind == PointerUpdateKind.XButton1Released)
-                {
-                    //戻る
-                    if (this.Frame.CanGoBack)
-                    {
-                        this.Frame.GoBack();
-                    }
-                }
-            }
+            CommonPageManager.OnGridPointerReleased(this.Frame, e);
         }
     }
 }

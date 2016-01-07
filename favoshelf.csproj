@@ -117,6 +117,7 @@
     <Compile Include="Views\BookshelfPage.xaml.cs">
       <DependentUpon>BookshelfPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CommonPageManager.cs" />
     <Compile Include="Views\FolderSelectPage.xaml.cs">
       <DependentUpon>FolderSelectPage.xaml</DependentUpon>
     </Compile>

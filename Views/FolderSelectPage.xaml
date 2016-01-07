@@ -28,25 +28,11 @@
         <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True" PointerReleased="Grid_PointerReleased">
             <GridView  x:Name="gridView"
                        ItemsSource="{Binding Path=ItemList}" 
+                       ItemTemplate="{StaticResource FolderGridItemTemplate}"
                        Margin="8" 
                        IsItemClickEnabled="True"
                        ContainerContentChanging="gridView_ContainerContentChanging"
                        ItemClick="gridView_ItemClick">
-                <GridView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Background="{Binding BackgroundColor, Mode=OneWay}">
-                            <Image Source="{Binding PreviewImage}" 
-                                   Width="{Binding ThumWidth}" 
-                                   Height="{Binding ThumHeight}"/>
-                            <TextBlock Text="{Binding Name}" 
-                                       Style="{StaticResource BaseTextBlockStyle}" 
-                                       Width="{Binding ThumWidth}"
-                                       Height="50"
-                                       Margin="8,2,0,0"
-                                       TextWrapping="Wrap" />
-                        </StackPanel>
-                    </DataTemplate>
-                </GridView.ItemTemplate>
             </GridView>
         </Grid>
 

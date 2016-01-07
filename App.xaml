@@ -10,6 +10,21 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- フォルダ・画像一覧画面のGridViewのItemTemplate -->
+            <DataTemplate x:Key="FolderGridItemTemplate">
+                <StackPanel Background="{Binding BackgroundColor, Mode=OneWay}">
+                    <Image Source="{Binding PreviewImage}" 
+                           Width="{Binding ThumWidth}" 
+                           Height="{Binding ThumHeight}"/>
+                    <TextBlock Text="{Binding Name}" 
+                               Style="{StaticResource BaseTextBlockStyle}" 
+                               Width="{Binding ThumWidth}"
+                               Height="50"
+                               Margin="8,2,0,0"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

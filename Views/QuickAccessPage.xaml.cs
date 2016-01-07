@@ -15,12 +15,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// 空白ページのアイテム テンプレートについては、http://go.microsoft.com/fwlink/?LinkId=234238 を参照してください
-
 namespace favoshelf.Views
 {
     /// <summary>
-    /// それ自体で使用できる空白ページまたはフレーム内に移動できる空白ページ。
+    /// クイックアクセス（履歴）ページ
     /// </summary>
     public sealed partial class QuickAccessPage : Page
     {
@@ -28,8 +26,10 @@ namespace favoshelf.Views
         /// データモデル
         /// </summary>
         private FolderSelectViewModel m_viewModel;
-
-
+        
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public QuickAccessPage()
         {
             this.InitializeComponent();
@@ -44,30 +44,9 @@ namespace favoshelf.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
+            
             m_viewModel.InitFromToken(StorageHistoryManager.GetTokenList(StorageHistoryManager.DataType.Latest));
             this.gridView.DataContext = m_viewModel;
-        }
-        
-        /// <summary>
-        /// グリッドビューのアイテム変更状態変更イベント
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void gridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            FolderListItem listItem = args.Item as FolderListItem;
-            if (listItem != null)
-            {
-                if (args.InRecycleQueue)
-                {
-                    listItem.ReleaseThumImage();
-                }
-                else
-                {
-                    listItem.UpdateThumImage();
-                }
-            }
         }
 
         /// <summary>
@@ -77,24 +56,19 @@ namespace favoshelf.Views
         /// <param name="e"></param>
         private void gridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            FolderListItem item = e.ClickedItem as FolderListItem;
-            if (item == null)
-            {
-                return;
-            }
-
-            switch (item.Type)
-            {
-                case FolderListItem.FileType.Archive:
-                case FolderListItem.FileType.ImageFile:
-                    this.Frame.Navigate(typeof(ImageMainPage), item);
-                    break;
-                default:
-                    //何もしない
-                    break;
-            }
+            CommonPageManager.OnGridViewItemClick(this.Frame, e.ClickedItem as FolderListItem);
         }
-        
+
+        /// <summary>
+        /// グリッドビューのアイテム変更状態変更イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void gridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            CommonPageManager.OnGridContentChanging(args.Item as FolderListItem, args.InRecycleQueue);
+        }
+
         /// <summary>
         /// 全画面グリッドでタッチ・マウスボタンを離したとき
         /// </summary>
@@ -102,18 +76,19 @@ namespace favoshelf.Views
         /// <param name="e"></param>
         private void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            Pointer pointer = e.Pointer;
-            PointerPoint point = e.GetCurrentPoint(this.Frame);
-            if (pointer.PointerDeviceType == PointerDeviceType.Mouse)
+            CommonPageManager.OnGridPointerReleased(this.Frame, e);
+        }
+
+        /// <summary>
+        /// ボタン押下処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender == deleteAllButton)
             {
-                if (point.Properties.PointerUpdateKind == PointerUpdateKind.XButton1Released)
-                {
-                    //戻る
-                    if (this.Frame.CanGoBack)
-                    {
-                        this.Frame.GoBack();
-                    }
-                }
+                StorageHistoryManager.RemoveAll(StorageHistoryManager.DataType.Latest);
             }
         }
     }

@@ -28,7 +28,7 @@ namespace favoshelf
         {
             if (type == DataType.Latest)
             {
-                StorageApplicationPermissions.MostRecentlyUsedList.Add(item, type.ToString());
+                StorageApplicationPermissions.MostRecentlyUsedList.Add(item, DateTime.Now.ToString("yyyyMMddHHmmss"));
             }
             else
             {
@@ -47,16 +47,20 @@ namespace favoshelf
         public static List<string> GetTokenList(DataType type)
         {
             AccessListEntryView entries = getEntryFromType(type);
-            List<string> resultList = new List<string>();
-
-            foreach (AccessListEntry entry in entries)
+            List<string> resultList;
+            if (type == DataType.Latest)
             {
-                if (entry.Metadata == type.ToString())
-                {
-                    resultList.Add(entry.Token);
-                }
+                resultList = entries.OrderByDescending(entry => entry.Metadata)
+                    .Select(entry => entry.Token)
+                    .ToList();
             }
-
+            else
+            {
+                resultList = entries.Where(entry => entry.Metadata == type.ToString())
+                    .Select(entry => entry.Token)
+                    .ToList();
+            }
+            
             return resultList;
         }
 

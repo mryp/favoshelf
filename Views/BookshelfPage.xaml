@@ -14,15 +14,14 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
-            <AppBarButton Icon="Edit" Label="Edit"/>
-            <AppBarButton Icon="Delete" Label="Delete"/>
-            <AppBarSeparator/>
-            <AppBarToggleButton Icon="Sort" Label="Sort"/>
+            <AppBarButton x:Name="sortButton" Icon="Sort" Label="並び替え" Click="AppBarButton_Click"/>
+            <!--
             <CommandBar.SecondaryCommands>
                 <AppBarButton Label="Menu Item 1"/>
                 <AppBarButton Label="Menu Item 2"/>
                 <AppBarButton Label="Menu Item 3"/>
             </CommandBar.SecondaryCommands>
+            -->
             <CommandBar.Content>
                 <ctl:PageHeader>
                     <ctl:PageHeader.HeaderContent>
@@ -32,8 +31,15 @@
             </CommandBar.Content>
         </CommandBar>
 
-        <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True">
-            <TextBlock Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Bookshelf"/>
+        <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True" PointerReleased="Grid_PointerReleased">
+            <GridView  x:Name="gridView"
+                       ItemsSource="{Binding Path=ItemList}" 
+                       ItemTemplate="{StaticResource FolderGridItemTemplate}"
+                       Margin="8" 
+                       IsItemClickEnabled="True"
+                       ContainerContentChanging="gridView_ContainerContentChanging"
+                       ItemClick="gridView_ItemClick">
+            </GridView>
         </Grid>
     </Grid>
 </Page>
