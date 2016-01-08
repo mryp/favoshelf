@@ -45,7 +45,7 @@ namespace favoshelf.Views
         }
 
         private const int DESKTOP_THUM_IMAGE_WIDTH = 200;
-        private const int DESKTOP_THUM_IMAGE_HEIGHT = 266;
+        private const int DESKTOP_THUM_IMAGE_HEIGHT = 200;
         private int m_thumWidth;
         private int m_thumHeight;
 
@@ -53,7 +53,7 @@ namespace favoshelf.Views
         {
             Rect size = Window.Current.Bounds;
             m_thumWidth = (int)(size.Width / 3.0) - (4 * 4);
-            m_thumHeight = (int)(m_thumWidth * (4.0 / 3.0));
+            m_thumHeight = m_thumWidth;
             if (m_thumWidth > DESKTOP_THUM_IMAGE_WIDTH)
             {
                 m_thumWidth = DESKTOP_THUM_IMAGE_WIDTH;

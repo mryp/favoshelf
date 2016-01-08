@@ -24,7 +24,6 @@
                 </ctl:PageHeader>
             </CommandBar.Content>
         </CommandBar>
-
         <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True" PointerReleased="Grid_PointerReleased">
             <GridView  x:Name="gridView"
                        ItemsSource="{Binding Path=ItemList}" 

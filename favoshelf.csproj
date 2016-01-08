@@ -109,6 +109,8 @@
       <DependentUpon>HeaderContent.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NavMenuListView.cs" />
+    <Compile Include="Data\EnvPath.cs" />
+    <Compile Include="Data\StringUtils.cs" />
     <Compile Include="FileKind.cs" />
     <Compile Include="FolderListItem.cs" />
     <Compile Include="NavMenuItem.cs" />

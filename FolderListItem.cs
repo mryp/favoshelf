@@ -39,7 +39,7 @@ namespace favoshelf
         private string m_token = "";
         private FileType m_type = FileType.OtherFile;
         private int m_thumWidth = 100;
-        private int m_thumHeight = 133;
+        private int m_thumHeight = 100;
         private BitmapImage m_prevImage;
         #endregion
 
@@ -163,50 +163,24 @@ namespace favoshelf
         }
 
         /// <summary>
-        /// タイプによる背景色
-        /// </summary>
-        public string BackgroundColor
-        {
-            get { return convertFileTypeToBackColor(this.Type); }
-        }
-
-        /// <summary>
-        /// タイルの背景色
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private string convertFileTypeToBackColor(FileType type)
-        {
-            string color = "#111111";
-            switch (type)
-            {
-                case FileType.Archive:
-                case FileType.ImageFile:
-                    color = "#0D47A1";
-                    break;
-                case FileType.Folder:
-                    color = "#827717";
-                    break;
-                case FileType.OtherFile:
-                default:
-                    color = "#212121";
-                    break;
-            }
-            return color;
-        }
-
-        /// <summary>
         /// サムネイル画像を取得する
         /// </summary>
         public async void UpdateThumImage()
         {
             if (this.Type == FileType.ImageFile)
             {
-                PreviewImage = await BitmapUtils.CreateBitmap(Path, ThumWidth);
+                StorageFile storage = await StorageFile.GetFileFromPathAsync(Path);
+                PreviewImage = await BitmapUtils.CreateThumbnailBitmap(storage, (uint)ThumWidth);
             }
             else if (this.Type == FileType.Archive)
             {
-                PreviewImage = await getFirstImageFromArchive(Path, ThumWidth);
+                //PreviewImage = await BitmapUtils.GetFirstImageFromArchive(Path, ThumWidth);
+                PreviewImage = await BitmapUtils.CreateBitmapFromArchiveCover(Path, ThumWidth);
+            }
+            else if (this.Type == FileType.Folder)
+            {
+                StorageFolder storage = await StorageFolder.GetFolderFromPathAsync(Path);
+                PreviewImage = await BitmapUtils.CreateThumbnailBitmap(storage, (uint)ThumWidth);
             }
         }
 
@@ -220,34 +194,6 @@ namespace favoshelf
                 PreviewImage = null;
             }
         }
-
-        /// <summary>
-        /// アーカイブファイルからサムネイル用画像データを取得する
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="thumWidth"></param>
-        /// <returns></returns>
-        private async Task<BitmapImage> getFirstImageFromArchive(string path, int thumWidth)
-        {
-            BitmapImage bitmap = null;
-            StorageFile zipFile = await StorageFile.GetFileFromPathAsync(path);
-            IRandomAccessStream randomStream = await zipFile.OpenReadAsync();
-            Stream stream = randomStream.AsStreamForRead();
-            using (ZipArchive zipArchive = new ZipArchive(stream))
-            {
-                foreach (ZipArchiveEntry entry in zipArchive.Entries)
-                {
-                    if (FileKind.IsImageFile(entry.FullName))
-                    {
-                        bitmap = await BitmapUtils.CreateBitmap(entry, thumWidth);
-                        break;
-                    }
-                }
-            }
-
-            return bitmap;
-        }
-
         #region INotifyPropertyChanged member
 
         public event PropertyChangedEventHandler PropertyChanged;

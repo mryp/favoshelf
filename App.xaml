@@ -13,17 +13,21 @@
 
             <!-- フォルダ・画像一覧画面のGridViewのItemTemplate -->
             <DataTemplate x:Key="FolderGridItemTemplate">
-                <StackPanel Background="{Binding BackgroundColor, Mode=OneWay}">
-                    <Image Source="{Binding PreviewImage}" 
-                           Stretch="Uniform"
-                           Width="{Binding ThumWidth}" 
-                           Height="{Binding ThumHeight}"/>
-                    <TextBlock Text="{Binding Name}" 
+                <StackPanel Background="#FF4B4B4B" 
+                            Width="{Binding ThumWidth}">
+                    <Border Background="#FF4B4B4B"  >
+                        <Image Source="{Binding PreviewImage}" 
+                               Stretch="Uniform"
+                               Width="{Binding ThumWidth}" 
+                               Height="{Binding ThumHeight}"/>
+                    </Border>
+                    <Border Background="#FF333333" >
+                        <TextBlock Text="{Binding Name}" 
                                Style="{StaticResource BaseTextBlockStyle}" 
-                               Width="{Binding ThumWidth}"
                                Height="50"
                                Margin="8,2,0,0"
                                TextWrapping="Wrap" />
+                    </Border>
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
