@@ -1,4 +1,5 @@
-﻿using System;
+﻿using favoshelf.Data;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ namespace favoshelf.Views
         #endregion
 
         #region フィールド
-        private FolderListItem m_selectFileItem = null;
+        private ImageNavigateParameter m_viewParam = null;
         private int m_index = 0;
         private ObservableCollection<object> m_dataList = new ObservableCollection<object>();
         private BitmapImage m_indexImage;
@@ -32,17 +33,17 @@ namespace favoshelf.Views
         /// <summary>
         /// 画像表示時に選択したファイル情報
         /// </summary>
-        public FolderListItem SelectFileItem
+        public ImageNavigateParameter ViewParam
         {
             get
             {
-                return m_selectFileItem;
+                return m_viewParam;
             }
             set
             {
-                if (value != m_selectFileItem)
+                if (value != m_viewParam)
                 {
-                    m_selectFileItem = value;
+                    m_viewParam = value;
                     OnPropertyChanged();
                 }
             }
@@ -142,9 +143,9 @@ namespace favoshelf.Views
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public async Task Init(FolderListItem item)
+        public async Task Init(ImageNavigateParameter item)
         {
-            this.SelectFileItem = item;
+            this.ViewParam = item;
             await initField(item);
         }
 
@@ -153,7 +154,7 @@ namespace favoshelf.Views
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        protected abstract Task initField(FolderListItem item);
+        protected abstract Task initField(ImageNavigateParameter item);
 
         /// <summary>
         /// 指定した位置の画像を取得する

@@ -29,7 +29,7 @@ namespace favoshelf.Views
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        protected override async Task initField(FolderListItem item)
+        protected override async Task initField(ImageNavigateParameter param)
         {
             if (m_zipArchive != null)
             {
@@ -37,7 +37,7 @@ namespace favoshelf.Views
             }
             this.DataList.Clear();
 
-            StorageFile zipFile = await StorageFile.GetFileFromPathAsync(item.Path);
+            StorageFile zipFile = await StorageFile.GetFileFromPathAsync(param.Path);
             StorageHistoryManager.AddStorage(zipFile, StorageHistoryManager.DataType.Latest);
 
             IRandomAccessStream randomStream = await zipFile.OpenReadAsync();
@@ -51,7 +51,7 @@ namespace favoshelf.Views
                 }
             }
 
-            this.CommandTitle = item.Name;
+            this.CommandTitle = Path.GetFileNameWithoutExtension(param.Path);
             this.Index = 0;
         }
 

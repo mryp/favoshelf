@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -34,10 +35,18 @@ namespace favoshelf.Views
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        protected override async Task initField(FolderListItem item)
+        protected override async Task initField(ImageNavigateParameter param)
         {
-            StorageFile imageFile = await StorageFile.GetFileFromPathAsync(item.Path);
-            StorageFolder folder = await imageFile.GetParentAsync();
+            StorageFolder folder;
+            if (param.Type == ImageNavigateParameter.DataType.ImageFile)
+            {
+                StorageFile imageFile = await StorageFile.GetFileFromPathAsync(param.Path);
+                folder = await imageFile.GetParentAsync();
+            }
+            else
+            {
+                folder = await StorageFolder.GetFolderFromPathAsync(param.Path);
+            }
             StorageHistoryManager.AddStorage(folder, StorageHistoryManager.DataType.Latest);
 
             IReadOnlyList<StorageFile> fileList = await getImageFilesAsync(folder);
@@ -47,14 +56,22 @@ namespace favoshelf.Views
                 this.DataList.Add(file);
             }
 
-            //選択した画像位置をデフォルトとしてセットする
-            for (int i = 0; i < fileList.Count; i++)
+            if (param.Type == ImageNavigateParameter.DataType.ImageFile)
             {
-                if (fileList[i].Name == imageFile.Name)
+                //選択した画像位置をデフォルトとしてセットする
+                string imageFileName = Path.GetFileName(param.Path).ToLower();
+                for (int i = 0; i < fileList.Count; i++)
                 {
-                    this.Index = i;
-                    break;
+                    if (fileList[i].Name.ToLower() == imageFileName)
+                    {
+                        this.Index = i;
+                        break;
+                    }
                 }
+            }
+            else
+            {
+                this.Index = 0;
             }
             this.CommandTitle = folder.DisplayName;
         }

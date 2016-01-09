@@ -1,4 +1,5 @@
-﻿using System;
+﻿using favoshelf.Data;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -41,6 +42,8 @@ namespace favoshelf.Views
         /// </summary>
         private ImageViewModelBase m_viewModel;
 
+        private BookshelfDatabase m_db;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -49,21 +52,41 @@ namespace favoshelf.Views
             this.InitializeComponent();
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
 
-            this.bookshelfMenu.Items.Add(new ToggleMenuFlyoutItem()
+            m_db = new BookshelfDatabase();
+            foreach (Bookshelf bookshelf in m_db.SelectBookshelfAll())
             {
-                Text = "TEST1",
-                Tag = "Test1",
-            });
-            this.bookshelfMenu.Items.Add(new ToggleMenuFlyoutItem()
+                ToggleMenuFlyoutItem buttonItem = new ToggleMenuFlyoutItem()
+                {
+                    Text = bookshelf.Label,
+                    Tag = bookshelf,
+                };
+                buttonItem.Click += BookshelfButtonItem_Click;
+                bookshelfMenu.Items.Add(buttonItem);
+            }
+        }
+
+        private void BookshelfButtonItem_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMenuFlyoutItem item = sender as ToggleMenuFlyoutItem;
+            if (item == null)
             {
-                Text = "TEST2",
-                Tag = "Test2",
-            });
-            this.bookshelfMenu.Items.Add(new ToggleMenuFlyoutItem()
+                return;
+            }
+            Bookshelf bs = item.Tag as Bookshelf;
+            if (bs == null)
             {
-                Text = "TEST3",
-                Tag = "Test3",
-            });
+                return;
+            }
+
+            Debug.WriteLine("label=" + bs.Label + " toggle=" + item.IsChecked.ToString());
+            if (item.IsChecked) //追加
+            {
+
+            }
+            else
+            {
+
+            }
         }
 
         /// <summary>
@@ -73,25 +96,26 @@ namespace favoshelf.Views
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            
-            FolderListItem item = e.Parameter as FolderListItem;
-            if (item == null)
+
+            ImageNavigateParameter param = e.Parameter as ImageNavigateParameter;
+            if (param == null)
             {
                 return;
             }
 
-            if (item.Type == FolderListItem.FileType.ImageFile)
+            if (param.Type == ImageNavigateParameter.DataType.ImageFile
+            ||  param.Type == ImageNavigateParameter.DataType.Folder)
             {
                 m_viewModel = new ImageFolderViewModel();
             }
-            else if (item.Type == FolderListItem.FileType.Archive)
+            else if (param.Type == ImageNavigateParameter.DataType.Archive)
             {
                 m_viewModel = new ImageZipViewModel();
             }
 
-            await m_viewModel.Init(item);
+            await m_viewModel.Init(param);
             this.DataContext = m_viewModel;
-            setFirstImage(item);
+            setFirstImage();
         }
 
         /// <summary>
@@ -117,8 +141,7 @@ namespace favoshelf.Views
         /// <summary>
         /// 最初の画面を表示する
         /// </summary>
-        /// <param name="item"></param>
-        private void setFirstImage(FolderListItem item)
+        private void setFirstImage()
         {
             m_viewModel.GetImage();
         }

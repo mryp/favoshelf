@@ -114,6 +114,7 @@
     <Compile Include="Data\EnvPath.cs" />
     <Compile Include="Data\FolderPathNavigateParameter.cs" />
     <Compile Include="Data\FolderRootNavigateParameter.cs" />
+    <Compile Include="Data\ImageNavigateParameter.cs" />
     <Compile Include="Data\INavigateParameter.cs" />
     <Compile Include="Data\QuickAccessNavigateParameter.cs" />
     <Compile Include="Data\StringUtils.cs" />
@@ -207,9 +208,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="Microsoft.VCLibs.120, Version=14.0">
-      <Name>Microsoft Visual C++ 2013 Runtime Package for Windows Universal</Name>
-    </SDKReference>
     <SDKReference Include="SQLite.UAP.2015, Version=3.10.0">
       <Name>SQLite for Universal App Platform</Name>
     </SDKReference>

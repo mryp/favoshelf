@@ -27,12 +27,15 @@ namespace favoshelf.Views
             switch (item.Type)
             {
                 case FolderListItem.FileType.Folder:
-                    FolderPathNavigateParameter param = new FolderPathNavigateParameter(item.Path);
-                    result = frame.Navigate(typeof(FolderSelectPage), param);
+                    result = frame.Navigate(typeof(FolderSelectPage), new FolderPathNavigateParameter(item.Path));
                     break;
                 case FolderListItem.FileType.Archive:
+                    result = frame.Navigate(typeof(ImageMainPage), 
+                        new ImageNavigateParameter(ImageNavigateParameter.DataType.Archive, item.Path));
+                    break;
                 case FolderListItem.FileType.ImageFile:
-                    result = frame.Navigate(typeof(ImageMainPage), item);
+                    result = frame.Navigate(typeof(ImageMainPage), 
+                        new ImageNavigateParameter(ImageNavigateParameter.DataType.ImageFile, item.Path));
                     break;
                 default:
                     //何もしない
