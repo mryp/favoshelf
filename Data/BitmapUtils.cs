@@ -14,7 +14,7 @@ using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace favoshelf
+namespace favoshelf.Data
 {
     /// <summary>
     /// Bitmap処理クラス

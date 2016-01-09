@@ -1,4 +1,5 @@
-﻿using System;
+﻿using favoshelf.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,6 @@ namespace favoshelf.Views
     /// </summary>
     public class CommonPageManager
     {
-
         public static bool OnGridViewItemClick(Frame frame, FolderListItem item)
         {
             if (item == null)
@@ -27,13 +27,13 @@ namespace favoshelf.Views
             switch (item.Type)
             {
                 case FolderListItem.FileType.Folder:
-                    result = frame.Navigate(typeof(FolderSelectPage), item);
+                    FolderPathNavigateParameter param = new FolderPathNavigateParameter(item.Path);
+                    result = frame.Navigate(typeof(FolderSelectPage), param);
                     break;
                 case FolderListItem.FileType.Archive:
                 case FolderListItem.FileType.ImageFile:
                     result = frame.Navigate(typeof(ImageMainPage), item);
                     break;
-                case FolderListItem.FileType.OtherFile:
                 default:
                     //何もしない
                     break;

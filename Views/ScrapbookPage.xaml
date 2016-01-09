@@ -19,9 +19,9 @@
             <AppBarSeparator/>
             <AppBarToggleButton Icon="Sort" Label="Sort"/>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Menu Item 1"/>
-                <AppBarButton Label="Menu Item 2"/>
-                <AppBarButton Label="Menu Item 3"/>
+                <AppBarToggleButton Label="Menu Item 1"/>
+                <AppBarToggleButton Label="Menu Item 2"/>
+                <AppBarToggleButton Label="Menu Item 3"/>
             </CommandBar.SecondaryCommands>
             <CommandBar.Content>
                 <ctl:PageHeader>

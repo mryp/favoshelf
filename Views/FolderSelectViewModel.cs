@@ -1,4 +1,5 @@
-﻿using System;
+﻿using favoshelf.Data;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -44,144 +45,25 @@ namespace favoshelf.Views
             }
         }
 
-        private const int DESKTOP_THUM_IMAGE_WIDTH = 200;
-        private const int DESKTOP_THUM_IMAGE_HEIGHT = 200;
-        private const int NORMAL_TEXT_SIZE = 16;
-        private const int SMALL_TEXT_SIZE = 12;
-        private int m_thumWidth;
-        private int m_thumHeight;
-        private int m_textSize;
-
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public FolderSelectViewModel()
         {
-            Rect size = Window.Current.Bounds;
-            m_thumWidth = (int)(size.Width / 3.0) - (4 * 4);
-            m_thumHeight = m_thumWidth;
-            m_textSize = SMALL_TEXT_SIZE;
-            if (m_thumWidth > DESKTOP_THUM_IMAGE_WIDTH)
-            {
-                m_thumWidth = DESKTOP_THUM_IMAGE_WIDTH;
-                m_thumHeight = DESKTOP_THUM_IMAGE_HEIGHT;
-                m_textSize = NORMAL_TEXT_SIZE;
-            }
-            Debug.WriteLine("Window.Current.Bounds=" + Window.Current.Bounds.ToString());
-            Debug.WriteLine("m_thumWidth=" + m_thumWidth.ToString() + " m_thumHeight=" + m_thumHeight.ToString());
-        }
-        
-        /// <summary>
-        /// 初期化（フォルダパス用）
-        /// </summary>
-        /// <param name="folderPath"></param>
-        public async void InitFromFolderPath(string folderPath)
-        {
-            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(folderPath);
-            if (folder != null)
-            {
-                IReadOnlyList<StorageFolder> subFolderList = await folder.GetFoldersAsync();
-                foreach (StorageFolder subFolder in subFolderList)
-                {
-                    ItemList.Add(new FolderListItem()
-                    {
-                        Name = subFolder.DisplayName,
-                        Path = subFolder.Path,
-                        Token = "",
-                        Type = FolderListItem.FileType.Folder,
-                        ThumWidth = m_thumWidth,
-                        ThumHeight = m_thumHeight,
-                        TextSize = m_textSize
-                    });
-                }
-
-                IReadOnlyList<StorageFile> fileList = await folder.GetFilesAsync();
-                foreach (StorageFile file in fileList)
-                {
-                    FolderListItem item = new FolderListItem()
-                    {
-                        Name = file.DisplayName,
-                        Path = file.Path,
-                        Token = "",
-                        Type = getFileType(file),
-                        ThumWidth = m_thumWidth,
-                        ThumHeight = m_thumHeight,
-                        TextSize = m_textSize
-                    };
-                    ItemList.Add(item);
-                }
-            }
         }
 
         /// <summary>
-        /// 初期化（トークン用）
+        /// リストの初期化を行う
         /// </summary>
-        /// <param name="tokenList"></param>
-        public async void InitFromToken(List<string> tokenList)
+        /// <param name="naviParam"></param>
+        public async void Init(INavigateParameter naviParam)
         {
-            ItemList.Clear();
-            foreach (string token in tokenList)
+            IReadOnlyList<FolderListItem> itemList = await naviParam.GetItemList();
+            this.ItemList.Clear();
+            foreach (FolderListItem item in itemList)
             {
-                IStorageItem storageItem = null;
-                if (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(token))
-                {
-                    storageItem = await StorageApplicationPermissions.MostRecentlyUsedList.GetItemAsync(token);
-
-                }
-                else if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
-                {
-                    storageItem = await StorageApplicationPermissions.FutureAccessList.GetItemAsync(token);
-                }
-                else
-                {
-                    continue;
-                }
-                if (storageItem.IsOfType(StorageItemTypes.Folder))
-                {
-                    ItemList.Add(new FolderListItem()
-                    {
-                        Name = storageItem.Name,
-                        Path = storageItem.Path,
-                        Token = token,
-                        Type = FolderListItem.FileType.Folder,
-                        ThumWidth = m_thumWidth,
-                        ThumHeight = m_thumHeight,
-                        TextSize = m_textSize
-                    });
-                }
-                else
-                {
-                    FolderListItem item = new FolderListItem()
-                    {
-                        Name = storageItem.Name,
-                        Path = storageItem.Path,
-                        Token = token,
-                        Type = getFileType((StorageFile)storageItem),
-                        ThumWidth = m_thumWidth,
-                        ThumHeight = m_thumHeight,
-                        TextSize = m_textSize
-                    };
-                    ItemList.Add(item);
-                }
+                this.ItemList.Add(item);
             }
-        }
-
-
-        /// <summary>
-        /// 指定したファイルのタイプを取得する
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        private FolderListItem.FileType getFileType(StorageFile file)
-        {
-            FolderListItem.FileType resultType = FolderListItem.FileType.OtherFile;
-            if (FileKind.IsImageFile(file.Path))
-            {
-                resultType = FolderListItem.FileType.ImageFile;
-            }
-            else if (FileKind.IsArchiveFile(file.Path))
-            {
-                resultType = FolderListItem.FileType.Archive;
-            }
-
-            return resultType;
         }
         
         #region INotifyPropertyChanged member

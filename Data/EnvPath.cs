@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace favoshelf.Data
     public class EnvPath
     {
         private const string FOLDER_ARCHIVE_COVER = "arccover";
+        private const string DB_FILE_NAME = "bookshelf.db";
 
         public static StorageFolder GetLocalFolder()
         {
@@ -38,6 +40,12 @@ namespace favoshelf.Data
         {
             string hash = StringUtils.GetHashString(zipFilePath);
             return hash + ".jpg";
+        }
+
+        public static string GetDatabaseFilePath()
+        {
+            StorageFolder local = GetLocalFolder();
+            return Path.Combine(local.Path, DB_FILE_NAME);
         }
     }
 }

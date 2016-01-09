@@ -1,4 +1,5 @@
-﻿using System;
+﻿using favoshelf.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -8,8 +9,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace favoshelf
@@ -28,9 +33,14 @@ namespace favoshelf
             Folder,
             Archive,
             ImageFile,
-            OtherFile
+            OtherFile,
+            Bookshelf,
         }
 
+        private const int DESKTOP_THUM_IMAGE_WIDTH = 200;
+        private const int DESKTOP_THUM_IMAGE_HEIGHT = 200;
+        private const int NORMAL_TEXT_SIZE = 16;
+        private const int SMALL_TEXT_SIZE = 12;
         #endregion
 
         #region フィールド
@@ -49,6 +59,7 @@ namespace favoshelf
         /// </summary>
         public FolderListItem()
         {
+            m_textSize = NORMAL_TEXT_SIZE;
         }
 
         /// <summary>
@@ -210,6 +221,40 @@ namespace favoshelf
             {
                 PreviewImage = null;
             }
+        }
+        
+        public async static Task<Size> GetThumSizeFromWindow()
+        {
+            Rect size;
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                size = Window.Current.Bounds;
+            });
+
+            int thumWidth = (int)(size.Width / 3.0) - (4 * 4);
+            int thumHeight = thumWidth;
+            if (thumWidth > DESKTOP_THUM_IMAGE_WIDTH)
+            {
+                thumWidth = DESKTOP_THUM_IMAGE_WIDTH;
+                thumHeight = DESKTOP_THUM_IMAGE_HEIGHT;
+            }
+
+            return new Size(thumWidth, thumHeight);
+        }
+
+        public static FileType GetFileTypeFromStorage(StorageFile file)
+        {
+            FileType resultType = FileType.OtherFile;
+            if (FileKind.IsImageFile(file.Path))
+            {
+                resultType = FolderListItem.FileType.ImageFile;
+            }
+            else if (FileKind.IsArchiveFile(file.Path))
+            {
+                resultType = FolderListItem.FileType.Archive;
+            }
+
+            return resultType;
         }
         #region INotifyPropertyChanged member
 

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using favoshelf.Data;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -26,6 +28,11 @@ namespace favoshelf.Views
         private FolderSelectViewModel m_viewModel;
 
         /// <summary>
+        /// データベース
+        /// </summary>
+        private BookshelfDatabase m_db;
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         public BookshelfPage()
@@ -33,6 +40,7 @@ namespace favoshelf.Views
             this.InitializeComponent();
 
             m_viewModel = new FolderSelectViewModel();
+            m_db = new BookshelfDatabase();
         }
 
         /// <summary>
@@ -43,7 +51,12 @@ namespace favoshelf.Views
         {
             base.OnNavigatedTo(e);
 
-            m_viewModel.InitFromToken(StorageHistoryManager.GetTokenList(StorageHistoryManager.DataType.Bookshelf));
+            INavigateParameter param = e.Parameter as INavigateParameter;
+            if (param == null)
+            {
+                param = new BookshelfNavigateParameter(m_db);
+            }
+            m_viewModel.Init(param);
             this.gridView.DataContext = m_viewModel;
         }
 
@@ -76,9 +89,24 @@ namespace favoshelf.Views
         {
             CommonPageManager.OnGridPointerReleased(this.Frame, e);
         }
-
-        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        
+        private async void addButton_Click(object sender, RoutedEventArgs e)
         {
+            InsertBookshelfDialog dialog = new InsertBookshelfDialog();
+            await dialog.ShowAsync();
+            if (!string.IsNullOrEmpty(dialog.Label))
+            {
+                Bookshelf boolshelf = new Bookshelf()
+                {
+                    Label = dialog.Label,
+                };
+                m_db.InsertBoolshelf(boolshelf);
+            }
+        }
+
+        private void sortButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

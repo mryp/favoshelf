@@ -48,6 +48,22 @@ namespace favoshelf.Views
         {
             this.InitializeComponent();
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
+
+            this.bookshelfMenu.Items.Add(new ToggleMenuFlyoutItem()
+            {
+                Text = "TEST1",
+                Tag = "Test1",
+            });
+            this.bookshelfMenu.Items.Add(new ToggleMenuFlyoutItem()
+            {
+                Text = "TEST2",
+                Tag = "Test2",
+            });
+            this.bookshelfMenu.Items.Add(new ToggleMenuFlyoutItem()
+            {
+                Text = "TEST3",
+                Tag = "Test3",
+            });
         }
 
         /// <summary>
@@ -199,6 +215,11 @@ namespace favoshelf.Views
                     setNextImage();
                 }
             }
+        }
+
+        private void NewBookShelfMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

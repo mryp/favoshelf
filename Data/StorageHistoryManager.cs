@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 
-namespace favoshelf
+namespace favoshelf.Data
 {
     /// <summary>
     /// ファイル・フォルダ利用履歴管理クラス

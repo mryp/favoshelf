@@ -1,4 +1,5 @@
-﻿using System;
+﻿using favoshelf.Data;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -46,7 +47,13 @@ namespace favoshelf.Views
         {
             base.OnNavigatedTo(e);
             
-            m_viewModel.InitFromToken(StorageHistoryManager.GetTokenList(StorageHistoryManager.DataType.Latest));
+            INavigateParameter param = e.Parameter as INavigateParameter;
+            if (param == null)
+            {
+                param = new QuickAccessNavigateParameter();
+            }
+
+            m_viewModel.Init(param);
             this.gridView.DataContext = m_viewModel;
         }
 

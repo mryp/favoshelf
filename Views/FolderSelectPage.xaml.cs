@@ -1,4 +1,5 @@
-﻿using System;
+﻿using favoshelf.Data;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -51,6 +52,15 @@ namespace favoshelf.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
+            INavigateParameter param = e.Parameter as INavigateParameter;
+            if (param == null)
+            {
+                param = new FolderRootNavigateParameter();
+            }
+            m_viewModel.Init(param);
+
+            /*
             FolderListItem item = e.Parameter as FolderListItem;
             if (item == null)
             {
@@ -60,6 +70,7 @@ namespace favoshelf.Views
             {
                 m_viewModel.InitFromFolderPath(item.Path);
             }
+            */
 
             this.gridView.DataContext = m_viewModel;
         }

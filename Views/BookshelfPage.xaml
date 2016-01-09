@@ -14,14 +14,8 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
-            <AppBarButton x:Name="sortButton" Icon="Sort" Label="並び替え" Click="AppBarButton_Click"/>
-            <!--
-            <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Menu Item 1"/>
-                <AppBarButton Label="Menu Item 2"/>
-                <AppBarButton Label="Menu Item 3"/>
-            </CommandBar.SecondaryCommands>
-            -->
+            <AppBarButton x:Name="addButton" Icon="Add" Label="追加" Click="addButton_Click"/>
+            <AppBarButton x:Name="sortButton" Icon="Sort" Label="並び替え" Click="sortButton_Click"/>
             <CommandBar.Content>
                 <ctl:PageHeader>
                     <ctl:PageHeader.HeaderContent>
