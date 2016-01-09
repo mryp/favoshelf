@@ -46,18 +46,23 @@ namespace favoshelf.Views
 
         private const int DESKTOP_THUM_IMAGE_WIDTH = 200;
         private const int DESKTOP_THUM_IMAGE_HEIGHT = 200;
+        private const int NORMAL_TEXT_SIZE = 16;
+        private const int SMALL_TEXT_SIZE = 12;
         private int m_thumWidth;
         private int m_thumHeight;
+        private int m_textSize;
 
         public FolderSelectViewModel()
         {
             Rect size = Window.Current.Bounds;
             m_thumWidth = (int)(size.Width / 3.0) - (4 * 4);
             m_thumHeight = m_thumWidth;
+            m_textSize = SMALL_TEXT_SIZE;
             if (m_thumWidth > DESKTOP_THUM_IMAGE_WIDTH)
             {
                 m_thumWidth = DESKTOP_THUM_IMAGE_WIDTH;
                 m_thumHeight = DESKTOP_THUM_IMAGE_HEIGHT;
+                m_textSize = NORMAL_TEXT_SIZE;
             }
             Debug.WriteLine("Window.Current.Bounds=" + Window.Current.Bounds.ToString());
             Debug.WriteLine("m_thumWidth=" + m_thumWidth.ToString() + " m_thumHeight=" + m_thumHeight.ToString());
@@ -82,7 +87,8 @@ namespace favoshelf.Views
                         Token = "",
                         Type = FolderListItem.FileType.Folder,
                         ThumWidth = m_thumWidth,
-                        ThumHeight = m_thumHeight
+                        ThumHeight = m_thumHeight,
+                        TextSize = m_textSize
                     });
                 }
 
@@ -96,7 +102,8 @@ namespace favoshelf.Views
                         Token = "",
                         Type = getFileType(file),
                         ThumWidth = m_thumWidth,
-                        ThumHeight = m_thumHeight
+                        ThumHeight = m_thumHeight,
+                        TextSize = m_textSize
                     };
                     ItemList.Add(item);
                 }
@@ -135,7 +142,8 @@ namespace favoshelf.Views
                         Token = token,
                         Type = FolderListItem.FileType.Folder,
                         ThumWidth = m_thumWidth,
-                        ThumHeight = m_thumHeight
+                        ThumHeight = m_thumHeight,
+                        TextSize = m_textSize
                     });
                 }
                 else
@@ -147,7 +155,8 @@ namespace favoshelf.Views
                         Token = token,
                         Type = getFileType((StorageFile)storageItem),
                         ThumWidth = m_thumWidth,
-                        ThumHeight = m_thumHeight
+                        ThumHeight = m_thumHeight,
+                        TextSize = m_textSize
                     };
                     ItemList.Add(item);
                 }

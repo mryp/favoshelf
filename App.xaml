@@ -21,12 +21,13 @@
                                Width="{Binding ThumWidth}" 
                                Height="{Binding ThumHeight}"/>
                     </Border>
-                    <Border Background="#FF333333" >
+                    <Border Background="#FF333333" Height="48">
                         <TextBlock Text="{Binding Name}" 
-                               Style="{StaticResource BaseTextBlockStyle}" 
-                               Height="50"
-                               Margin="8,2,0,0"
-                               TextWrapping="Wrap" />
+                                   Style="{StaticResource BaseTextBlockStyle}" 
+                                   FontSize="{Binding TextSize}"
+                                   VerticalAlignment="Center"
+                                   Margin="8,2,0,0"
+                                   TextWrapping="Wrap" />
                     </Border>
                 </StackPanel>
             </DataTemplate>

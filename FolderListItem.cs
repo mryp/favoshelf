@@ -40,6 +40,7 @@ namespace favoshelf
         private FileType m_type = FileType.OtherFile;
         private int m_thumWidth = 100;
         private int m_thumHeight = 100;
+        private int m_textSize = 16;
         private BitmapImage m_prevImage;
         #endregion
 
@@ -141,6 +142,22 @@ namespace favoshelf
                 if (value != m_thumHeight)
                 {
                     m_thumHeight = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// ファイル名表示サイズ
+        /// </summary>
+        public int TextSize
+        {
+            get { return m_textSize; }
+            set
+            {
+                if (value != m_textSize)
+                {
+                    m_textSize = value;
                     OnPropertyChanged();
                 }
             }
