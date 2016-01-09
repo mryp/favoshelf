@@ -20,9 +20,10 @@ namespace favoshelf
         public static bool IsImageFile(string path)
         {
             bool result = false;
-            switch (Path.GetExtension(path))
+            switch (Path.GetExtension(path).ToLower())
             {
                 case ".jpg":
+                case ".jpe":
                 case ".jpeg":
                 case ".png":
                     result = true;
@@ -50,7 +51,7 @@ namespace favoshelf
         public static bool IsArchiveFile(string path)
         {
             bool result = false;
-            switch (Path.GetExtension(path))
+            switch (Path.GetExtension(path).ToLower())
             {
                 case ".zip":
                     result = true;
