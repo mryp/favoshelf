@@ -48,6 +48,7 @@ namespace favoshelf.Views
                 folder = await StorageFolder.GetFolderFromPathAsync(param.Path);
             }
             StorageHistoryManager.AddStorage(folder, StorageHistoryManager.DataType.Latest);
+            this.ImageStorage = folder;
 
             IReadOnlyList<StorageFile> fileList = await getImageFilesAsync(folder);
             this.DataList.Clear();

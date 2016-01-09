@@ -39,6 +39,7 @@ namespace favoshelf.Views
 
             StorageFile zipFile = await StorageFile.GetFileFromPathAsync(param.Path);
             StorageHistoryManager.AddStorage(zipFile, StorageHistoryManager.DataType.Latest);
+            this.ImageStorage = zipFile;
 
             IRandomAccessStream randomStream = await zipFile.OpenReadAsync();
             Stream stream = randomStream.AsStreamForRead();

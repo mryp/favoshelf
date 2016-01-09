@@ -67,7 +67,25 @@ namespace favoshelf.Views
         /// <param name="e"></param>
         private void gridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            CommonPageManager.OnGridViewItemClick(this.Frame, e.ClickedItem as FolderListItem);
+            FolderListItem item = e.ClickedItem as FolderListItem;
+            if (item == null)
+            {
+                return;
+            }
+
+            if (item.Type != FolderListItem.FileType.Bookshelf)
+            {
+                return;
+            }
+            
+            Bookshelf bookshelf = m_db.SelectBookshelf(item.Name);
+            IEnumerable<BookItem> bookItemList = m_db.SelectBookList(bookshelf);
+            if (bookItemList.Count() == 0)
+            {
+                return;
+            }
+
+            this.Frame.Navigate(typeof(FolderSelectPage), new BookItemNavigateParameter(m_db, bookshelf.Label));
         }
 
         /// <summary>

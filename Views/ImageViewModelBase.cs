@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace favoshelf.Views
@@ -27,6 +28,7 @@ namespace favoshelf.Views
         private ObservableCollection<object> m_dataList = new ObservableCollection<object>();
         private BitmapImage m_indexImage;
         private string m_comanndTitle;
+        private IStorageItem m_storage = null;
         #endregion
 
         #region プロパティ
@@ -44,6 +46,22 @@ namespace favoshelf.Views
                 if (value != m_viewParam)
                 {
                     m_viewParam = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public IStorageItem ImageStorage
+        {
+            get
+            {
+                return m_storage;
+            }
+            set
+            {
+                if (value != m_storage)
+                {
+                    m_storage = value;
                     OnPropertyChanged();
                 }
             }

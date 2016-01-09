@@ -22,19 +22,20 @@ namespace favoshelf.Data
         }
     }
 
-    public class Book
+    public class BookItem
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         [Indexed]
         public int BookshelfId { get; set; }
         public string Token { get; set; }
-        public string Name { get; set; }
+        public string Path { get; set; }
         public DateTime Uptime { get; set; }
 
         public override string ToString()
         {
-            return "[" + BookshelfId.ToString() + "]" + Name;
+            return String.Format("Id={0}, BookshelfId={1}, Token={2}, Path={3}, Uptime={4}"
+                , Id, BookshelfId, Token, Path, Uptime.ToString("yyyy/MM/dd HH:mm:ss"));
         }
     }
 
@@ -48,7 +49,7 @@ namespace favoshelf.Data
             : base(new SQLitePlatformWinRT(), EnvPath.GetDatabaseFilePath())
         {
             CreateTable<Bookshelf>();
-            CreateTable<Book>();
+            CreateTable<BookItem>();
         }
 
         public Bookshelf SelectBookshelf(string label)
@@ -89,9 +90,47 @@ namespace favoshelf.Data
             }
         }
 
-        public IEnumerable<Book> SelectBookList(Bookshelf boolshelf)
+        public IEnumerable<BookItem> SelectBookList(Bookshelf boolshelf)
         {
-            return Table<Book>().Where(x => x.BookshelfId == boolshelf.Id);
+            return Table<BookItem>().Where(x => x.BookshelfId == boolshelf.Id);
+        }
+
+        public BookItem SelectBookItemFromToken(int bookshelfId, string token)
+        {
+            return (from s in Table<BookItem>()
+                    where (s.BookshelfId == bookshelfId && s.Token == token)
+                    select s).FirstOrDefault();
+        }
+
+        public BookItem SelectBookItemFromPath(int bookshelfId, string path)
+        {
+            return (from s in Table<BookItem>()
+                    where (s.BookshelfId == bookshelfId && s.Path == path)
+                    select s).FirstOrDefault();
+        }
+
+        public bool InsertBookItem(BookItem bookItem)
+        {
+            if (SelectBookItemFromToken(bookItem.BookshelfId, bookItem.Token) != null)
+            {
+                return false;
+            }
+
+            int id = Insert(bookItem);
+            bookItem.Id = id;
+            return true;
+        }
+
+        public bool DeleteBookItem(BookItem item)
+        {
+            if (Delete<BookItem>(item.Id) > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }

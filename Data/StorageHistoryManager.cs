@@ -38,16 +38,19 @@ namespace favoshelf.Data
         #endregion
 
         #region メソッド
-        public static void AddStorage(IStorageItem item, DataType type)
+        public static string AddStorage(IStorageItem item, DataType type)
         {
+            string token = "";
             if (type == DataType.Latest)
             {
-                StorageApplicationPermissions.MostRecentlyUsedList.Add(item, DateTime.Now.ToString("yyyyMMddHHmmss"));
+                token = StorageApplicationPermissions.MostRecentlyUsedList.Add(item, DateTime.Now.ToString("yyyyMMddHHmmss"));
             }
             else
             {
-                StorageApplicationPermissions.FutureAccessList.Add(item, type.ToString());
+                token = StorageApplicationPermissions.FutureAccessList.Add(item, type.ToString());
             }
+
+            return token;
         }
 
         public static void RemoveStorage(string token)

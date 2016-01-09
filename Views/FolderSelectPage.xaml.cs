@@ -60,18 +60,6 @@ namespace favoshelf.Views
             }
             m_viewModel.Init(param);
 
-            /*
-            FolderListItem item = e.Parameter as FolderListItem;
-            if (item == null)
-            {
-                m_viewModel.InitFromToken(StorageHistoryManager.GetTokenList(StorageHistoryManager.DataType.Folder));
-            }
-            else
-            {
-                m_viewModel.InitFromFolderPath(item.Path);
-            }
-            */
-
             this.gridView.DataContext = m_viewModel;
         }
 

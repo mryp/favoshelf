@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.AccessCache;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -53,16 +54,6 @@ namespace favoshelf.Views
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
 
             m_db = new BookshelfDatabase();
-            foreach (Bookshelf bookshelf in m_db.SelectBookshelfAll())
-            {
-                ToggleMenuFlyoutItem buttonItem = new ToggleMenuFlyoutItem()
-                {
-                    Text = bookshelf.Label,
-                    Tag = bookshelf,
-                };
-                buttonItem.Click += BookshelfButtonItem_Click;
-                bookshelfMenu.Items.Add(buttonItem);
-            }
         }
 
         private void BookshelfButtonItem_Click(object sender, RoutedEventArgs e)
@@ -79,13 +70,27 @@ namespace favoshelf.Views
             }
 
             Debug.WriteLine("label=" + bs.Label + " toggle=" + item.IsChecked.ToString());
-            if (item.IsChecked) //追加
+            if (item.IsChecked)
             {
-
+                //追加
+                string token = StorageHistoryManager.AddStorage(m_viewModel.ImageStorage, StorageHistoryManager.DataType.Bookshelf);
+                m_db.InsertBookItem(new BookItem()
+                {
+                    BookshelfId = bs.Id,
+                    Token = token,
+                    Path = m_viewModel.ImageStorage.Path,
+                    Uptime = DateTime.Now
+                });
             }
             else
             {
-
+                //削除
+                BookItem bookItem = m_db.SelectBookItemFromPath(bs.Id, m_viewModel.ImageStorage.Path);
+                if (bookItem != null)
+                {
+                    StorageHistoryManager.RemoveStorage(bookItem.Token);
+                    m_db.DeleteBookItem(bookItem);
+                }
             }
         }
 
@@ -116,6 +121,25 @@ namespace favoshelf.Views
             await m_viewModel.Init(param);
             this.DataContext = m_viewModel;
             setFirstImage();
+
+            foreach (Bookshelf bookshelf in m_db.SelectBookshelfAll())
+            {
+                ToggleMenuFlyoutItem buttonItem = new ToggleMenuFlyoutItem()
+                {
+                    Text = bookshelf.Label,
+                    Tag = bookshelf,
+                };
+                buttonItem.Click += BookshelfButtonItem_Click;
+                if (m_db.SelectBookItemFromPath(bookshelf.Id, m_viewModel.ImageStorage.Path) == null)
+                {
+                    buttonItem.IsChecked = false;
+                }
+                else
+                {
+                    buttonItem.IsChecked = true;
+                }
+                bookshelfMenu.Items.Add(buttonItem);
+            }
         }
 
         /// <summary>
@@ -242,7 +266,6 @@ namespace favoshelf.Views
 
         private void NewBookShelfMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }
