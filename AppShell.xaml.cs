@@ -81,6 +81,7 @@ namespace favoshelf
             SystemNavigationManager.GetForCurrentView().BackRequested += SystemNavigationManager_BackRequested;
 
             NavMenuList.ItemsSource = navlist;
+            NavMenuList.SelectedIndex = 0;
         }
 
 
