@@ -9,6 +9,7 @@ using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Input;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -28,6 +29,11 @@ namespace favoshelf.Views
         /// データモデル
         /// </summary>
         private FolderSelectViewModel m_viewModel;
+
+        /// <summary>
+        /// 画面繊維パラメーター
+        /// </summary>
+        private INavigateParameter m_naviParam;
         
         /// <summary>
         /// コンストラクタ
@@ -46,14 +52,14 @@ namespace favoshelf.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            
-            INavigateParameter param = e.Parameter as INavigateParameter;
-            if (param == null)
+
+            m_naviParam = e.Parameter as INavigateParameter;
+            if (m_naviParam == null)
             {
-                param = new QuickAccessNavigateParameter();
+                m_naviParam = new QuickAccessNavigateParameter();
             }
 
-            m_viewModel.Init(param);
+            m_viewModel.Init(m_naviParam);
             this.gridView.DataContext = m_viewModel;
         }
 
@@ -92,16 +98,22 @@ namespace favoshelf.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        private async void deleteAllButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender == deleteAllButton)
-            {
+            MessageDialog dialog = new MessageDialog("全履歴の削除を実行しますか？", "確認");
+            dialog.Commands.Add(new UICommand("OK", (command) => {
                 StorageHistoryManager.RemoveAll(StorageHistoryManager.DataType.Latest);
-            }
+                m_viewModel.Init(m_naviParam);
+            }));
+            dialog.Commands.Add(new UICommand("キャンセル"));
+            dialog.DefaultCommandIndex = 1;
+            await dialog.ShowAsync();
+
         }
 
-        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void gridView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
+            Debug.WriteLine("右クリック？" + sender.ToString());
         }
     }
 }

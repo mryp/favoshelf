@@ -6,7 +6,7 @@
     xmlns:ctl="using:favoshelf.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" SizeChanged="Page_SizeChanged">
+    mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">        
         <Grid.RowDefinitions>
@@ -14,7 +14,9 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
-            <AppBarButton x:Name="deleteAllButton" Icon="Delete" Label="履歴全削除" Click="AppBarButton_Click" />
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="deleteAllButton" Label="履歴全削除" Click="deleteAllButton_Click" />
+            </CommandBar.SecondaryCommands>
             <CommandBar.Content>
                 <ctl:PageHeader>
                     <ctl:PageHeader.HeaderContent>
@@ -32,6 +34,7 @@
                        ItemTemplate="{StaticResource FolderGridItemTemplate}"
                        Margin="4" 
                        IsItemClickEnabled="True"
+                       RightTapped="gridView_RightTapped"
                        ContainerContentChanging="gridView_ContainerContentChanging"
                        ItemClick="gridView_ItemClick">
             </GridView>
