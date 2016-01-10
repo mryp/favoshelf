@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
@@ -43,6 +44,9 @@ namespace favoshelf.Views
         /// </summary>
         private ImageViewModelBase m_viewModel;
 
+        /// <summary>
+        /// ローカルDB
+        /// </summary>
         private LocalDatabase m_db;
 
         /// <summary>
@@ -83,26 +87,34 @@ namespace favoshelf.Views
             await m_viewModel.Init(param);
             this.DataContext = m_viewModel;
             setFirstImage();
-            initBookshelf();
+            initBookCategory();
+            initScrapbookCategory();
         }
 
-        private void initBookshelf()
+        /// <summary>
+        /// 本棚リストを初期化する
+        /// </summary>
+        private void initBookCategory()
         {
-            foreach (BookCategory bookshelf in m_db.QueryBookCategoryAll())
+            foreach (BookCategory category in m_db.QueryBookCategoryAll())
             {
-                addBookshelfMenuItem(bookshelf);
+                addBookCategoryMenuItem(category);
             }
         }
 
-        private void addBookshelfMenuItem(BookCategory bookshelf)
+        /// <summary>
+        /// 本棚アイテムを作成しメニューに追加する
+        /// </summary>
+        /// <param name="category"></param>
+        private void addBookCategoryMenuItem(BookCategory category)
         {
             ToggleMenuFlyoutItem buttonItem = new ToggleMenuFlyoutItem()
             {
-                Text = bookshelf.Label,
-                Tag = bookshelf,
+                Text = category.Label,
+                Tag = category,
             };
             buttonItem.Click += BookshelfButtonItem_Click;
-            if (m_db.QueryBookItemFromPath(bookshelf.Id, m_viewModel.ImageStorage.Path) == null)
+            if (m_db.QueryBookItemFromPath(category.Id, m_viewModel.ImageStorage.Path) == null)
             {
                 buttonItem.IsChecked = false;
             }
@@ -111,6 +123,25 @@ namespace favoshelf.Views
                 buttonItem.IsChecked = true;
             }
             bookshelfMenu.Items.Add(buttonItem);
+        }
+
+        private void initScrapbookCategory()
+        {
+            foreach (ScrapbookCategory category in m_db.QueryScrapbookCategoryAll())
+            {
+                addScrapbookCategoryMenuItem(category);
+            }
+        }
+
+        private void addScrapbookCategoryMenuItem(ScrapbookCategory category)
+        {
+            MenuFlyoutItem buttonItem = new MenuFlyoutItem()
+            {
+                Text = category.FolderName,
+                Tag = category,
+            };
+            buttonItem.Click += ScrapbookButtonItem_Click;
+            scrapbookMenu.Items.Add(buttonItem);
         }
 
         /// <summary>
@@ -242,20 +273,20 @@ namespace favoshelf.Views
             {
                 return;
             }
-            BookCategory bs = item.Tag as BookCategory;
-            if (bs == null)
+            BookCategory category = item.Tag as BookCategory;
+            if (category == null)
             {
                 return;
             }
 
-            Debug.WriteLine("label=" + bs.Label + " toggle=" + item.IsChecked.ToString());
+            Debug.WriteLine("label=" + category.Label + " toggle=" + item.IsChecked.ToString());
             if (item.IsChecked)
             {
-                addBookshelf(bs);
+                addBookItem(category);
             }
             else
             {
-                removeBookshelf(bs);
+                removeBookItem(category);
             }
         }
 
@@ -270,38 +301,96 @@ namespace favoshelf.Views
             await dialog.ShowAsync();
             if (!string.IsNullOrEmpty(dialog.Label))
             {
-                BookCategory bookshelf = new BookCategory()
+                BookCategory category = new BookCategory()
                 {
                     Label = dialog.Label,
                 };
-                if (m_db.InsertBookCategory(bookshelf))
+                if (m_db.InsertBookCategory(category))
                 {
-                    addBookshelf(bookshelf);
-                    addBookshelfMenuItem(bookshelf);
+                    addBookItem(category);
+                    addBookCategoryMenuItem(category);
                 }
             }
         }
 
-        private void addBookshelf(BookCategory bs)
+        private void addBookItem(BookCategory category)
         {
             string token = StorageHistoryManager.AddStorage(m_viewModel.ImageStorage, StorageHistoryManager.DataType.Bookshelf);
             m_db.InsertBookItem(new BookItem()
             {
-                BookCategoryId = bs.Id,
+                BookCategoryId = category.Id,
                 Token = token,
                 Path = m_viewModel.ImageStorage.Path,
                 Uptime = DateTime.Now
             });
         }
 
-        private void removeBookshelf(BookCategory bs)
+        private void removeBookItem(BookCategory category)
         {
-            BookItem bookItem = m_db.QueryBookItemFromPath(bs.Id, m_viewModel.ImageStorage.Path);
+            BookItem bookItem = m_db.QueryBookItemFromPath(category.Id, m_viewModel.ImageStorage.Path);
             if (bookItem != null)
             {
                 StorageHistoryManager.RemoveStorage(bookItem.Token);
                 m_db.DeleteBookItem(bookItem);
             }
+        }
+
+        private void ScrapbookButtonItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem item = sender as MenuFlyoutItem;
+            if (item == null)
+            {
+                return;
+            }
+            ScrapbookCategory category = item.Tag as ScrapbookCategory;
+            if (category == null)
+            {
+                return;
+            }
+
+            Debug.WriteLine("FolderName=" + category.FolderName);
+            addScrapbookItem(category);
+        }
+
+        private async void NewScrapbookMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            InsertScrapbookDialog dialog = new InsertScrapbookDialog();
+            await dialog.ShowAsync();
+            if (!string.IsNullOrEmpty(dialog.FolderName))
+            {
+                ScrapbookCategory category = new ScrapbookCategory()
+                {
+                    FolderName = dialog.FolderName,
+                };
+                if (EnvPath.GetScrapbookSubFolder(category.FolderName) != null)
+                {
+                    if (m_db.InsertScrapbookCategory(category))
+                    {
+                        addScrapbookItem(category);
+                        addScrapbookCategoryMenuItem(category);
+                    }
+                }
+            }
+        }
+
+        private async void addScrapbookItem(ScrapbookCategory category)
+        {
+            string fileName = EnvPath.CreateScrapbookFileName();
+            StorageFolder folder = await EnvPath.GetScrapbookSubFolder(category.FolderName);
+            StorageFile copyFile = await m_viewModel.CopyFileAsync(folder, fileName);
+            if (copyFile == null)
+            {
+                Debug.WriteLine("ファイルコピー失敗");
+                return;
+            }
+
+            m_db.InsertScrapbookItem(new ScrapbookItem()
+            {
+                ScrapbookCategoryId = category.Id,
+                FileName = Path.GetFileName(copyFile.Path),
+                Uptime = DateTime.Now
+            });
+            Debug.WriteLine("保存成功 path=" + copyFile.Path);
         }
     }
 

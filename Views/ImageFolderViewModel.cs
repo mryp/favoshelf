@@ -108,6 +108,19 @@ namespace favoshelf.Views
             return await queryResult.GetFilesAsync();
         }
 
+        public override async Task<StorageFile> CopyFileAsync(StorageFolder folder, string fileName)
+        {
+            StorageFile imageFile = this.DataList[this.Index] as StorageFile;
+            if (imageFile == null)
+            {
+                return null;
+            }
+            string ext = Path.GetExtension(imageFile.Path);
+
+            StorageFile copyFile = await imageFile.CopyAsync(folder, fileName + ext, NameCollisionOption.ReplaceExisting);
+            return copyFile;
+        }
+
         public override void Dispose()
         {
             //なし

@@ -78,14 +78,14 @@ namespace favoshelf.Views
                 return;
             }
             
-            BookCategory bookshelf = m_db.QueryBookCategory(item.Name);
-            IEnumerable<BookItem> bookItemList = m_db.QueryBookItemList(bookshelf);
+            BookCategory category = m_db.QueryBookCategory(item.Name);
+            IEnumerable<BookItem> bookItemList = m_db.QueryBookItemList(category);
             if (bookItemList.Count() == 0)
             {
                 return;
             }
 
-            this.Frame.Navigate(typeof(FolderSelectPage), new BookItemNavigateParameter(m_db, bookshelf.Label));
+            this.Frame.Navigate(typeof(FolderSelectPage), new BookItemNavigateParameter(m_db, category.Label));
         }
 
         /// <summary>
@@ -108,23 +108,27 @@ namespace favoshelf.Views
             CommonPageManager.OnGridPointerReleased(this.Frame, e);
         }
         
+        /// <summary>
+        /// カテゴリの追加
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void addButton_Click(object sender, RoutedEventArgs e)
         {
             InsertBookshelfDialog dialog = new InsertBookshelfDialog();
             await dialog.ShowAsync();
             if (!string.IsNullOrEmpty(dialog.Label))
             {
-                BookCategory boolshelf = new BookCategory()
+                BookCategory category = new BookCategory()
                 {
                     Label = dialog.Label,
                 };
-                m_db.InsertBookCategory(boolshelf);
+                m_db.InsertBookCategory(category);
             }
         }
 
         private void sortButton_Click(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

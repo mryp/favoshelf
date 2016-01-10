@@ -14,10 +14,8 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
-            <AppBarButton Icon="Edit" Label="Edit"/>
-            <AppBarButton Icon="Delete" Label="Delete"/>
-            <AppBarSeparator/>
-            <AppBarToggleButton Icon="Sort" Label="Sort"/>
+            <AppBarButton x:Name="addButton" Icon="Add" Label="追加" Click="addButton_Click"/>
+            <AppBarButton x:Name="sortButton" Icon="Sort" Label="並び替え" Click="sortButton_Click"/>
             <CommandBar.SecondaryCommands>
                 <AppBarToggleButton Label="Menu Item 1"/>
                 <AppBarToggleButton Label="Menu Item 2"/>
@@ -32,8 +30,15 @@
             </CommandBar.Content>
         </CommandBar>
 
-        <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True">
-            <TextBlock Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Scrapbook"/>
+        <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True" PointerReleased="Grid_PointerReleased">
+            <GridView  x:Name="gridView"
+                       ItemsSource="{Binding Path=ItemList}" 
+                       ItemTemplate="{StaticResource FolderGridItemTemplate}"
+                       Margin="4" 
+                       IsItemClickEnabled="True"
+                       ContainerContentChanging="gridView_ContainerContentChanging"
+                       ItemClick="gridView_ItemClick">
+            </GridView>
         </Grid>
     </Grid>
 </Page>

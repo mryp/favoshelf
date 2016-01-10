@@ -243,6 +243,13 @@ namespace favoshelf.Views
             this.IndexImage = await GetImage(this.Index);
         }
 
+        /// <summary>
+        /// 指定したフォルダに現在のファイルをコピーする
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public abstract Task<StorageFile> CopyFileAsync(StorageFolder folder, string fileName);
         #region INotifyPropertyChanged member
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -118,6 +118,8 @@
     <Compile Include="Data\ImageNavigateParameter.cs" />
     <Compile Include="Data\INavigateParameter.cs" />
     <Compile Include="Data\QuickAccessNavigateParameter.cs" />
+    <Compile Include="Data\ScrapbookItemNavigateParameter.cs" />
+    <Compile Include="Data\ScrapbookNavigateParameter.cs" />
     <Compile Include="Data\StringUtils.cs" />
     <Compile Include="FileKind.cs" />
     <Compile Include="FolderListItem.cs" />
@@ -141,6 +143,9 @@
     <Compile Include="Views\ImageZipViewModel.cs" />
     <Compile Include="Views\InsertBookshelfDialog.xaml.cs">
       <DependentUpon>InsertBookshelfDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InsertScrapbookDialog.xaml.cs">
+      <DependentUpon>InsertScrapbookDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\QuickAccessPage.xaml.cs">
       <DependentUpon>QuickAccessPage.xaml</DependentUpon>
@@ -196,6 +201,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\InsertBookshelfDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InsertScrapbookDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

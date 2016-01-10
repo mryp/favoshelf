@@ -13,40 +13,42 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+//コンテンツ ダイアログ項目テンプレートについては、http://go.microsoft.com/fwlink/?LinkId=234238 を参照してください。
+
 namespace favoshelf.Views
 {
-    public sealed partial class InsertBookshelfDialog : ContentDialog
+    public sealed partial class InsertScrapbookDialog : ContentDialog
     {
-        public string Label
+        public string FolderName
         {
             get;
             private set;
         }
 
-        public InsertBookshelfDialog()
+        public InsertScrapbookDialog()
         {
             this.InitializeComponent();
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            if (string.IsNullOrEmpty(labelNameTextBox.Text))
+            if (string.IsNullOrEmpty(folderNameTextBox.Text))
             {
-                this.Label = "";
+                this.FolderName = "";
                 args.Cancel = true;
             }
             else
             {
-                this.Label = labelNameTextBox.Text;
+                this.FolderName = folderNameTextBox.Text;
             }
-            
+
             ContentDialogButtonClickDeferral deferral = args.GetDeferral();
             deferral.Complete();
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            this.Label = "";
+            this.FolderName = "";
         }
     }
 }

@@ -34,8 +34,8 @@ namespace favoshelf.Data
 
             List<FolderListItem> itemList = new List<FolderListItem>();
             Size thumSize = await FolderListItem.GetThumSizeFromWindow();
-            BookCategory bookshelf = m_db.QueryBookCategory(m_label);
-            foreach (BookItem bookItem in m_db.QueryBookItemList(bookshelf))
+            BookCategory category = m_db.QueryBookCategory(m_label);
+            foreach (BookItem bookItem in m_db.QueryBookItemList(category))
             {
                 if (!StorageApplicationPermissions.FutureAccessList.ContainsItem(bookItem.Token))
                 {

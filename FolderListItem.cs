@@ -35,6 +35,7 @@ namespace favoshelf
             ImageFile,
             OtherFile,
             Bookshelf,
+            Scrapbook,
         }
 
         private const int DESKTOP_THUM_IMAGE_WIDTH = 200;

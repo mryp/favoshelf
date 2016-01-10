@@ -14,7 +14,14 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
-            <AppBarButton Icon="Favorite" Label="スクラップブックに登録"/>
+            <AppBarButton Icon="Attach" Label="スクラップブックに登録">
+                <AppBarButton.Flyout>
+                    <MenuFlyout x:Name="scrapbookMenu">
+                        <MenuFlyoutItem Text="新しいスクラップブックを作成" Click="NewScrapbookMenuFlyoutItem_Click" />
+                        <MenuFlyoutSeparator/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
             <AppBarButton Icon="Tag" Label="本棚に登録">
                 <AppBarButton.Flyout>
                     <MenuFlyout x:Name="bookshelfMenu">
@@ -24,7 +31,17 @@
                 </AppBarButton.Flyout>
             </AppBarButton>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Menu Item 1"/>
+                <AppBarButton Label="Menu Item 1">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="aaa" />
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem Text="aaa" />
+                            <MenuFlyoutItem Text="aaa" />
+                            <MenuFlyoutItem Text="aaa" />
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
                 <AppBarButton Label="Menu Item 2"/>
                 <AppBarButton Label="Menu Item 3"/>
             </CommandBar.SecondaryCommands>

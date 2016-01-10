@@ -181,8 +181,8 @@ namespace favoshelf.Data
         {
             StorageFolder folder = await EnvPath.GetArchiveCoverFolder();
             string fileName = EnvPath.GetArchiveCoverFileName(path);
-
             IStorageItem imageFile = await folder.TryGetItemAsync(fileName);
+
             if (imageFile == null)
             {
                 using (await m_asyncLock.LockAsync())
@@ -199,9 +199,12 @@ namespace favoshelf.Data
                                 {
                                     if (FileKind.IsImageFile(entry.FullName))
                                     {
-                                        WriteableBitmap writeableBitmap = await CreateWriteableBitmap(entry);
-                                        await SaveToJpegFile(writeableBitmap, coverFile, 1000);
+                                        /*
+                                        WriteableBitmap writeableBitmap = await createWriteableBitmap(entry);
+                                        await saveToJpegFile(writeableBitmap, coverFile);
                                         imageFile = await folder.GetFileAsync(fileName);
+                                        */
+                                        imageFile = await SaveToFileFromZipEntry(entry, coverFile);
                                         break;
                                     }
                                 }
@@ -210,7 +213,7 @@ namespace favoshelf.Data
                     }
                 }
             }
-            
+
             if (imageFile != null)
             {
                 return await CreateThumbnailBitmap(imageFile, (uint)thumWidth);
@@ -221,7 +224,22 @@ namespace favoshelf.Data
             }
         }
 
-        public static async Task<WriteableBitmap> CreateWriteableBitmap(ZipArchiveEntry entry)
+        public static async Task<StorageFile> SaveToFileFromZipEntry(ZipArchiveEntry entry, StorageFile outputFile)
+        {
+            using (Stream entryStream = entry.Open())
+            {
+                using (IInputStream inputStream = entryStream.AsInputStream())
+                {
+                    byte[] buffBytes = new byte[entry.Length];
+                    await inputStream.ReadAsync(buffBytes.AsBuffer(), (uint)buffBytes.Length, InputStreamOptions.None);
+                    await FileIO.WriteBytesAsync(outputFile, buffBytes);
+                }
+            }
+
+            return outputFile;
+        }
+
+        private static async Task<WriteableBitmap> createWriteableBitmap(ZipArchiveEntry entry)
         {
             WriteableBitmap writableBitmap = null;
             using (Stream entryStream = entry.Open())
@@ -245,7 +263,7 @@ namespace favoshelf.Data
             return writableBitmap;
         }
 
-        public static async Task SaveToJpegFile(WriteableBitmap writeableBitmap, StorageFile outputFile, uint size)
+        private static async Task saveToJpegFile(WriteableBitmap writeableBitmap, StorageFile outputFile)
         {
             Guid encoderId = BitmapEncoder.JpegEncoderId;
             Stream stream = writeableBitmap.PixelBuffer.AsStream();

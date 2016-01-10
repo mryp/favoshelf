@@ -73,7 +73,32 @@ namespace favoshelf.Views
             BitmapImage bitmap = await BitmapUtils.CreateBitmap(entry);
             return bitmap;
         }
-        
+
+        /// <summary>
+        /// 現在開いている画像を指定した場所にコピーする
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public override async Task<StorageFile> CopyFileAsync(StorageFolder folder, string fileName)
+        {
+            ZipArchiveEntry entry = this.DataList[this.Index] as ZipArchiveEntry;
+            if (entry == null)
+            {
+                return null;
+            }
+
+            string ext = Path.GetExtension(entry.FullName);
+            StorageFile saveFile = await folder.CreateFileAsync(fileName + ext, CreationCollisionOption.ReplaceExisting);
+            StorageFile outputFile = await BitmapUtils.SaveToFileFromZipEntry(entry, saveFile);
+            if (outputFile == null)
+            {
+                return null;
+            }
+
+            return saveFile;
+        }
+
         /// <summary>
         /// オブジェクトの解放
         /// </summary>
