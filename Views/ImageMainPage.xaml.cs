@@ -43,7 +43,7 @@ namespace favoshelf.Views
         /// </summary>
         private ImageViewModelBase m_viewModel;
 
-        private BookshelfDatabase m_db;
+        private LocalDatabase m_db;
 
         /// <summary>
         /// コンストラクタ
@@ -53,45 +53,7 @@ namespace favoshelf.Views
             this.InitializeComponent();
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
 
-            m_db = new BookshelfDatabase();
-        }
-
-        private void BookshelfButtonItem_Click(object sender, RoutedEventArgs e)
-        {
-            ToggleMenuFlyoutItem item = sender as ToggleMenuFlyoutItem;
-            if (item == null)
-            {
-                return;
-            }
-            Bookshelf bs = item.Tag as Bookshelf;
-            if (bs == null)
-            {
-                return;
-            }
-
-            Debug.WriteLine("label=" + bs.Label + " toggle=" + item.IsChecked.ToString());
-            if (item.IsChecked)
-            {
-                //追加
-                string token = StorageHistoryManager.AddStorage(m_viewModel.ImageStorage, StorageHistoryManager.DataType.Bookshelf);
-                m_db.InsertBookItem(new BookItem()
-                {
-                    BookshelfId = bs.Id,
-                    Token = token,
-                    Path = m_viewModel.ImageStorage.Path,
-                    Uptime = DateTime.Now
-                });
-            }
-            else
-            {
-                //削除
-                BookItem bookItem = m_db.SelectBookItemFromPath(bs.Id, m_viewModel.ImageStorage.Path);
-                if (bookItem != null)
-                {
-                    StorageHistoryManager.RemoveStorage(bookItem.Token);
-                    m_db.DeleteBookItem(bookItem);
-                }
-            }
+            m_db = new LocalDatabase();
         }
 
         /// <summary>
@@ -121,25 +83,34 @@ namespace favoshelf.Views
             await m_viewModel.Init(param);
             this.DataContext = m_viewModel;
             setFirstImage();
+            initBookshelf();
+        }
 
+        private void initBookshelf()
+        {
             foreach (Bookshelf bookshelf in m_db.SelectBookshelfAll())
             {
-                ToggleMenuFlyoutItem buttonItem = new ToggleMenuFlyoutItem()
-                {
-                    Text = bookshelf.Label,
-                    Tag = bookshelf,
-                };
-                buttonItem.Click += BookshelfButtonItem_Click;
-                if (m_db.SelectBookItemFromPath(bookshelf.Id, m_viewModel.ImageStorage.Path) == null)
-                {
-                    buttonItem.IsChecked = false;
-                }
-                else
-                {
-                    buttonItem.IsChecked = true;
-                }
-                bookshelfMenu.Items.Add(buttonItem);
+                addBookshelfMenuItem(bookshelf);
             }
+        }
+
+        private void addBookshelfMenuItem(Bookshelf bookshelf)
+        {
+            ToggleMenuFlyoutItem buttonItem = new ToggleMenuFlyoutItem()
+            {
+                Text = bookshelf.Label,
+                Tag = bookshelf,
+            };
+            buttonItem.Click += BookshelfButtonItem_Click;
+            if (m_db.SelectBookItemFromPath(bookshelf.Id, m_viewModel.ImageStorage.Path) == null)
+            {
+                buttonItem.IsChecked = false;
+            }
+            else
+            {
+                buttonItem.IsChecked = true;
+            }
+            bookshelfMenu.Items.Add(buttonItem);
         }
 
         /// <summary>
@@ -264,8 +235,74 @@ namespace favoshelf.Views
             }
         }
 
-        private void NewBookShelfMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private void BookshelfButtonItem_Click(object sender, RoutedEventArgs e)
         {
+            ToggleMenuFlyoutItem item = sender as ToggleMenuFlyoutItem;
+            if (item == null)
+            {
+                return;
+            }
+            Bookshelf bs = item.Tag as Bookshelf;
+            if (bs == null)
+            {
+                return;
+            }
+
+            Debug.WriteLine("label=" + bs.Label + " toggle=" + item.IsChecked.ToString());
+            if (item.IsChecked)
+            {
+                addBookshelf(bs);
+            }
+            else
+            {
+                removeBookshelf(bs);
+            }
+        }
+
+        /// <summary>
+        /// 新しい本棚に追加
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void NewBookShelfMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            InsertBookshelfDialog dialog = new InsertBookshelfDialog();
+            await dialog.ShowAsync();
+            if (!string.IsNullOrEmpty(dialog.Label))
+            {
+                Bookshelf bookshelf = new Bookshelf()
+                {
+                    Label = dialog.Label,
+                };
+                if (m_db.InsertBoolshelf(bookshelf))
+                {
+                    addBookshelf(bookshelf);
+                    addBookshelfMenuItem(bookshelf);
+                }
+            }
+        }
+
+        private void addBookshelf(Bookshelf bs)
+        {
+            string token = StorageHistoryManager.AddStorage(m_viewModel.ImageStorage, StorageHistoryManager.DataType.Bookshelf);
+            m_db.InsertBookItem(new BookshelfItem()
+            {
+                BookshelfId = bs.Id,
+                Token = token,
+                Path = m_viewModel.ImageStorage.Path,
+                Uptime = DateTime.Now
+            });
+        }
+
+        private void removeBookshelf(Bookshelf bs)
+        {
+            BookshelfItem bookItem = m_db.SelectBookItemFromPath(bs.Id, m_viewModel.ImageStorage.Path);
+            if (bookItem != null)
+            {
+                StorageHistoryManager.RemoveStorage(bookItem.Token);
+                m_db.DeleteBookItem(bookItem);
+            }
         }
     }
+
 }

@@ -16,8 +16,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// 空白ページのアイテム テンプレートについては、http://go.microsoft.com/fwlink/?LinkId=234238 を参照してください
-
 namespace favoshelf
 {
     /// <summary>
@@ -38,12 +36,6 @@ namespace favoshelf
                 },
                 new NavMenuItem()
                 {
-                    Symbol = Symbol.Favorite,
-                    Label = "スクラップブック",
-                    DestPage = typeof(Views.ScrapbookPage)
-                },
-                new NavMenuItem()
-                {
                     Symbol = Symbol.Tag,
                     Label = "本棚",
                     DestPage = typeof(Views.BookshelfPage),
@@ -53,6 +45,12 @@ namespace favoshelf
                     Symbol = Symbol.MoveToFolder,
                     Label = "フォルダー",
                     DestPage = typeof(Views.FolderSelectPage),
+                },
+                new NavMenuItem()
+                {
+                    Symbol = Symbol.Attach,
+                    Label = "スクラップブック",
+                    DestPage = typeof(Views.ScrapbookPage)
                 },
             });
 

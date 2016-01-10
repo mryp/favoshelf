@@ -110,7 +110,7 @@
     </Compile>
     <Compile Include="Controls\NavMenuListView.cs" />
     <Compile Include="Data\BookItemNavigateParameter.cs" />
-    <Compile Include="Data\BookshelfDatabase.cs" />
+    <Compile Include="Data\LocalDatabase.cs" />
     <Compile Include="Data\BookshelfNavigateParameter.cs" />
     <Compile Include="Data\EnvPath.cs" />
     <Compile Include="Data\FolderPathNavigateParameter.cs" />

@@ -11,7 +11,7 @@ namespace favoshelf.Data
 {
     public class BookItemNavigateParameter : INavigateParameter
     {
-        private BookshelfDatabase m_db;
+        private LocalDatabase m_db;
         private string m_label;
 
         public BookItemNavigateParameter(string label)
@@ -19,7 +19,7 @@ namespace favoshelf.Data
             m_label = label;
         }
 
-        public BookItemNavigateParameter(BookshelfDatabase db, string label)
+        public BookItemNavigateParameter(LocalDatabase db, string label)
         {
             m_db = db;
             m_label = label;
@@ -29,13 +29,13 @@ namespace favoshelf.Data
         {
             if (m_db == null)
             {
-                m_db = new BookshelfDatabase();
+                m_db = new LocalDatabase();
             }
 
             List<FolderListItem> itemList = new List<FolderListItem>();
             Size thumSize = await FolderListItem.GetThumSizeFromWindow();
             Bookshelf bookshelf = m_db.SelectBookshelf(m_label);
-            foreach (BookItem bookItem in m_db.SelectBookList(bookshelf))
+            foreach (BookshelfItem bookItem in m_db.SelectBookList(bookshelf))
             {
                 if (!StorageApplicationPermissions.FutureAccessList.ContainsItem(bookItem.Token))
                 {

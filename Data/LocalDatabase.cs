@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace favoshelf.Data
 {
+    /// <summary>
+    /// 本棚テーブル
+    /// </summary>
     public class Bookshelf
     {
         [PrimaryKey, AutoIncrement]
@@ -22,7 +25,10 @@ namespace favoshelf.Data
         }
     }
 
-    public class BookItem
+    /// <summary>
+    /// 本棚に格納するための本情報テーブル
+    /// </summary>
+    public class BookshelfItem
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -40,18 +46,21 @@ namespace favoshelf.Data
     }
 
     /// <summary>
-    /// 本棚データベース
+    /// 内部管理用データベース
     /// 参考：http://igrali.com/2015/05/01/using-sqlite-in-windows-10-universal-apps/
     /// </summary>
-    public class BookshelfDatabase : SQLiteConnection
+    public class LocalDatabase : SQLiteConnection
     {
-        public BookshelfDatabase()
+        public LocalDatabase()
             : base(new SQLitePlatformWinRT(), EnvPath.GetDatabaseFilePath())
         {
+            //DropTable<Bookshelf>();
+            //DropTable<BookshelfItem>();
             CreateTable<Bookshelf>();
-            CreateTable<BookItem>();
+            CreateTable<BookshelfItem>();
         }
 
+        #region 本棚関連
         public Bookshelf SelectBookshelf(string label)
         {
             return (from s in Table<Bookshelf>()
@@ -73,9 +82,14 @@ namespace favoshelf.Data
                 return false;
             }
 
-            int id = Insert(bookshelf);
-            bookshelf.Id = id;
-            return true;
+            if (Insert(bookshelf) > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool DeleteBookshelfAll()
@@ -89,41 +103,36 @@ namespace favoshelf.Data
                 return false;
             }
         }
+        #endregion
 
-        public IEnumerable<BookItem> SelectBookList(Bookshelf boolshelf)
+        #region 本関連
+        public IEnumerable<BookshelfItem> SelectBookList(Bookshelf boolshelf)
         {
-            return Table<BookItem>().Where(x => x.BookshelfId == boolshelf.Id);
+            return Table<BookshelfItem>().Where(x => x.BookshelfId == boolshelf.Id);
         }
 
-        public BookItem SelectBookItemFromToken(int bookshelfId, string token)
+        public BookshelfItem SelectBookItemFromToken(int bookshelfId, string token)
         {
-            return (from s in Table<BookItem>()
+            return (from s in Table<BookshelfItem>()
                     where (s.BookshelfId == bookshelfId && s.Token == token)
                     select s).FirstOrDefault();
         }
 
-        public BookItem SelectBookItemFromPath(int bookshelfId, string path)
+        public BookshelfItem SelectBookItemFromPath(int bookshelfId, string path)
         {
-            return (from s in Table<BookItem>()
+            return (from s in Table<BookshelfItem>()
                     where (s.BookshelfId == bookshelfId && s.Path == path)
                     select s).FirstOrDefault();
         }
 
-        public bool InsertBookItem(BookItem bookItem)
+        public bool InsertBookItem(BookshelfItem bookItem)
         {
             if (SelectBookItemFromToken(bookItem.BookshelfId, bookItem.Token) != null)
             {
                 return false;
             }
 
-            int id = Insert(bookItem);
-            bookItem.Id = id;
-            return true;
-        }
-
-        public bool DeleteBookItem(BookItem item)
-        {
-            if (Delete<BookItem>(item.Id) > 0)
+            if (Insert(bookItem) > 0)
             {
                 return true;
             }
@@ -133,5 +142,17 @@ namespace favoshelf.Data
             }
         }
 
+        public bool DeleteBookItem(BookshelfItem item)
+        {
+            if (Delete<BookshelfItem>(item.Id) > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
     }
 }

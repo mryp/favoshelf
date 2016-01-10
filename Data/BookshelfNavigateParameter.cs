@@ -13,14 +13,14 @@ namespace favoshelf.Data
 {
     public class BookshelfNavigateParameter : INavigateParameter
     {
-        private BookshelfDatabase m_db;
+        private LocalDatabase m_db;
 
         public BookshelfNavigateParameter()
         {
             m_db = null;
         }
 
-        public BookshelfNavigateParameter(BookshelfDatabase db)
+        public BookshelfNavigateParameter(LocalDatabase db)
         {
             m_db = db;
         }
@@ -29,7 +29,7 @@ namespace favoshelf.Data
         {
             if (m_db == null)
             {
-                m_db = new BookshelfDatabase();
+                m_db = new LocalDatabase();
             }
             
             Size thumSize = await FolderListItem.GetThumSizeFromWindow();

@@ -30,7 +30,7 @@ namespace favoshelf.Views
         /// <summary>
         /// データベース
         /// </summary>
-        private BookshelfDatabase m_db;
+        private LocalDatabase m_db;
 
         /// <summary>
         /// コンストラクタ
@@ -40,7 +40,7 @@ namespace favoshelf.Views
             this.InitializeComponent();
 
             m_viewModel = new FolderSelectViewModel();
-            m_db = new BookshelfDatabase();
+            m_db = new LocalDatabase();
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace favoshelf.Views
             }
             
             Bookshelf bookshelf = m_db.SelectBookshelf(item.Name);
-            IEnumerable<BookItem> bookItemList = m_db.SelectBookList(bookshelf);
+            IEnumerable<BookshelfItem> bookItemList = m_db.SelectBookList(bookshelf);
             if (bookItemList.Count() == 0)
             {
                 return;
