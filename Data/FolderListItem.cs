@@ -1,4 +1,5 @@
 ﻿using favoshelf.Data;
+using favoshelf.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,7 +18,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace favoshelf
+namespace favoshelf.Data
 {
     /// <summary>
     /// フォルダ選択画面で表示する項目アイテム

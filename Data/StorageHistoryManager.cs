@@ -43,7 +43,10 @@ namespace favoshelf.Data
             string token = "";
             if (type == DataType.Latest)
             {
-                token = StorageApplicationPermissions.MostRecentlyUsedList.Add(item, DateTime.Now.ToString("yyyyMMddHHmmss"));
+                if (!EnvPath.IsLocalFolder(item.Path))
+                {
+                    token = StorageApplicationPermissions.MostRecentlyUsedList.Add(item, DateTime.Now.ToString("yyyyMMddHHmmss"));
+                }
             }
             else
             {

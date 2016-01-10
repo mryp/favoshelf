@@ -5,8 +5,17 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace favoshelf
+namespace favoshelf.Util
 {
+    /// <summary>
+    /// 非同期処理の排他ロックを行うためのクラス
+    /// 例：
+    /// AsyncLock masyncLock = new AsyncLock();
+    /// using (await m_asyncLock.LockAsync())
+    /// {
+    ///     ～処理～
+    /// }
+    /// </summary>
     public sealed class AsyncLock
     {
         private readonly SemaphoreSlim m_semaphore = new SemaphoreSlim(1, 1);

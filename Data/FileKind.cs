@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace favoshelf
+namespace favoshelf.Data
 {
     /// <summary>
     /// ファイル種別判定クラス
@@ -33,6 +33,10 @@ namespace favoshelf
             return result;
         }
 
+        /// <summary>
+        /// 画像ファイル検索用拡張子フィルターリストを取得数r
+        /// </summary>
+        /// <returns></returns>
         public static List<string> GetImageFilterList()
         {
             List<string> fileTypeFilter = new List<string>();

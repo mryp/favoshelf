@@ -7,7 +7,7 @@ using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
 
-namespace favoshelf.Data
+namespace favoshelf.Util
 {
     public class StringUtils
     {
