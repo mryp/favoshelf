@@ -88,13 +88,13 @@ namespace favoshelf.Views
 
         private void initBookshelf()
         {
-            foreach (Bookshelf bookshelf in m_db.SelectBookshelfAll())
+            foreach (BookCategory bookshelf in m_db.QueryBookCategoryAll())
             {
                 addBookshelfMenuItem(bookshelf);
             }
         }
 
-        private void addBookshelfMenuItem(Bookshelf bookshelf)
+        private void addBookshelfMenuItem(BookCategory bookshelf)
         {
             ToggleMenuFlyoutItem buttonItem = new ToggleMenuFlyoutItem()
             {
@@ -102,7 +102,7 @@ namespace favoshelf.Views
                 Tag = bookshelf,
             };
             buttonItem.Click += BookshelfButtonItem_Click;
-            if (m_db.SelectBookItemFromPath(bookshelf.Id, m_viewModel.ImageStorage.Path) == null)
+            if (m_db.QueryBookItemFromPath(bookshelf.Id, m_viewModel.ImageStorage.Path) == null)
             {
                 buttonItem.IsChecked = false;
             }
@@ -242,7 +242,7 @@ namespace favoshelf.Views
             {
                 return;
             }
-            Bookshelf bs = item.Tag as Bookshelf;
+            BookCategory bs = item.Tag as BookCategory;
             if (bs == null)
             {
                 return;
@@ -270,11 +270,11 @@ namespace favoshelf.Views
             await dialog.ShowAsync();
             if (!string.IsNullOrEmpty(dialog.Label))
             {
-                Bookshelf bookshelf = new Bookshelf()
+                BookCategory bookshelf = new BookCategory()
                 {
                     Label = dialog.Label,
                 };
-                if (m_db.InsertBoolshelf(bookshelf))
+                if (m_db.InsertBookCategory(bookshelf))
                 {
                     addBookshelf(bookshelf);
                     addBookshelfMenuItem(bookshelf);
@@ -282,21 +282,21 @@ namespace favoshelf.Views
             }
         }
 
-        private void addBookshelf(Bookshelf bs)
+        private void addBookshelf(BookCategory bs)
         {
             string token = StorageHistoryManager.AddStorage(m_viewModel.ImageStorage, StorageHistoryManager.DataType.Bookshelf);
-            m_db.InsertBookItem(new BookshelfItem()
+            m_db.InsertBookItem(new BookItem()
             {
-                BookshelfId = bs.Id,
+                BookCategoryId = bs.Id,
                 Token = token,
                 Path = m_viewModel.ImageStorage.Path,
                 Uptime = DateTime.Now
             });
         }
 
-        private void removeBookshelf(Bookshelf bs)
+        private void removeBookshelf(BookCategory bs)
         {
-            BookshelfItem bookItem = m_db.SelectBookItemFromPath(bs.Id, m_viewModel.ImageStorage.Path);
+            BookItem bookItem = m_db.QueryBookItemFromPath(bs.Id, m_viewModel.ImageStorage.Path);
             if (bookItem != null)
             {
                 StorageHistoryManager.RemoveStorage(bookItem.Token);

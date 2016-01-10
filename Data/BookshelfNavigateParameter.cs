@@ -34,13 +34,13 @@ namespace favoshelf.Data
             
             Size thumSize = await FolderListItem.GetThumSizeFromWindow();
             List<FolderListItem> itemList = new List<FolderListItem>();
-            IEnumerable<Bookshelf> bookshelfList = m_db.SelectBookshelfAll();
+            IEnumerable<BookCategory> bookshelfList = m_db.QueryBookCategoryAll();
             if (bookshelfList == null)
             {
                 return itemList;
             }
 
-            foreach (Bookshelf bookshelf in bookshelfList)
+            foreach (BookCategory bookshelf in bookshelfList)
             {
                 itemList.Add(new FolderListItem()
                 {

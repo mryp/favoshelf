@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 namespace favoshelf.Data
 {
     /// <summary>
-    /// 本棚テーブル
+    /// 本棚カテゴリテーブル
     /// </summary>
-    public class Bookshelf
+    public class BookCategory
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -28,12 +28,12 @@ namespace favoshelf.Data
     /// <summary>
     /// 本棚に格納するための本情報テーブル
     /// </summary>
-    public class BookshelfItem
+    public class BookItem
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         [Indexed]
-        public int BookshelfId { get; set; }
+        public int BookCategoryId { get; set; }
         public string Token { get; set; }
         public string Path { get; set; }
         public DateTime Uptime { get; set; }
@@ -41,7 +41,7 @@ namespace favoshelf.Data
         public override string ToString()
         {
             return String.Format("Id={0}, BookshelfId={1}, Token={2}, Path={3}, Uptime={4}"
-                , Id, BookshelfId, Token, Path, Uptime.ToString("yyyy/MM/dd HH:mm:ss"));
+                , Id, BookCategoryId, Token, Path, Uptime.ToString("yyyy/MM/dd HH:mm:ss"));
         }
     }
 
@@ -54,30 +54,30 @@ namespace favoshelf.Data
         public LocalDatabase()
             : base(new SQLitePlatformWinRT(), EnvPath.GetDatabaseFilePath())
         {
-            //DropTable<Bookshelf>();
-            //DropTable<BookshelfItem>();
-            CreateTable<Bookshelf>();
-            CreateTable<BookshelfItem>();
+            //DropTable<BookCategory>();
+            //DropTable<BookItem>();
+            CreateTable<BookCategory>();
+            CreateTable<BookItem>();
         }
 
         #region 本棚関連
-        public Bookshelf SelectBookshelf(string label)
+        public BookCategory QueryBookCategory(string label)
         {
-            return (from s in Table<Bookshelf>()
+            return (from s in Table<BookCategory>()
                     where s.Label == label
                     select s).FirstOrDefault();
         }
 
-        public IEnumerable<Bookshelf> SelectBookshelfAll()
+        public IEnumerable<BookCategory> QueryBookCategoryAll()
         {
-            return from shelf in Table<Bookshelf>()
+            return from shelf in Table<BookCategory>()
                    orderby shelf.Label
                    select shelf;
         }
 
-        public bool InsertBoolshelf(Bookshelf bookshelf)
+        public bool InsertBookCategory(BookCategory bookshelf)
         {
-            if (SelectBookshelf(bookshelf.Label) != null)
+            if (QueryBookCategory(bookshelf.Label) != null)
             {
                 return false;
             }
@@ -92,9 +92,9 @@ namespace favoshelf.Data
             }
         }
 
-        public bool DeleteBookshelfAll()
+        public bool DeleteBookCategoryAll()
         {
-            if (DeleteAll<Bookshelf>() > 0)
+            if (DeleteAll<BookCategory>() > 0)
             {
                 return true;
             }
@@ -106,28 +106,28 @@ namespace favoshelf.Data
         #endregion
 
         #region 本関連
-        public IEnumerable<BookshelfItem> SelectBookList(Bookshelf boolshelf)
+        public IEnumerable<BookItem> QueryBookItemList(BookCategory boolshelf)
         {
-            return Table<BookshelfItem>().Where(x => x.BookshelfId == boolshelf.Id);
+            return Table<BookItem>().Where(x => x.BookCategoryId == boolshelf.Id);
         }
 
-        public BookshelfItem SelectBookItemFromToken(int bookshelfId, string token)
+        public BookItem QueryBookItemFromToken(int bookshelfId, string token)
         {
-            return (from s in Table<BookshelfItem>()
-                    where (s.BookshelfId == bookshelfId && s.Token == token)
+            return (from s in Table<BookItem>()
+                    where (s.BookCategoryId == bookshelfId && s.Token == token)
                     select s).FirstOrDefault();
         }
 
-        public BookshelfItem SelectBookItemFromPath(int bookshelfId, string path)
+        public BookItem QueryBookItemFromPath(int bookshelfId, string path)
         {
-            return (from s in Table<BookshelfItem>()
-                    where (s.BookshelfId == bookshelfId && s.Path == path)
+            return (from s in Table<BookItem>()
+                    where (s.BookCategoryId == bookshelfId && s.Path == path)
                     select s).FirstOrDefault();
         }
 
-        public bool InsertBookItem(BookshelfItem bookItem)
+        public bool InsertBookItem(BookItem bookItem)
         {
-            if (SelectBookItemFromToken(bookItem.BookshelfId, bookItem.Token) != null)
+            if (QueryBookItemFromToken(bookItem.BookCategoryId, bookItem.Token) != null)
             {
                 return false;
             }
@@ -142,9 +142,9 @@ namespace favoshelf.Data
             }
         }
 
-        public bool DeleteBookItem(BookshelfItem item)
+        public bool DeleteBookItem(BookItem item)
         {
-            if (Delete<BookshelfItem>(item.Id) > 0)
+            if (Delete<BookItem>(item.Id) > 0)
             {
                 return true;
             }

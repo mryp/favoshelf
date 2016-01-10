@@ -78,8 +78,8 @@ namespace favoshelf.Views
                 return;
             }
             
-            Bookshelf bookshelf = m_db.SelectBookshelf(item.Name);
-            IEnumerable<BookshelfItem> bookItemList = m_db.SelectBookList(bookshelf);
+            BookCategory bookshelf = m_db.QueryBookCategory(item.Name);
+            IEnumerable<BookItem> bookItemList = m_db.QueryBookItemList(bookshelf);
             if (bookItemList.Count() == 0)
             {
                 return;
@@ -114,11 +114,11 @@ namespace favoshelf.Views
             await dialog.ShowAsync();
             if (!string.IsNullOrEmpty(dialog.Label))
             {
-                Bookshelf boolshelf = new Bookshelf()
+                BookCategory boolshelf = new BookCategory()
                 {
                     Label = dialog.Label,
                 };
-                m_db.InsertBoolshelf(boolshelf);
+                m_db.InsertBookCategory(boolshelf);
             }
         }
 
