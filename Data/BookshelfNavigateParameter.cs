@@ -47,7 +47,7 @@ namespace favoshelf.Data
                     Name = category.Label,
                     Path = category.Id.ToString(),
                     Token = "",
-                    Type = FolderListItem.FileType.Scrapbook,
+                    Type = FolderListItem.FileType.Bookshelf,
                     ThumWidth = (int)thumSize.Width,
                     ThumHeight = (int)thumSize.Height
                 });

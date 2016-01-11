@@ -8,6 +8,35 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <DataTemplate x:Key="FolderItemGridItemTemplate">
+            <StackPanel Background="#FF4B4B4B" 
+                        RightTapped="girdViewItem_RightTapped"
+                        Holding="gridViewItem_Holding"
+                        Width="{Binding ThumWidth}">
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="削除" Click="deleteItemButton_Click" />
+                    </MenuFlyout>
+                </FlyoutBase.AttachedFlyout>
+                <Border Background="#FF4B4B4B"  >
+                    <Image Source="{Binding PreviewImage}" 
+                           Stretch="Uniform"
+                           Width="{Binding ThumWidth}" 
+                           Height="{Binding ThumHeight}"/>
+                </Border>
+                <Border Background="#FF333333" Height="48">
+                    <TextBlock Text="{Binding Name}" 
+                               Style="{StaticResource BaseTextBlockStyle}" 
+                               FontSize="{Binding TextSize}"
+                               VerticalAlignment="Center"
+                               Margin="8,2,0,0"
+                               TextWrapping="Wrap" />
+                </Border>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -28,10 +57,10 @@
         <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True" PointerReleased="Grid_PointerReleased">
             <GridView  x:Name="gridView"
                        ItemsSource="{Binding Path=ItemList}" 
-                       ItemTemplate="{StaticResource FolderGridItemTemplate}"
+                       ItemTemplate="{StaticResource FolderItemGridItemTemplate}"
                        Margin="4" 
-                       IsItemClickEnabled="True"
                        ContainerContentChanging="gridView_ContainerContentChanging"
+                       IsItemClickEnabled="True"
                        ItemClick="gridView_ItemClick">
             </GridView>
         </Grid>

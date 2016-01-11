@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -129,6 +130,51 @@ namespace favoshelf.Views
 
         private void sortButton_Click(object sender, RoutedEventArgs e)
         {
+        }
+        
+        private void girdViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            if (e.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Mouse)
+            {
+                return;
+            }
+
+            showContextMenu(sender as FrameworkElement);
+            e.Handled = true;
+        }
+
+        private void gridViewItem_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            if (e.HoldingState != Windows.UI.Input.HoldingState.Started)
+            {
+                return;
+            }
+
+            showContextMenu(sender as FrameworkElement);
+            e.Handled = true;
+        }
+
+        private void showContextMenu(FrameworkElement senderElement)
+        {
+            FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
+            flyoutBase.ShowAt(senderElement);
+        }
+
+        private async void deleteItemButton_Click(object sender, RoutedEventArgs e)
+        {
+            FolderListItem item = (sender as MenuFlyoutItem).DataContext as FolderListItem;
+            if (item == null)
+            {
+                return;
+            }
+
+            MessageDialog dialog = new MessageDialog(item.Name + "を本棚から削除しますか？", "確認");
+            dialog.Commands.Add(new UICommand("OK", (command) => {
+                //TODO:ここに削除処理
+            }));
+            dialog.Commands.Add(new UICommand("キャンセル"));
+            dialog.DefaultCommandIndex = 1;
+            await dialog.ShowAsync();
         }
     }
 }

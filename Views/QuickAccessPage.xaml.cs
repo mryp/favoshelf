@@ -94,7 +94,7 @@ namespace favoshelf.Views
         }
 
         /// <summary>
-        /// ボタン押下処理
+        /// 全削除ボタン押下処理
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -108,12 +108,6 @@ namespace favoshelf.Views
             dialog.Commands.Add(new UICommand("キャンセル"));
             dialog.DefaultCommandIndex = 1;
             await dialog.ShowAsync();
-
-        }
-
-        private void gridView_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            Debug.WriteLine("右クリック？" + sender.ToString());
         }
     }
 }

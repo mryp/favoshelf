@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
         <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
             <CommandBar.SecondaryCommands>
-                <AppBarButton x:Name="deleteAllButton" Label="履歴全削除" Click="deleteAllButton_Click" />
+                <AppBarButton Label="履歴全削除" Click="deleteAllButton_Click" />
             </CommandBar.SecondaryCommands>
             <CommandBar.Content>
                 <ctl:PageHeader>
@@ -33,9 +33,8 @@
                        ItemsSource="{Binding Path=ItemList}" 
                        ItemTemplate="{StaticResource FolderGridItemTemplate}"
                        Margin="4" 
-                       IsItemClickEnabled="True"
-                       RightTapped="gridView_RightTapped"
                        ContainerContentChanging="gridView_ContainerContentChanging"
+                       IsItemClickEnabled="True"
                        ItemClick="gridView_ItemClick">
             </GridView>
         </Grid>
