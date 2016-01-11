@@ -29,6 +29,7 @@ namespace favoshelf.Views
         private BitmapImage m_indexImage;
         private string m_comanndTitle;
         private IStorageItem m_storage = null;
+        private bool m_isBusy = false;
         #endregion
 
         #region プロパティ
@@ -51,6 +52,9 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// 初期化時に読み込んだファイルまたはフォルダ情報
+        /// </summary>
         public IStorageItem ImageStorage
         {
             get
@@ -142,6 +146,25 @@ namespace favoshelf.Views
                 }
             }
         }
+
+        /// <summary>
+        /// 画像読み込み処理中かどうか
+        /// </summary>
+        public bool IsBusy
+        {
+            get
+            {
+                return m_isBusy;
+            }
+            set
+            {
+                if (value != m_isBusy)
+                {
+                    m_isBusy = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         #endregion
 
         /// <summary>
@@ -212,7 +235,9 @@ namespace favoshelf.Views
         /// <returns></returns>
         public async void GetImage()
         {
+            this.IsBusy = true;
             this.IndexImage = await GetImage(this.Index);
+            this.IsBusy = false;
         }
 
         /// <summary>
@@ -225,8 +250,14 @@ namespace favoshelf.Views
             {
                 return;
             }
+            if (this.IsBusy)
+            {
+                return;
+            }
+            this.IsBusy = true;
             this.Index++;
             this.IndexImage = await GetImage(this.Index);
+            this.IsBusy = false;
         }
 
         /// <summary>
@@ -239,8 +270,14 @@ namespace favoshelf.Views
             {
                 return;
             }
+            if (this.IsBusy)
+            {
+                return;
+            }
+            this.IsBusy = true;
             this.Index--;
             this.IndexImage = await GetImage(this.Index);
+            this.IsBusy = false;
         }
 
         /// <summary>

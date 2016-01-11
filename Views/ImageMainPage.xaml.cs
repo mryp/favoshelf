@@ -125,6 +125,9 @@ namespace favoshelf.Views
             bookshelfMenu.Items.Add(buttonItem);
         }
 
+        /// <summary>
+        /// スクラップブックカテゴリ一覧を作成する
+        /// </summary>
         private void initScrapbookCategory()
         {
             foreach (ScrapbookCategory category in m_db.QueryScrapbookCategoryAll())
@@ -133,6 +136,10 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// スクラップブックカテゴリをメニューに追加する
+        /// </summary>
+        /// <param name="category"></param>
         private void addScrapbookCategoryMenuItem(ScrapbookCategory category)
         {
             MenuFlyoutItem buttonItem = new MenuFlyoutItem()
@@ -266,6 +273,11 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// カテゴリに登録・解除を行う
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BookshelfButtonItem_Click(object sender, RoutedEventArgs e)
         {
             ToggleMenuFlyoutItem item = sender as ToggleMenuFlyoutItem;
@@ -291,7 +303,7 @@ namespace favoshelf.Views
         }
 
         /// <summary>
-        /// 新しい本棚に追加
+        /// 新しい本棚を作成して追加
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -313,6 +325,10 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// 指定した本棚カテゴリに追加する
+        /// </summary>
+        /// <param name="category"></param>
         private void addBookItem(BookCategory category)
         {
             string token = StorageHistoryManager.AddStorage(m_viewModel.ImageStorage, StorageHistoryManager.DataType.Bookshelf);
@@ -325,6 +341,10 @@ namespace favoshelf.Views
             });
         }
 
+        /// <summary>
+        /// 指定した本棚カテゴリから削除する
+        /// </summary>
+        /// <param name="category"></param>
         private void removeBookItem(BookCategory category)
         {
             BookItem bookItem = m_db.QueryBookItemFromPath(category.Id, m_viewModel.ImageStorage.Path);
@@ -335,6 +355,11 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// スクラップ登録ボタンを押下した時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ScrapbookButtonItem_Click(object sender, RoutedEventArgs e)
         {
             MenuFlyoutItem item = sender as MenuFlyoutItem;
@@ -352,6 +377,11 @@ namespace favoshelf.Views
             addScrapbookItem(category);
         }
 
+        /// <summary>
+        /// 新しいスクラップカテゴリを作成し登録する
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void NewScrapbookMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             InsertScrapbookDialog dialog = new InsertScrapbookDialog();
@@ -373,6 +403,10 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// スクラップカテゴリに現在表示している画像を登録する
+        /// </summary>
+        /// <param name="category"></param>
         private async void addScrapbookItem(ScrapbookCategory category)
         {
             string fileName = EnvPath.CreateScrapbookFileName();
