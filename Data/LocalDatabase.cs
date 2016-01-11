@@ -139,6 +139,22 @@ namespace favoshelf.Data
                 return false;
             }
         }
+        
+        public bool DeleteBookCategory(BookCategory category)
+        {
+            foreach (BookItem item in QueryBookItemList(category))
+            {
+                DeleteBookItem(item);
+            }
+            if (Delete<BookCategory>(category.Id) > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         #endregion
 
         #region 本関連

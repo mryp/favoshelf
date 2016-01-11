@@ -34,6 +34,11 @@ namespace favoshelf.Views
         private LocalDatabase m_db;
 
         /// <summary>
+        /// 画面遷移パラメーター
+        /// </summary>
+        private INavigateParameter m_naviParam;
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         public BookshelfPage()
@@ -52,12 +57,12 @@ namespace favoshelf.Views
         {
             base.OnNavigatedTo(e);
 
-            INavigateParameter param = e.Parameter as INavigateParameter;
-            if (param == null)
+            m_naviParam = e.Parameter as INavigateParameter;
+            if (m_naviParam == null)
             {
-                param = new BookshelfNavigateParameter(m_db);
+                m_naviParam = new BookshelfNavigateParameter(m_db);
             }
-            m_viewModel.Init(param);
+            m_viewModel.Init(m_naviParam);
             this.gridView.DataContext = m_viewModel;
         }
 
@@ -125,6 +130,8 @@ namespace favoshelf.Views
                     Label = dialog.Label,
                 };
                 m_db.InsertBookCategory(category);
+
+                m_viewModel.Init(m_naviParam);
             }
         }
 
@@ -132,6 +139,11 @@ namespace favoshelf.Views
         {
         }
         
+        /// <summary>
+        /// リスト項目を右クリックした時（マウス用）
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void girdViewItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             if (e.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Mouse)
@@ -143,6 +155,11 @@ namespace favoshelf.Views
             e.Handled = true;
         }
 
+        /// <summary>
+        /// リスト項目を長押しした時（タッチ用）
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gridViewItem_Holding(object sender, HoldingRoutedEventArgs e)
         {
             if (e.HoldingState != Windows.UI.Input.HoldingState.Started)
@@ -154,12 +171,21 @@ namespace favoshelf.Views
             e.Handled = true;
         }
 
+        /// <summary>
+        /// リストアイテム用コンテキストを表示する
+        /// </summary>
+        /// <param name="senderElement"></param>
         private void showContextMenu(FrameworkElement senderElement)
         {
             FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
             flyoutBase.ShowAt(senderElement);
         }
 
+        /// <summary>
+        /// 指定したアイテムを削除する
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void deleteItemButton_Click(object sender, RoutedEventArgs e)
         {
             FolderListItem item = (sender as MenuFlyoutItem).DataContext as FolderListItem;
@@ -171,6 +197,14 @@ namespace favoshelf.Views
             MessageDialog dialog = new MessageDialog(item.Name + "を本棚から削除しますか？", "確認");
             dialog.Commands.Add(new UICommand("OK", (command) => {
                 //TODO:ここに削除処理
+                BookCategory category = m_db.QueryBookCategory(item.Name);
+                foreach (BookItem bookItem in m_db.QueryBookItemList(category))
+                {
+                    StorageHistoryManager.RemoveStorage(bookItem.Token);
+                }
+                m_db.DeleteBookCategory(category);
+
+                m_viewModel.Init(m_naviParam);
             }));
             dialog.Commands.Add(new UICommand("キャンセル"));
             dialog.DefaultCommandIndex = 1;
