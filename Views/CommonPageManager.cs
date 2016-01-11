@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Input;
 using Windows.UI.Input;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -28,7 +29,8 @@ namespace favoshelf.Views
             switch (item.Type)
             {
                 case FolderListItem.FileType.Folder:
-                    result = frame.Navigate(typeof(FolderSelectPage), new FolderPathNavigateParameter(item.Path));
+                    navigateFolder(frame, item);
+                    result = true;
                     break;
                 case FolderListItem.FileType.Archive:
                     result = frame.Navigate(typeof(ImageMainPage), 
@@ -44,6 +46,32 @@ namespace favoshelf.Views
             }
 
             return result;
+        }
+
+        private static async void navigateFolder(Frame frame, FolderListItem item)
+        {
+            if (item.Type != FolderListItem.FileType.Folder)
+            {
+                return;
+            }
+
+            LocalDatabase db = new LocalDatabase();
+            if (db.QueryBookmark(item.Path) == null)
+            {
+                frame.Navigate(typeof(FolderSelectPage), new FolderPathNavigateParameter(item.Path));
+                return;
+            }
+
+            MessageDialog dialog = new MessageDialog("しおりが見つかりました。続きから表示しますか？", "確認");
+            dialog.Commands.Add(new UICommand("続きから画像を表示", (command) => {
+                frame.Navigate(typeof(ImageMainPage),
+                    new ImageNavigateParameter(ImageNavigateParameter.DataType.Folder, item.Path));
+            }));
+            dialog.Commands.Add(new UICommand("ファイル一覧", (command) => {
+                frame.Navigate(typeof(FolderSelectPage), new FolderPathNavigateParameter(item.Path));
+            }));
+            dialog.DefaultCommandIndex = 0;
+            await dialog.ShowAsync();
         }
         
         public static void OnGridContentChanging(FolderListItem listItem, bool inRecycleQueue)

@@ -50,6 +50,16 @@ namespace favoshelf.Views
         private LocalDatabase m_db;
 
         /// <summary>
+        /// ナビメニューを戻すためのデフォルト値
+        /// </summary>
+        private bool m_isOpenNaviDefault = false;
+
+        /// <summary>
+        /// ブックマーク
+        /// </summary>
+        private Bookmark m_bookmark;
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         public ImageMainPage()
@@ -86,20 +96,47 @@ namespace favoshelf.Views
 
             await m_viewModel.Init(param);
             this.DataContext = m_viewModel;
-            setFirstImage();
+            initBookmark();
             initBookCategory();
             initScrapbookCategory();
+            setFirstImage();
         }
 
+        /// <summary>
+        /// 画面から離れるとき
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            
+
+            m_bookmark.PageIndex = m_viewModel.Index;
+            m_db.InsertBookmark(m_bookmark);
+
             //ナビメニューの表示状態を元に戻す
             AppShell shell = Window.Current.Content as AppShell;
             if (shell != null)
             {
                 shell.IsNaviMenuPaneOpen = m_isOpenNaviDefault;
+            }
+        }
+
+        /// <summary>
+        /// ブックマークの読み込みと初期化
+        /// </summary>
+        private void initBookmark()
+        {
+            m_bookmark = m_db.QueryBookmark(m_viewModel.ImageStorage.Path);
+            if (m_bookmark == null)
+            {
+                m_bookmark = new Bookmark()
+                {
+                    Path = m_viewModel.ImageStorage.Path,
+                    PageIndex = 0,
+                    MaxPageCount = m_viewModel.DataList.Count,
+                    Uptime = DateTime.Now,
+                };
+                m_db.InsertBookmark(m_bookmark);
             }
         }
 
@@ -183,7 +220,6 @@ namespace favoshelf.Views
             }
         }
 
-        private bool m_isOpenNaviDefault = false;
         /// <summary>
         /// 最初の画面を表示する
         /// </summary>
@@ -194,6 +230,10 @@ namespace favoshelf.Views
             {
                 m_isOpenNaviDefault = shell.IsNaviMenuPaneOpen;
                 shell.IsNaviMenuPaneOpen = false;
+            }
+            if (m_viewModel.Index == 0)
+            {
+                m_viewModel.Index = m_bookmark.PageIndex;
             }
             m_viewModel.GetImage();
         }

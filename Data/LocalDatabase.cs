@@ -78,9 +78,28 @@ namespace favoshelf.Data
         }
     }
 
+    public class Bookmark
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
+        [Unique]
+        public string Path { get; set; }
+        public int PageIndex { get; set; }
+        public int MaxPageCount { get; set; }
+        public DateTime Uptime { get; set; }
+
+        public override string ToString()
+        {
+            return String.Format("Id={0}, PageIndex={1}, MaxPageCount={2}, Uptime={3}"
+                , Id, PageIndex, MaxPageCount, Uptime.ToString("yyyy/MM/dd HH:mm:ss"));
+        }
+    }
+
     /// <summary>
     /// 内部管理用データベース
     /// 参考：http://igrali.com/2015/05/01/using-sqlite-in-windows-10-universal-apps/
+    /// GitHub: https://github.com/oysteinkrog/SQLite.Net-PCL
     /// </summary>
     public class LocalDatabase : SQLiteConnection
     {
@@ -94,6 +113,8 @@ namespace favoshelf.Data
 
             CreateTable<ScrapbookCategory>();
             CreateTable<ScrapbookItem>();
+
+            CreateTable<Bookmark>();
         }
 
         #region 本棚関連
@@ -285,6 +306,48 @@ namespace favoshelf.Data
         public bool DeleteScrapbookItem(ScrapbookItem item)
         {
             if (Delete<ScrapbookItem>(item.Id) > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
+
+        #region ブックマーク関連
+        public Bookmark QueryBookmark(string path)
+        {
+            return (from s in Table<Bookmark>()
+                    where (s.Path == path)
+                    select s).FirstOrDefault();
+        }
+
+        public bool InsertBookmark(Bookmark bookmark)
+        {
+            bookmark.Uptime = DateTime.Now;
+            if (QueryBookmark(bookmark.Path) != null)
+            {
+                if (Update(bookmark) > 0)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (Insert(bookmark) > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
+        public bool DeleteBookmark(Bookmark bookmark)
+        {
+            if (Delete<Bookmark>(bookmark.Id) > 0)
             {
                 return true;
             }
