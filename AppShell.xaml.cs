@@ -81,8 +81,7 @@ namespace favoshelf
             NavMenuList.ItemsSource = navlist;
             NavMenuList.SelectedIndex = 0;
         }
-
-
+        
         public Frame AppFrame { get { return this.frame; } }
 
         /// <summary>
@@ -134,6 +133,17 @@ namespace favoshelf
             }
         }
 
+        public bool IsNaviMenuPaneOpen
+        {
+            get
+            {
+                return this.RootSplitView.IsPaneOpen;
+            }
+            set
+            {
+                this.RootSplitView.IsPaneOpen = value;
+            }
+        }
         #region BackRequested Handlers
 
         private void SystemNavigationManager_BackRequested(object sender, BackRequestedEventArgs e)

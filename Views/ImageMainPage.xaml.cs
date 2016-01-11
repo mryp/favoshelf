@@ -67,7 +67,7 @@ namespace favoshelf.Views
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
+            
             ImageNavigateParameter param = e.Parameter as ImageNavigateParameter;
             if (param == null)
             {
@@ -89,6 +89,18 @@ namespace favoshelf.Views
             setFirstImage();
             initBookCategory();
             initScrapbookCategory();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            
+            //ナビメニューの表示状態を元に戻す
+            AppShell shell = Window.Current.Content as AppShell;
+            if (shell != null)
+            {
+                shell.IsNaviMenuPaneOpen = m_isOpenNaviDefault;
+            }
         }
 
         /// <summary>
@@ -170,12 +182,19 @@ namespace favoshelf.Views
                     break;
             }
         }
-        
+
+        private bool m_isOpenNaviDefault = false;
         /// <summary>
         /// 最初の画面を表示する
         /// </summary>
         private void setFirstImage()
         {
+            AppShell shell = Window.Current.Content as AppShell;
+            if (shell != null)
+            {
+                m_isOpenNaviDefault = shell.IsNaviMenuPaneOpen;
+                shell.IsNaviMenuPaneOpen = false;
+            }
             m_viewModel.GetImage();
         }
 
