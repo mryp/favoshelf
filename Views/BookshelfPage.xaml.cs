@@ -56,7 +56,7 @@ namespace favoshelf.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
+            
             m_naviParam = e.Parameter as INavigateParameter;
             if (m_naviParam == null)
             {

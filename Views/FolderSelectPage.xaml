@@ -1,13 +1,37 @@
-﻿<Page
+﻿<util:LayoutAwarePage
     x:Class="favoshelf.Views.FolderSelectPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:top="using:favoshelf"
     xmlns:local="using:favoshelf.Views"
+    xmlns:util="using:favoshelf.Util"
     xmlns:ctl="using:favoshelf.Controls"
+    xmlns:data="using:favoshelf.Data"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="FolderItemGridItemTemplate" x:DataType="data:FolderListItem">
+            <StackPanel Background="#FF4B4B4B"
+                        Width="{x:Bind ThumWidth}">
+                <Border Background="#FF4B4B4B" 
+                        Width="{x:Bind ThumWidth, Mode=OneWay}" 
+                        Height="{x:Bind ThumHeight, Mode=OneWay}">
+                    <Image Source="{x:Bind PreviewImage, Mode=OneWay}" 
+                           Stretch="Uniform" x:Phase="1" />
+                </Border>
+                <Border Background="#FF333333" Height="48">
+                    <TextBlock Text="{x:Bind Name, Mode=OneWay}" 
+                               Style="{StaticResource BaseTextBlockStyle}" 
+                               FontSize="{x:Bind TextSize, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               Margin="8,2,0,0"
+                               TextWrapping="Wrap" />
+                </Border>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -25,15 +49,16 @@
             </CommandBar.Content>
         </CommandBar>
         <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True" PointerReleased="Grid_PointerReleased">
-            <GridView  x:Name="gridView"
-                       ItemsSource="{Binding Path=ItemList}" 
-                       ItemTemplate="{StaticResource FolderGridItemTemplate}"
+            <ctl:FolderGridView  x:Name="gridView"
+                       ItemsSource="{x:Bind ViewModel.ItemList}" 
+                       ItemTemplate="{StaticResource FolderItemGridItemTemplate}"
                        Margin="4" 
-                       IsItemClickEnabled="True"
+                       ScrollViewerSizeChanged="gridView_ScrollViewerSizeChanged"
                        ContainerContentChanging="gridView_ContainerContentChanging"
+                       IsItemClickEnabled="True"
                        ItemClick="gridView_ItemClick">
-            </GridView>
+            </ctl:FolderGridView>
         </Grid>
 
     </Grid>
-</Page>
+</util:LayoutAwarePage>

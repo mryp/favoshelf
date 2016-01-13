@@ -485,6 +485,19 @@ namespace favoshelf.Views
             });
             Debug.WriteLine("保存成功 path=" + copyFile.Path);
         }
+
+        private void touchPanel_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            Debug.WriteLine("touchPanel_ManipulationDelta delta=" + e.Delta.ToString());
+            if (e.Delta.Translation.X > 10)
+            {
+                Debug.WriteLine("Right:" + e.Delta.Translation.X.ToString());
+            }
+            else if (e.Delta.Translation.X < -10)
+            {
+                Debug.WriteLine("Left:" + e.Delta.Translation.Y.ToString());
+            }
+        }
     }
 
 }

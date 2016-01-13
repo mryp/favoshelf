@@ -103,6 +103,7 @@
     <Compile Include="AppShell.xaml.cs">
       <DependentUpon>AppShell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FolderGridView.cs" />
     <Compile Include="Util\AsyncLock.cs" />
     <Compile Include="Util\BitmapUtils.cs" />
     <Compile Include="Controls\HeaderContent.xaml.cs">
@@ -120,12 +121,14 @@
     <Compile Include="Data\QuickAccessNavigateParameter.cs" />
     <Compile Include="Data\ScrapbookItemNavigateParameter.cs" />
     <Compile Include="Data\ScrapbookNavigateParameter.cs" />
+    <Compile Include="Util\LayoutAwarePage.cs" />
     <Compile Include="Util\StringUtils.cs" />
     <Compile Include="Data\FileKind.cs" />
     <Compile Include="Data\FolderListItem.cs" />
     <Compile Include="NavMenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\StorageHistoryManager.cs" />
+    <Compile Include="Util\SuspensionManager.cs" />
     <Compile Include="Views\BookshelfPage.xaml.cs">
       <DependentUpon>BookshelfPage.xaml</DependentUpon>
     </Compile>

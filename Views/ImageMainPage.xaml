@@ -65,10 +65,10 @@
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <Border Grid.Row="0" Grid.Column="0" x:Name="touchPanelTopLeft" Background="Transparent" Margin="0" PointerWheelChanged="touchPanel_PointerWheelChanged" PointerReleased="touchPanel_PointerReleased"/>
-                <Border Grid.Row="0" Grid.Column="1" x:Name="touchPanelTopRight" Background="Transparent" Margin="0" PointerWheelChanged="touchPanel_PointerWheelChanged" PointerReleased="touchPanel_PointerReleased"/>
-                <Border Grid.Row="1" Grid.Column="0" x:Name="touchPanelBottomLeft" Background="Transparent" Margin="0" PointerWheelChanged="touchPanel_PointerWheelChanged" PointerReleased="touchPanel_PointerReleased"/>
-                <Border Grid.Row="1" Grid.Column="1" x:Name="touchPanelBottomRight" Background="Transparent" Margin="0" PointerWheelChanged="touchPanel_PointerWheelChanged" PointerReleased="touchPanel_PointerReleased"/>
+                <Border Grid.Row="0" Grid.Column="0" x:Name="touchPanelTopLeft" Background="Transparent" Margin="0" PointerWheelChanged="touchPanel_PointerWheelChanged" PointerReleased="touchPanel_PointerReleased" ManipulationDelta="touchPanel_ManipulationDelta" />
+                <Border Grid.Row="0" Grid.Column="1" x:Name="touchPanelTopRight" Background="Transparent" Margin="0" PointerWheelChanged="touchPanel_PointerWheelChanged" PointerReleased="touchPanel_PointerReleased" ManipulationDelta="touchPanel_ManipulationDelta" />
+                <Border Grid.Row="1" Grid.Column="0" x:Name="touchPanelBottomLeft" Background="Transparent" Margin="0" PointerWheelChanged="touchPanel_PointerWheelChanged" PointerReleased="touchPanel_PointerReleased" ManipulationDelta="touchPanel_ManipulationDelta" />
+                <Border Grid.Row="1" Grid.Column="1" x:Name="touchPanelBottomRight" Background="Transparent" Margin="0" PointerWheelChanged="touchPanel_PointerWheelChanged" PointerReleased="touchPanel_PointerReleased" ManipulationDelta="touchPanel_ManipulationDelta" />
             </Grid>
         </Grid>
     </Grid>

@@ -1,4 +1,5 @@
 ﻿using favoshelf.Data;
+using favoshelf.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,12 +30,15 @@ namespace favoshelf.Views
     /// <summary>
     /// フォルダ一覧表示用ページ
     /// </summary>
-    public sealed partial class FolderSelectPage : Page
+    public sealed partial class FolderSelectPage : LayoutAwarePage
     {
-        /// <summary>
-        /// データモデル
-        /// </summary>
-        private FolderSelectViewModel m_viewModel;
+        public FolderSelectViewModel ViewModel
+        {
+            get;
+            private set;
+        }
+
+        private double? m_scrollPosition;
 
         /// <summary>
         /// コンストラクタ
@@ -42,7 +46,7 @@ namespace favoshelf.Views
         public FolderSelectPage()
         {
             this.InitializeComponent();
-            m_viewModel = new FolderSelectViewModel();
+            this.ViewModel = new FolderSelectViewModel();
         }
 
         /// <summary>
@@ -58,9 +62,29 @@ namespace favoshelf.Views
             {
                 param = new FolderRootNavigateParameter();
             }
-            m_viewModel.Init(param);
+            ViewModel.Init(param);
+        }
 
-            this.gridView.DataContext = m_viewModel;
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+        }
+
+        protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
+        {
+            base.LoadState(navigationParameter, pageState);
+            
+            if (pageState != null && pageState.ContainsKey("ScrollPosition"))
+            {
+                m_scrollPosition = pageState["ScrollPosition"] as double?;
+            }
+        }
+
+        protected override void SaveState(Dictionary<string, object> pageState)
+        {
+            base.SaveState(pageState);
+
+            pageState["ScrollPosition"] = gridView.VerticalOffset;
         }
 
         /// <summary>
@@ -85,6 +109,7 @@ namespace favoshelf.Views
         /// <returns>選択フォルダ（未選択時はnull）</returns>
         private async Task<StorageFolder> selectFolder()
         {
+            Debug.WriteLine("");
             FolderPicker folderPicker = new FolderPicker();
             folderPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
             folderPicker.FileTypeFilter.Add("*");
@@ -114,7 +139,36 @@ namespace favoshelf.Views
         /// <param name="args"></param>
         private void gridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
-            CommonPageManager.OnGridContentChanging(args.Item as FolderListItem, args.InRecycleQueue);
+            Debug.WriteLine("args.Phase=" + args.Phase.ToString());
+            if (args.Phase == 0)
+            {
+                if (m_scrollPosition.HasValue)
+                {
+                    gridView.ScrollToVerticalOffset(m_scrollPosition.Value);
+                    Debug.WriteLine("VerticalOffset=" + gridView.VerticalOffset.ToString());
+                    if (m_scrollPosition.Value == 0 || gridView.VerticalOffset != 0)
+                    {
+                        m_scrollPosition = null;
+                        args.RegisterUpdateCallback(1, gridView_ContainerContentChanging);
+                        args.Handled = true;
+                    }
+                    else
+                    {
+                        args.RegisterUpdateCallback(0, gridView_ContainerContentChanging);
+                        args.Handled = false;
+                    }
+                }
+                else
+                {
+                    args.RegisterUpdateCallback(1, gridView_ContainerContentChanging);
+                    args.Handled = true;
+                }
+            }
+            else if (args.Phase == 1)
+            {
+                CommonPageManager.OnGridContentChanging(args.Item as FolderListItem, args.InRecycleQueue);
+                args.Handled = true;
+            }
         }
 
         /// <summary>
@@ -125,6 +179,17 @@ namespace favoshelf.Views
         private void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             CommonPageManager.OnGridPointerReleased(this.Frame, e);
+        }
+        
+        private void gridView_ScrollViewerSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            /*
+            if (m_scrollPosition.HasValue)
+            {
+                gridView.ScrollToVerticalOffset(m_scrollPosition.Value);
+                m_scrollPosition = null;
+            }
+            */
         }
     }
 }
