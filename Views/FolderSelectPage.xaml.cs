@@ -139,36 +139,33 @@ namespace favoshelf.Views
         /// <param name="args"></param>
         private void gridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
-            Debug.WriteLine("args.Phase=" + args.Phase.ToString());
             if (args.Phase == 0)
             {
                 if (m_scrollPosition.HasValue)
                 {
                     gridView.ScrollToVerticalOffset(m_scrollPosition.Value);
-                    Debug.WriteLine("VerticalOffset=" + gridView.VerticalOffset.ToString());
                     if (m_scrollPosition.Value == 0 || gridView.VerticalOffset != 0)
                     {
                         m_scrollPosition = null;
                         args.RegisterUpdateCallback(1, gridView_ContainerContentChanging);
-                        args.Handled = true;
                     }
                     else
                     {
+                        //スクロール位置が設定できなかったのでもう一度試す
                         args.RegisterUpdateCallback(0, gridView_ContainerContentChanging);
-                        args.Handled = false;
                     }
                 }
                 else
                 {
                     args.RegisterUpdateCallback(1, gridView_ContainerContentChanging);
-                    args.Handled = true;
                 }
             }
             else if (args.Phase == 1)
             {
                 CommonPageManager.OnGridContentChanging(args.Item as FolderListItem, args.InRecycleQueue);
-                args.Handled = true;
             }
+
+            args.Handled = true;
         }
 
         /// <summary>
