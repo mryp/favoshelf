@@ -1,4 +1,5 @@
 ﻿using favoshelf.Data;
+using favoshelf.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,13 +22,8 @@ namespace favoshelf.Views
     /// <summary>
     /// 本棚ページ
     /// </summary>
-    public sealed partial class BookshelfPage : Page
+    public sealed partial class BookshelfPage : LayoutAwarePage
     {
-        /// <summary>
-        /// データモデル
-        /// </summary>
-        private FolderSelectViewModel m_viewModel;
-
         /// <summary>
         /// データベース
         /// </summary>
@@ -39,31 +35,49 @@ namespace favoshelf.Views
         private INavigateParameter m_naviParam;
 
         /// <summary>
+        /// ビューモデル
+        /// </summary>
+        public FolderSelectViewModel ViewModel
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         public BookshelfPage()
         {
             this.InitializeComponent();
 
-            m_viewModel = new FolderSelectViewModel();
+            this.ViewModel = new FolderSelectViewModel();
             m_db = new LocalDatabase();
         }
 
         /// <summary>
-        /// 画面遷移されてきたときの処理
+        /// 画面ステータスを読み込む
         /// </summary>
-        /// <param name="e"></param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <param name="navigationParameter"></param>
+        /// <param name="pageState"></param>
+        protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
         {
-            base.OnNavigatedTo(e);
-            
-            m_naviParam = e.Parameter as INavigateParameter;
+            base.LoadState(navigationParameter, pageState);
+
+            m_naviParam = navigationParameter as INavigateParameter;
             if (m_naviParam == null)
             {
                 m_naviParam = new BookshelfNavigateParameter(m_db);
             }
-            m_viewModel.Init(m_naviParam);
-            this.gridView.DataContext = m_viewModel;
+            ViewModel.Init(m_naviParam);
+        }
+
+        /// <summary>
+        /// 画面ステータスを保存する
+        /// </summary>
+        /// <param name="pageState"></param>
+        protected override void SaveState(Dictionary<string, object> pageState)
+        {
+            base.SaveState(pageState);
         }
 
         /// <summary>
@@ -131,7 +145,7 @@ namespace favoshelf.Views
                 };
                 m_db.InsertBookCategory(category);
 
-                m_viewModel.Init(m_naviParam);
+                this.ViewModel.Init(m_naviParam);
             }
         }
 
@@ -204,7 +218,7 @@ namespace favoshelf.Views
                 }
                 m_db.DeleteBookCategory(category);
 
-                m_viewModel.Init(m_naviParam);
+                this.ViewModel.Init(m_naviParam);
             }));
             dialog.Commands.Add(new UICommand("キャンセル"));
             dialog.DefaultCommandIndex = 1;

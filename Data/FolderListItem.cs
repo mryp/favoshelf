@@ -233,7 +233,7 @@ namespace favoshelf.Data
                 size = Window.Current.Bounds;
             });
 
-            int thumWidth = (int)(size.Width / 3.0) - (4 * 4);
+            int thumWidth = (int)(size.Width / 3.0) - (4 * 2);
             int thumHeight = thumWidth;
             if (thumWidth > DESKTOP_THUM_IMAGE_WIDTH)
             {

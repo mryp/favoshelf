@@ -1,4 +1,5 @@
 ﻿using favoshelf.Data;
+using favoshelf.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,12 +20,16 @@ namespace favoshelf.Views
     /// <summary>
     /// スクラップブックカテゴリ表示ページ
     /// </summary>
-    public sealed partial class ScrapbookPage : Page
+    public sealed partial class ScrapbookPage : LayoutAwarePage
     {
         /// <summary>
-        /// データモデル
+        /// ビューモデル
         /// </summary>
-        private FolderSelectViewModel m_viewModel;
+        public FolderSelectViewModel ViewModel
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// データベース
@@ -35,27 +40,36 @@ namespace favoshelf.Views
         {
             this.InitializeComponent();
 
-            m_viewModel = new FolderSelectViewModel();
+            this.ViewModel = new FolderSelectViewModel();
             m_db = new LocalDatabase();
         }
 
         /// <summary>
-        /// 画面遷移されてきたときの処理
+        /// 画面ステータスを読み込む
         /// </summary>
-        /// <param name="e"></param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <param name="navigationParameter"></param>
+        /// <param name="pageState"></param>
+        protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
         {
-            base.OnNavigatedTo(e);
+            base.LoadState(navigationParameter, pageState);
 
-            INavigateParameter param = e.Parameter as INavigateParameter;
+            INavigateParameter param = navigationParameter as INavigateParameter;
             if (param == null)
             {
                 param = new ScrapbookNavigateParameter(m_db);
             }
-            m_viewModel.Init(param);
-            this.gridView.DataContext = m_viewModel;
+            ViewModel.Init(param);
         }
 
+        /// <summary>
+        /// 画面ステータスを保存する
+        /// </summary>
+        /// <param name="pageState"></param>
+        protected override void SaveState(Dictionary<string, object> pageState)
+        {
+            base.SaveState(pageState);
+        }
+        
         /// <summary>
         /// アイテムを選択したとき
         /// </summary>

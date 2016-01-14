@@ -1,4 +1,5 @@
 ﻿using favoshelf.Data;
+using favoshelf.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,44 +24,55 @@ namespace favoshelf.Views
     /// <summary>
     /// クイックアクセス（履歴）ページ
     /// </summary>
-    public sealed partial class QuickAccessPage : Page
+    public sealed partial class QuickAccessPage : LayoutAwarePage
     {
-        /// <summary>
-        /// データモデル
-        /// </summary>
-        private FolderSelectViewModel m_viewModel;
-
         /// <summary>
         /// 画面繊維パラメーター
         /// </summary>
         private INavigateParameter m_naviParam;
-        
+
+        /// <summary>
+        /// ビューモデル
+        /// </summary>
+        public FolderSelectViewModel ViewModel
+        {
+            get;
+            private set;
+        }
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
         public QuickAccessPage()
         {
             this.InitializeComponent();
-
-            m_viewModel = new FolderSelectViewModel();
+            this.ViewModel = new FolderSelectViewModel();
         }
 
         /// <summary>
-        /// 画面遷移されてきたときの処理
+        /// 画面ステータスを読み込む
         /// </summary>
-        /// <param name="e"></param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <param name="navigationParameter"></param>
+        /// <param name="pageState"></param>
+        protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
         {
-            base.OnNavigatedTo(e);
+            base.LoadState(navigationParameter, pageState);
 
-            m_naviParam = e.Parameter as INavigateParameter;
+            m_naviParam = navigationParameter as INavigateParameter;
             if (m_naviParam == null)
             {
                 m_naviParam = new QuickAccessNavigateParameter();
             }
+            ViewModel.Init(m_naviParam);
+        }
 
-            m_viewModel.Init(m_naviParam);
-            this.gridView.DataContext = m_viewModel;
+        /// <summary>
+        /// 画面ステータスを保存する
+        /// </summary>
+        /// <param name="pageState"></param>
+        protected override void SaveState(Dictionary<string, object> pageState)
+        {
+            base.SaveState(pageState);
         }
 
         /// <summary>
@@ -103,7 +115,7 @@ namespace favoshelf.Views
             MessageDialog dialog = new MessageDialog("全履歴の削除を実行しますか？", "確認");
             dialog.Commands.Add(new UICommand("OK", (command) => {
                 StorageHistoryManager.RemoveAll(StorageHistoryManager.DataType.Latest);
-                m_viewModel.Init(m_naviParam);
+                ViewModel.Init(m_naviParam);
             }));
             dialog.Commands.Add(new UICommand("キャンセル"));
             dialog.DefaultCommandIndex = 1;

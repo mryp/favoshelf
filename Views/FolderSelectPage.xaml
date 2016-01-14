@@ -12,7 +12,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <DataTemplate x:Key="FolderItemGridItemTemplate" x:DataType="data:FolderListItem">
+        <DataTemplate x:Key="FolderItemTemplate" x:DataType="data:FolderListItem">
             <StackPanel Background="#FF4B4B4B"
                         Width="{x:Bind ThumWidth}">
                 <Border Background="#FF4B4B4B" 
@@ -51,7 +51,7 @@
         <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True" PointerReleased="Grid_PointerReleased">
             <ctl:FolderGridView  x:Name="gridView"
                        ItemsSource="{x:Bind ViewModel.ItemList}" 
-                       ItemTemplate="{StaticResource FolderItemGridItemTemplate}"
+                       ItemTemplate="{StaticResource FolderItemTemplate}"
                        Margin="4" 
                        ContainerContentChanging="gridView_ContainerContentChanging"
                        IsItemClickEnabled="True"

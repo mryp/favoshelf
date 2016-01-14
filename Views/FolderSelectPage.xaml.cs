@@ -32,12 +32,14 @@ namespace favoshelf.Views
     /// </summary>
     public sealed partial class FolderSelectPage : LayoutAwarePage
     {
-        public FolderSelectViewModel ViewModel
-        {
-            get;
-            private set;
-        }
+        /// <summary>
+        /// スクロール位置状態保存用キー
+        /// </summary>
+        private const string KEY_SCROLL_POS = "m_scrollPosition";
 
+        /// <summary>
+        /// スクロール位置
+        /// </summary>
         private double? m_scrollPosition;
 
         /// <summary>
@@ -50,14 +52,29 @@ namespace favoshelf.Views
         }
 
         /// <summary>
-        /// 画面遷移されてきたときの処理
+        /// ビューモデル
         /// </summary>
-        /// <param name="e"></param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        public FolderSelectViewModel ViewModel
         {
-            base.OnNavigatedTo(e);
+            get;
+            private set;
+        }
 
-            INavigateParameter param = e.Parameter as INavigateParameter;
+        /// <summary>
+        /// 画面ステータスを読み込む
+        /// </summary>
+        /// <param name="navigationParameter"></param>
+        /// <param name="pageState"></param>
+        protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
+        {
+            base.LoadState(navigationParameter, pageState);
+            
+            if (pageState != null && pageState.ContainsKey(KEY_SCROLL_POS))
+            {
+                m_scrollPosition = pageState[KEY_SCROLL_POS] as double?;
+            }
+
+            INavigateParameter param = navigationParameter as INavigateParameter;
             if (param == null)
             {
                 param = new FolderRootNavigateParameter();
@@ -65,26 +82,15 @@ namespace favoshelf.Views
             ViewModel.Init(param);
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-        }
-
-        protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
-        {
-            base.LoadState(navigationParameter, pageState);
-            
-            if (pageState != null && pageState.ContainsKey("ScrollPosition"))
-            {
-                m_scrollPosition = pageState["ScrollPosition"] as double?;
-            }
-        }
-
+        /// <summary>
+        /// 画面ステータスを保存する
+        /// </summary>
+        /// <param name="pageState"></param>
         protected override void SaveState(Dictionary<string, object> pageState)
         {
             base.SaveState(pageState);
 
-            pageState["ScrollPosition"] = gridView.VerticalOffset;
+            pageState[KEY_SCROLL_POS] = gridView.VerticalOffset;
         }
 
         /// <summary>
@@ -177,6 +183,5 @@ namespace favoshelf.Views
         {
             CommonPageManager.OnGridPointerReleased(this.Frame, e);
         }
-        
     }
 }
