@@ -29,6 +29,7 @@ namespace favoshelf.Data
             }
 
             Size thumSize = await FolderListItem.GetThumSizeFromWindow();
+            int fontSize = FolderListItem.GetFontSizeFromThumImage((int)thumSize.Width);
             List<FolderListItem> itemList = new List<FolderListItem>();
             IEnumerable<ScrapbookCategory> categoryList = m_db.QueryScrapbookCategoryAll();
             if (categoryList == null)
@@ -45,7 +46,8 @@ namespace favoshelf.Data
                     Token = "",
                     Type = FolderListItem.FileType.Scrapbook,
                     ThumWidth = (int)thumSize.Width,
-                    ThumHeight = (int)thumSize.Height
+                    ThumHeight = (int)thumSize.Height,
+                    TextSize = fontSize,
                 });
             }
 

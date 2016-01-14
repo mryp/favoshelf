@@ -178,15 +178,5 @@ namespace favoshelf.Views
             CommonPageManager.OnGridPointerReleased(this.Frame, e);
         }
         
-        private void gridView_ScrollViewerSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            /*
-            if (m_scrollPosition.HasValue)
-            {
-                gridView.ScrollToVerticalOffset(m_scrollPosition.Value);
-                m_scrollPosition = null;
-            }
-            */
-        }
     }
 }

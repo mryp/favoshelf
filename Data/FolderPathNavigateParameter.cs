@@ -27,6 +27,7 @@ namespace favoshelf.Data
             }
 
             Size thumSize = await FolderListItem.GetThumSizeFromWindow();
+            int fontSize = FolderListItem.GetFontSizeFromThumImage((int)thumSize.Width);
             IReadOnlyList<StorageFolder> subFolderList = await folder.GetFoldersAsync();
             foreach (StorageFolder subFolder in subFolderList)
             {
@@ -38,6 +39,7 @@ namespace favoshelf.Data
                     Type = FolderListItem.FileType.Folder,
                     ThumWidth = (int)thumSize.Width,
                     ThumHeight = (int)thumSize.Height,
+                    TextSize = fontSize,
                 });
             }
 
@@ -52,6 +54,7 @@ namespace favoshelf.Data
                     Type = FolderListItem.GetFileTypeFromStorage(file),
                     ThumWidth = (int)thumSize.Width,
                     ThumHeight = (int)thumSize.Height,
+                    TextSize = fontSize,
                 };
                 itemList.Add(item);
             }

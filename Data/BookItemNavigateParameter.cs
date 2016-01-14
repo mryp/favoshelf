@@ -34,6 +34,7 @@ namespace favoshelf.Data
 
             List<FolderListItem> itemList = new List<FolderListItem>();
             Size thumSize = await FolderListItem.GetThumSizeFromWindow();
+            int fontSize = FolderListItem.GetFontSizeFromThumImage((int)thumSize.Width);
             BookCategory category = m_db.QueryBookCategory(m_label);
             foreach (BookItem bookItem in m_db.QueryBookItemList(category))
             {
@@ -53,6 +54,7 @@ namespace favoshelf.Data
                         Type = FolderListItem.FileType.Folder,
                         ThumWidth = (int)thumSize.Width,
                         ThumHeight = (int)thumSize.Height,
+                        TextSize = fontSize,
                     });
                 }
                 else
@@ -65,6 +67,7 @@ namespace favoshelf.Data
                         Type = FolderListItem.GetFileTypeFromStorage((StorageFile)storageItem),
                         ThumWidth = (int)thumSize.Width,
                         ThumHeight = (int)thumSize.Height,
+                        TextSize = fontSize,
                     });
                 }
             }

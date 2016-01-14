@@ -35,6 +35,7 @@ namespace favoshelf.Data
 
             List<FolderListItem> itemList = new List<FolderListItem>();
             Size thumSize = await FolderListItem.GetThumSizeFromWindow();
+            int fontSize = FolderListItem.GetFontSizeFromThumImage((int)thumSize.Width);
             ScrapbookCategory category = m_db.QueryScrapbookCategory(m_folderName);
             StorageFolder folder = await EnvPath.GetScrapbookSubFolder(category.FolderName);
             foreach (ScrapbookItem scrapItem in m_db.QueryScrapbookItemList(category))
@@ -51,6 +52,7 @@ namespace favoshelf.Data
                         Type = FolderListItem.GetFileTypeFromStorage((StorageFile)storage),
                         ThumWidth = (int)thumSize.Width,
                         ThumHeight = (int)thumSize.Height,
+                        TextSize = fontSize,
                     });
                 }
                 catch (Exception e)

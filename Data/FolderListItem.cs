@@ -258,6 +258,18 @@ namespace favoshelf.Data
 
             return resultType;
         }
+
+        public static int GetFontSizeFromThumImage(int thumWidth)
+        {
+            if (thumWidth < DESKTOP_THUM_IMAGE_WIDTH)
+            {
+                return SMALL_TEXT_SIZE;
+            }
+            else
+            {
+                return NORMAL_TEXT_SIZE;
+            }
+        }
         #region INotifyPropertyChanged member
 
         public event PropertyChangedEventHandler PropertyChanged;

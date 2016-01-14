@@ -16,6 +16,7 @@ namespace favoshelf.Data
             List<string> tokenList = StorageHistoryManager.GetTokenList(StorageHistoryManager.DataType.Latest);
             
             Size thumSize = await FolderListItem.GetThumSizeFromWindow();
+            int fontSize = FolderListItem.GetFontSizeFromThumImage((int)thumSize.Width);
             List<FolderListItem> itemList = new List<FolderListItem>();
             foreach (string token in tokenList)
             {
@@ -35,6 +36,7 @@ namespace favoshelf.Data
                         Type = FolderListItem.FileType.Folder,
                         ThumWidth = (int)thumSize.Width,
                         ThumHeight = (int)thumSize.Height,
+                        TextSize = fontSize,
                     });
                 }
                 else
@@ -47,6 +49,7 @@ namespace favoshelf.Data
                         Type = FolderListItem.GetFileTypeFromStorage((StorageFile)storageItem),
                         ThumWidth = (int)thumSize.Width,
                         ThumHeight = (int)thumSize.Height,
+                        TextSize = fontSize,
                     });
                 }
             }
