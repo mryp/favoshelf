@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,6 +61,11 @@ namespace favoshelf.Data
             }
 
             return itemList;
+        }
+
+        public string GetFolderName()
+        {
+            return Path.GetFileName(m_folderPath);
         }
     }
 }

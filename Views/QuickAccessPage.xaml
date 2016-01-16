@@ -44,7 +44,7 @@
             <CommandBar.Content>
                 <ctl:PageHeader>
                     <ctl:PageHeader.HeaderContent>
-                        <TextBlock Text="クイックアクセス" 
+                        <TextBlock Text="{x:Bind ViewModel.TitleName}" 
                                    Style="{ThemeResource PageTitleTextBlockStyle}" 
                                    TextWrapping="NoWrap"/>
                     </ctl:PageHeader.HeaderContent>

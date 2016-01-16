@@ -26,6 +26,8 @@ namespace favoshelf.Views
         /// </summary>
         private ObservableCollection<FolderListItem> m_itemList = new ObservableCollection<FolderListItem>();
 
+        private string m_titleName = "";
+
         /// <summary>
         /// フォルダ・ファイルリスト
         /// </summary>
@@ -45,6 +47,22 @@ namespace favoshelf.Views
             }
         }
 
+        public string TitleName
+        {
+            get
+            {
+                return m_titleName;
+            }
+            set
+            {
+                if (value != m_titleName)
+                {
+                    m_titleName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -58,6 +76,7 @@ namespace favoshelf.Views
         /// <param name="naviParam"></param>
         public async void Init(INavigateParameter naviParam)
         {
+            this.TitleName = naviParam.GetFolderName();
             IReadOnlyList<FolderListItem> itemList = await naviParam.GetItemList();
             this.ItemList.Clear();
             foreach (FolderListItem item in itemList)

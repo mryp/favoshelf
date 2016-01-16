@@ -56,5 +56,10 @@ namespace favoshelf.Data
 
             return itemList;
         }
+
+        public string GetFolderName()
+        {
+            return "クリックアクセス";
+        }
     }
 }

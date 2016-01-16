@@ -9,5 +9,7 @@ namespace favoshelf.Data
     public interface INavigateParameter
     {
         Task<IReadOnlyList<FolderListItem>> GetItemList();
+
+        string GetFolderName();
     }
 }
