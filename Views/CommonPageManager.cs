@@ -47,7 +47,7 @@ namespace favoshelf.Views
 
             return result;
         }
-
+        
         private static async void navigateFolder(Frame frame, FolderListItem item)
         {
             if (item.Type != FolderListItem.FileType.Folder)

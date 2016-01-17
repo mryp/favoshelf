@@ -55,7 +55,7 @@ namespace favoshelf
             });
 
         public static AppShell Current = null;
-
+        
         public AppShell()
         {
             this.InitializeComponent();
@@ -133,16 +133,34 @@ namespace favoshelf
             }
         }
 
-        public bool IsNaviMenuPaneOpen
+        public void HideMenu()
         {
-            get
+            TogglePaneButton.Visibility = Visibility.Collapsed;
+            if (RootSplitView.DisplayMode == SplitViewDisplayMode.CompactInline)
             {
-                return this.RootSplitView.IsPaneOpen;
+                RootSplitView.DisplayMode = SplitViewDisplayMode.Inline;
+                RootSplitView.IsPaneOpen = false;
             }
-            set
+            else if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
             {
-                this.RootSplitView.IsPaneOpen = value;
+                //何もしない
             }
+            CheckTogglePaneButtonSizeChanged();
+        }
+
+        public void ShowMenuPane()
+        {
+            TogglePaneButton.Visibility = Visibility.Visible;
+            if (RootSplitView.DisplayMode == SplitViewDisplayMode.Inline)
+            {
+                RootSplitView.DisplayMode = SplitViewDisplayMode.CompactInline;
+                RootSplitView.IsPaneOpen = true;
+            }
+            else if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
+            {
+                //何もしない
+            }
+            CheckTogglePaneButtonSizeChanged();
         }
         #region BackRequested Handlers
 
@@ -271,7 +289,14 @@ namespace favoshelf
             {
                 var transform = this.TogglePaneButton.TransformToVisual(this);
                 var rect = transform.TransformBounds(new Rect(0, 0, this.TogglePaneButton.ActualWidth, this.TogglePaneButton.ActualHeight));
-                this.TogglePaneButtonRect = rect;
+                if (this.TogglePaneButton.Visibility == Visibility.Visible)
+                {
+                    this.TogglePaneButtonRect = rect;
+                }
+                else
+                {
+                    this.TogglePaneButtonRect = new Rect();
+                }
             }
             else
             {

@@ -50,11 +50,6 @@ namespace favoshelf.Views
         private LocalDatabase m_db;
 
         /// <summary>
-        /// ナビメニューを戻すためのデフォルト値
-        /// </summary>
-        private bool m_isOpenNaviDefault = false;
-
-        /// <summary>
         /// ブックマーク
         /// </summary>
         private Bookmark m_bookmark;
@@ -117,7 +112,7 @@ namespace favoshelf.Views
             AppShell shell = Window.Current.Content as AppShell;
             if (shell != null)
             {
-                shell.IsNaviMenuPaneOpen = m_isOpenNaviDefault;
+                shell.ShowMenuPane();
             }
         }
 
@@ -230,8 +225,7 @@ namespace favoshelf.Views
             AppShell shell = Window.Current.Content as AppShell;
             if (shell != null)
             {
-                m_isOpenNaviDefault = shell.IsNaviMenuPaneOpen;
-                shell.IsNaviMenuPaneOpen = false;
+                shell.HideMenu();
             }
             if (m_viewModel.Index == 0)
             {
