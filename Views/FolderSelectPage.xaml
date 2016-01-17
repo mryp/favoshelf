@@ -33,12 +33,50 @@
         </DataTemplate>
     </Page.Resources>
 
+    <!-- 画面下部のコマンドバー（モバイル用） -->
+    <Page.BottomAppBar>
+        <CommandBar x:Name="bottomAppBar" Visibility="Visible" >
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Add" Label="フォルダを追加" Click="AddButton_Click"/>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <!-- トリガーによる表示状態変更 -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="bottomAppBar.Visibility" Value="Collapsed" />
+                        <Setter Target="topAppBar.Visibility" Value="Visible" />
+                        <Setter Target="titleOnlyBar.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="bottomAppBar.Visibility" Value="Visible" />
+                        <Setter Target="topAppBar.Visibility" Value="Collapsed" />
+                        <Setter Target="titleOnlyBar.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
+
+        <!-- タイトルとコマンドボタンを表示するバー -->
+        <CommandBar x:Name="topAppBar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
             <AppBarButton Icon="Add" Label="フォルダを追加" Click="AddButton_Click"/>
             <CommandBar.Content>
                 <ctl:PageHeader>
@@ -48,6 +86,19 @@
                 </ctl:PageHeader>
             </CommandBar.Content>
         </CommandBar>
+
+        <!-- タイトルのみを表示するバー -->
+        <Grid Grid.Row="0" x:Name="titleOnlyBar" Visibility="Visible" >
+            <ctl:PageHeader>
+                <ctl:PageHeader.HeaderContent>
+                    <TextBlock Text="{x:Bind ViewModel.TitleName}" 
+                                   Style="{ThemeResource PageTitleTextBlockStyle}" 
+                                   TextWrapping="NoWrap"/>
+                </ctl:PageHeader.HeaderContent>
+            </ctl:PageHeader>
+        </Grid>
+
+        <!-- アイコングリッドビュー -->
         <Grid Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True" PointerReleased="Grid_PointerReleased">
             <ctl:FolderGridView  x:Name="gridView"
                        ItemsSource="{x:Bind ViewModel.ItemList}" 

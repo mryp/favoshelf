@@ -172,6 +172,7 @@ namespace favoshelf.Views
                 buttonItem.IsChecked = true;
             }
             bookshelfMenu.Items.Add(buttonItem);
+            bookshelfMenuBottom.Items.Add(buttonItem);
         }
 
         /// <summary>
@@ -198,6 +199,7 @@ namespace favoshelf.Views
             };
             buttonItem.Click += ScrapbookButtonItem_Click;
             scrapbookMenu.Items.Add(buttonItem);
+            scrapbookMenuBottom.Items.Add(buttonItem);
         }
 
         /// <summary>

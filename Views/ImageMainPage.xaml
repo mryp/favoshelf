@@ -8,12 +8,78 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <!-- 画面下部のコマンドバー（モバイル用） -->
+    <Page.BottomAppBar>
+        <CommandBar x:Name="bottomAppBar" Visibility="Visible" >
+            <AppBarButton Icon="Attach" Label="スクラップブックに登録">
+                <AppBarButton.Flyout>
+                    <MenuFlyout x:Name="scrapbookMenuBottom">
+                        <MenuFlyoutItem Text="新しいスクラップブックを作成" Click="NewScrapbookMenuFlyoutItem_Click" />
+                        <MenuFlyoutSeparator/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton Icon="Tag" Label="本棚に登録">
+                <AppBarButton.Flyout>
+                    <MenuFlyout x:Name="bookshelfMenuBottom">
+                        <MenuFlyoutItem Text="新しい本棚を作成" Click="NewBookShelfMenuFlyoutItem_Click" />
+                        <MenuFlyoutSeparator/>
+                    </MenuFlyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Menu Item 1">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="aaa" />
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem Text="aaa" />
+                            <MenuFlyoutItem Text="aaa" />
+                            <MenuFlyoutItem Text="aaa" />
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton Label="Menu Item 2"/>
+                <AppBarButton Label="Menu Item 3"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <!-- トリガーによる表示状態変更 -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="bottomAppBar.Visibility" Value="Collapsed" />
+                        <Setter Target="topAppBar.Visibility" Value="Visible" />
+                        <Setter Target="titleOnlyBar.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="bottomAppBar.Visibility" Value="Visible" />
+                        <Setter Target="topAppBar.Visibility" Value="Collapsed" />
+                        <Setter Target="titleOnlyBar.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <CommandBar x:Name="topbar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
+
+        <!-- タイトルとコマンドボタンを表示するバー -->
+        <CommandBar x:Name="topAppBar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
             <AppBarButton Icon="Attach" Label="スクラップブックに登録">
                 <AppBarButton.Flyout>
                     <MenuFlyout x:Name="scrapbookMenu">
@@ -53,6 +119,17 @@
                 </ctl:PageHeader>
             </CommandBar.Content>
         </CommandBar>
+
+        <!-- タイトルのみを表示するバー -->
+        <Grid Grid.Row="0" x:Name="titleOnlyBar" Visibility="Visible" >
+            <ctl:PageHeader>
+                <ctl:PageHeader.HeaderContent>
+                    <TextBlock Text="{Binding CommandTitle}" 
+                               Style="{ThemeResource PageTitleTextBlockStyle}" 
+                               TextWrapping="NoWrap"/>
+                </ctl:PageHeader.HeaderContent>
+            </ctl:PageHeader>
+        </Grid>
 
         <Grid x:Name="mainGrid" Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True">
             <Image x:Name="imageView" Source="{Binding IndexImage}" />
