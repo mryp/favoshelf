@@ -59,7 +59,7 @@ namespace favoshelf.Data
 
         public string GetFolderName()
         {
-            return "クリックアクセス";
+            return "クイックアクセス";
         }
     }
 }
