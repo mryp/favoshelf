@@ -137,7 +137,6 @@
       <DependentUpon>FolderSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FolderSelectViewModel.cs" />
-    <Compile Include="Views\IImageAccess.cs" />
     <Compile Include="Views\ImageMainPage.xaml.cs">
       <DependentUpon>ImageMainPage.xaml</DependentUpon>
     </Compile>
@@ -258,9 +257,15 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs, Version=14.0">
+      <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
+    </SDKReference>
     <SDKReference Include="SQLite.UAP.2015, Version=3.10.0">
       <Name>SQLite for Universal App Platform</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

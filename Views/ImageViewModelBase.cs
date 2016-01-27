@@ -16,7 +16,7 @@ namespace favoshelf.Views
     /// 画像表示ページのデータビューの共通部分
     /// </summary>
     /// <typeparam name="T">データリスト（画像読み込み元情報）の型</typeparam>
-    public abstract class ImageViewModelBase : INotifyPropertyChanged, IImageAccess, IDisposable
+    public abstract class ImageViewModelBase : INotifyPropertyChanged, IDisposable
     {
         #region 定数
         private const string NOT_FOUND_IMAGE_URI = "ms-appx:///Assets/NotFoundImage.png";
