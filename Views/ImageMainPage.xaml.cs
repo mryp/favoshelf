@@ -405,7 +405,7 @@ namespace favoshelf.Views
             BookItem bookItem = m_db.QueryBookItemFromPath(category.Id, m_viewModel.ImageStorage.Path);
             if (bookItem != null)
             {
-                StorageHistoryManager.RemoveStorage(bookItem.Token);
+                StorageHistoryManager.RemoveStorage(bookItem.Token, StorageHistoryManager.DataType.Bookshelf);
                 m_db.DeleteBookItem(bookItem);
             }
         }

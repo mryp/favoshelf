@@ -56,11 +56,21 @@ namespace favoshelf.Data
             return token;
         }
 
-        public static void RemoveStorage(string token)
+        public static void RemoveStorage(string token, DataType type)
         {
-            if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+            if (type == DataType.Latest)
             {
-                StorageApplicationPermissions.FutureAccessList.Remove(token);
+                if (StorageApplicationPermissions.MostRecentlyUsedList.ContainsItem(token))
+                {
+                    StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
+                }
+            }
+            else
+            {
+                if (StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+                {
+                    StorageApplicationPermissions.FutureAccessList.Remove(token);
+                }
             }
         }
 

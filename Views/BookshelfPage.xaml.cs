@@ -214,7 +214,7 @@ namespace favoshelf.Views
                 BookCategory category = m_db.QueryBookCategory(item.Name);
                 foreach (BookItem bookItem in m_db.QueryBookItemList(category))
                 {
-                    StorageHistoryManager.RemoveStorage(bookItem.Token);
+                    StorageHistoryManager.RemoveStorage(bookItem.Token, StorageHistoryManager.DataType.Bookshelf);
                 }
                 m_db.DeleteBookCategory(category);
 

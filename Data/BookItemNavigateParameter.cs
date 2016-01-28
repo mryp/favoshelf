@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,8 +43,12 @@ namespace favoshelf.Data
                 {
                     continue;
                 }
+                IStorageItem storageItem = await getItemAsync(bookItem.Token);
+                if (storageItem == null)
+                {
+                    continue;
+                }
 
-                IStorageItem storageItem = await StorageApplicationPermissions.FutureAccessList.GetItemAsync(bookItem.Token);
                 if (storageItem.IsOfType(StorageItemTypes.Folder))
                 {
                     itemList.Add(new FolderListItem()
@@ -73,6 +78,23 @@ namespace favoshelf.Data
             }
             
             return itemList;
+        }
+
+        private async Task<IStorageItem> getItemAsync(string token)
+        {
+            IStorageItem storageItem = null;
+            try
+            {
+                storageItem = await StorageApplicationPermissions.FutureAccessList.GetItemAsync(token);
+            }
+            catch (Exception e)
+            {
+                StorageHistoryManager.RemoveStorage(token, StorageHistoryManager.DataType.Bookshelf);
+                Debug.WriteLine("BookItemNavigateParameter#getItemAsync 読み込み失敗 e=" + e.Message);
+                return null;
+            }
+
+            return storageItem;
         }
 
         public string GetFolderName()
