@@ -137,6 +137,7 @@
       <DependentUpon>FolderSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FolderSelectViewModel.cs" />
+    <Compile Include="Views\IImageFileReader.cs" />
     <Compile Include="Views\ImageMainPage.xaml.cs">
       <DependentUpon>ImageMainPage.xaml</DependentUpon>
     </Compile>
@@ -155,6 +156,7 @@
     <Compile Include="Views\ScrapbookPage.xaml.cs">
       <DependentUpon>ScrapbookPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ZipImageFileReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
