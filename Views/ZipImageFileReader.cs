@@ -22,6 +22,9 @@ namespace favoshelf.Views
         private ZipArchive m_zipArchive;
         private List<ZipArchiveEntry> m_dataList = new List<ZipArchiveEntry>();
 
+        /// <summary>
+        /// 読み込み可能なリスト個数
+        /// </summary>
         public int Count
         {
             get
@@ -30,20 +33,32 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// ZIPファイルのストレージオブジェクト
+        /// </summary>
         public IStorageItem ParentStorage
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="param"></param>
         public ZipImageFileReader(ImageNavigateParameter param)
         {
             m_imageParam = param;
         }
 
-        public async Task LoadData()
+        /// <summary>
+        /// ZIPデータを読み込みファイル一覧を作成する
+        /// </summary>
+        /// <returns></returns>
+        public async Task LoadDataAsync()
         {
             this.Dispose();
+            this.m_dataList.Clear();
 
             StorageFile zipFile = await StorageFile.GetFileFromPathAsync(m_imageParam.Path);
             StorageHistoryManager.AddStorage(zipFile, StorageHistoryManager.DataType.Latest);
@@ -61,6 +76,11 @@ namespace favoshelf.Views
             }            
         }
 
+        /// <summary>
+        /// 指定した位置のBitmapを取得する
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public async Task<BitmapImage> CreateBitmapAsync(int index)
         {
             ZipArchiveEntry entry = getEntryFromIndex(index);
@@ -73,6 +93,13 @@ namespace favoshelf.Views
             return bitmap;
         }
         
+        /// <summary>
+        /// 視程した位置のファイルをファイルコピーする
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="folder"></param>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public async Task<StorageFile> CopyFileAsync(int index, StorageFolder folder, string fileName)
         {
             ZipArchiveEntry entry = getEntryFromIndex(index);
@@ -92,6 +119,12 @@ namespace favoshelf.Views
             return saveFile;
         }
         
+        /// <summary>
+        /// 指定し位置のオブジェクトを取得する
+        /// 存在しない場合はnullを返す
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private ZipArchiveEntry getEntryFromIndex(int index)
         {
             if (m_dataList.Count <= index)
@@ -101,17 +134,15 @@ namespace favoshelf.Views
             return m_dataList[index];
         }
 
+        /// <summary>
+        /// オブジェク開放
+        /// </summary>
         public void Dispose()
         {
             if (m_zipArchive != null)
             {
                 m_zipArchive.Dispose();
                 m_zipArchive = null;
-            }
-            if (m_dataList != null)
-            {
-                m_dataList.Clear();
-                m_dataList = null;
             }
         }
     }

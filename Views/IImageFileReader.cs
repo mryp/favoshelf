@@ -11,7 +11,7 @@ namespace favoshelf.Views
     /// <summary>
     /// 画像ビューワー画面使用する画像リーダーインターフェース
     /// </summary>
-    interface IImageFileReader
+    public interface IImageFileReader
     {
         /// <summary>
         /// リストの個数
@@ -27,7 +27,7 @@ namespace favoshelf.Views
         /// データの初期化を行う
         /// </summary>
         /// <returns></returns>
-        Task LoadData();
+        Task LoadDataAsync();
 
         /// <summary>
         /// 視程した位置の画像を取得する

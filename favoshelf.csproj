@@ -133,11 +133,16 @@
       <DependentUpon>BookshelfPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CommonPageManager.cs" />
+    <Compile Include="Views\FolderImageFileReader.cs" />
     <Compile Include="Views\FolderSelectPage.xaml.cs">
       <DependentUpon>FolderSelectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FolderSelectViewModel.cs" />
     <Compile Include="Views\IImageFileReader.cs" />
+    <Compile Include="Views\ImageFlipPage.xaml.cs">
+      <DependentUpon>ImageFlipPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImageFlipViewModel.cs" />
     <Compile Include="Views\ImageMainPage.xaml.cs">
       <DependentUpon>ImageMainPage.xaml</DependentUpon>
     </Compile>
@@ -234,6 +239,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FolderSelectPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ImageFlipPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

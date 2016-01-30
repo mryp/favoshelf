@@ -33,11 +33,13 @@ namespace favoshelf.Views
                     result = true;
                     break;
                 case FolderListItem.FileType.Archive:
-                    result = frame.Navigate(typeof(ImageMainPage), 
+ //                   result = frame.Navigate(typeof(ImageMainPage),
+                    result = frame.Navigate(typeof(ImageFlipPage), 
                         new ImageNavigateParameter(ImageNavigateParameter.DataType.Archive, item.Path));
                     break;
                 case FolderListItem.FileType.ImageFile:
-                    result = frame.Navigate(typeof(ImageMainPage), 
+//                   result = frame.Navigate(typeof(ImageMainPage),
+                    result = frame.Navigate(typeof(ImageFlipPage),
                         new ImageNavigateParameter(ImageNavigateParameter.DataType.ImageFile, item.Path));
                     break;
                 default:
