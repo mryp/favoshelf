@@ -25,7 +25,7 @@ namespace favoshelf.Views
         {
             get
             {
-                throw new NotImplementedException();
+                return m_dataList.Count;
             }
         }
 
