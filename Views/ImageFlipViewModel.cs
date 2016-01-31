@@ -143,6 +143,34 @@ namespace favoshelf.Views
         }
 
         /// <summary>
+        /// 次の画像を表示する
+        /// </summary>
+        public void SelectNext()
+        {
+            int index = this.SelectedIndex;
+            if (!isItemListRange(index + 1))
+            {
+                return;
+            }
+
+            this.SelectedIndex = index + 1;
+        }
+
+        /// <summary>
+        /// 前の画像を表示する
+        /// </summary>
+        public void SelectPrev()
+        {
+            int index = this.SelectedIndex;
+            if (!isItemListRange(index - 1))
+            {
+                return;
+            }
+
+            this.SelectedIndex = index - 1;
+        }
+
+        /// <summary>
         /// 画像を読み込みリストにセットする
         /// </summary>
         /// <param name="index"></param>

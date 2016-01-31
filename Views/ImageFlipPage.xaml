@@ -107,7 +107,8 @@
             <FlipView x:Name="imageFlipView" 
                       ItemsSource="{x:Bind ViewModel.ItemList, Mode=OneWay}"
                       SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}"
-                      FlowDirection="RightToLeft">
+                      FlowDirection="RightToLeft"
+                      UseTouchAnimationsForAllNavigation="False">
                 <FlipView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel Orientation="Horizontal" />

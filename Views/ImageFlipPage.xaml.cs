@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,6 +23,28 @@ namespace favoshelf.Views
     /// </summary>
     public sealed partial class ImageFlipPage : Page
     {
+        /// <summary>
+        /// コマンドバー操作リアの高さ
+        /// </summary>
+        private const int COMMAND_AREA_HEIGHT = 96;
+
+        /// <summary>
+        /// モバイル・PC切り替え判定横幅
+        /// </summary>
+        private const int UI_MODE_MIN_WINDOW_WIDTH = 720;
+
+        /// <summary>
+        /// タッチエリア
+        /// </summary>
+        private enum TouchArea
+        {
+            CommandArea,
+            TopLeft,
+            TopRight,
+            BottomLeft,
+            BottomRight,
+        }
+
         /// <summary>
         /// ローカルDB
         /// </summary>
@@ -54,6 +77,7 @@ namespace favoshelf.Views
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            this.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(mainGrid_PointerReleased), true);
 
             ImageNavigateParameter param = e.Parameter as ImageNavigateParameter;
             if (param == null)
@@ -88,6 +112,7 @@ namespace favoshelf.Views
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
+            this.RemoveHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(mainGrid_PointerReleased));
 
             //終了処理
             this.ViewModel.Dispose();
@@ -110,6 +135,152 @@ namespace favoshelf.Views
             {
                 shell.HideMenu();
             }
+        }
+
+        private void mainGrid_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            Pointer pointer = e.Pointer;
+            PointerPoint point = e.GetCurrentPoint(this.mainGrid);
+            Size areaSize = new Size(mainGrid.ActualWidth, mainGrid.ActualHeight);
+            //Debug.WriteLine("mainGrid width=" + this.mainGrid.ActualWidth.ToString() + " height=" + this.mainGrid.ActualHeight.ToString());
+            //Debug.WriteLine("mainGrid_PointerReleased point=" + point.Position.ToString());
+
+            if (point.Properties.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
+            {
+                TouchArea area = getTouchArea(point.Position, areaSize);
+                switch (area)
+                {
+                    case TouchArea.CommandArea:
+                        touchEventCommandArea(areaSize);
+                        break;
+                    case TouchArea.TopLeft:
+                        touchEventTopLeft();
+                        break;
+                    case TouchArea.TopRight:
+                        touchEventTopRight();
+                        break;
+                    case TouchArea.BottomLeft:
+                        touchEventBottomLeft();
+                        break;
+                    case TouchArea.BottomRight:
+                        touchEventBottomRight();
+                        break;
+                }
+                e.Handled = false;
+            }
+            else if (point.Properties.PointerUpdateKind == PointerUpdateKind.XButton1Released)
+            {
+                if (this.Frame.CanGoBack)
+                {
+                    this.Frame.GoBack();
+                    e.Handled = true;
+                    return;
+                }
+            }
+
+            e.Handled = false;
+        }
+
+        /// <summary>
+        /// 視程した位置からタッチエリアを取得する
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="areaSize"></param>
+        /// <returns></returns>
+        private TouchArea getTouchArea(Point point, Size areaSize)
+        {
+            double splitAreaHeight = (areaSize.Height - COMMAND_AREA_HEIGHT) / 2.0;
+            double splitAreaWidth = areaSize.Width / 2.0;
+            if (point.Y < COMMAND_AREA_HEIGHT)
+            {
+                return TouchArea.CommandArea;
+            }
+            else if (point.Y < (splitAreaHeight + COMMAND_AREA_HEIGHT))
+            {
+                if (point.X < splitAreaWidth)
+                {
+                    return TouchArea.TopLeft;
+                }
+                else
+                {
+                    return TouchArea.TopRight;
+                }
+            }
+            else
+            {
+                if (point.X < splitAreaWidth)
+                {
+                    return TouchArea.BottomLeft;
+                }
+                else
+                {
+                    return TouchArea.BottomRight;
+                }
+            }
+        }
+
+        /// <summary>
+        /// コマンドエリアがタッチされた時の処理を行う
+        /// </summary>
+        /// <param name="areaSize"></param>
+        private void touchEventCommandArea(Size areaSize)
+        {
+            if (areaSize.Height < UI_MODE_MIN_WINDOW_WIDTH)
+            {
+                if (titleOnlyBar.Visibility == Visibility.Visible)
+                {
+                    titleOnlyBar.Visibility = Visibility.Collapsed;
+                    bottomAppBar.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    titleOnlyBar.Visibility = Visibility.Visible;
+                    bottomAppBar.Visibility = Visibility.Visible;
+                }
+            }
+            else
+            {
+                if (topAppBar.Visibility == Visibility.Visible)
+                {
+                    topAppBar.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    topAppBar.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 左上エリアをタッチした時
+        /// </summary>
+        private void touchEventTopLeft()
+        {
+            this.ViewModel.SelectPrev();
+        }
+
+        /// <summary>
+        /// 右上エリアをタッチした時
+        /// </summary>
+        private void touchEventTopRight()
+        {
+            this.ViewModel.SelectNext();
+        }
+
+        /// <summary>
+        /// 左下エリアをタッチした時
+        /// </summary>
+        private void touchEventBottomLeft()
+        {
+            this.ViewModel.SelectPrev();
+        }
+
+        /// <summary>
+        /// 右下エリアをタッチした時
+        /// </summary>
+        private void touchEventBottomRight()
+        {
+            this.ViewModel.SelectNext();
         }
     }
 }
