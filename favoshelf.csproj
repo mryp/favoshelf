@@ -104,6 +104,7 @@
       <DependentUpon>AppShell.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\FolderGridView.cs" />
+    <Compile Include="Data\ImageFlipItem.cs" />
     <Compile Include="Util\AsyncLock.cs" />
     <Compile Include="Util\BitmapUtils.cs" />
     <Compile Include="Controls\HeaderContent.xaml.cs">

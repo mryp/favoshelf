@@ -1,6 +1,7 @@
 ﻿using favoshelf.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -77,7 +78,6 @@ namespace favoshelf.Views
 
             await reader.LoadDataAsync();
             this.ViewModel.Init(reader, m_db);
-            this.DataContext = this.ViewModel;
             setFirstImage();
         }
 

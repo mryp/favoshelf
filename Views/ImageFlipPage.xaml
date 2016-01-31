@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:favoshelf.Views"
     xmlns:ctl="using:favoshelf.Controls"
+    xmlns:data="using:favoshelf.Data"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -83,7 +84,7 @@
             <CommandBar.Content>
                 <ctl:PageHeader>
                     <ctl:PageHeader.HeaderContent>
-                        <TextBlock x:Name="commandTitle" Text="{Binding Title}" 
+                        <TextBlock x:Name="commandTitle" Text="{x:Bind ViewModel.Title, Mode=OneWay}" 
                                    Style="{ThemeResource PageTitleTextBlockStyle}" 
                                    TextWrapping="NoWrap"/>
                     </ctl:PageHeader.HeaderContent>
@@ -95,7 +96,7 @@
         <Grid Grid.Row="0" x:Name="titleOnlyBar" Visibility="Visible" >
             <ctl:PageHeader>
                 <ctl:PageHeader.HeaderContent>
-                    <TextBlock Text="{Binding Title}" 
+                    <TextBlock Text="{x:Bind ViewModel.Title, Mode=OneWay}" 
                                Style="{ThemeResource PageTitleTextBlockStyle}" 
                                TextWrapping="NoWrap"/>
                 </ctl:PageHeader.HeaderContent>
@@ -103,7 +104,24 @@
         </Grid>
 
         <Grid x:Name="mainGrid" Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True">
-
+            <FlipView x:Name="imageFlipView" 
+                      ItemsSource="{x:Bind ViewModel.ItemList, Mode=OneWay}"
+                      SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}"
+                      FlowDirection="RightToLeft">
+                <FlipView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </FlipView.ItemsPanel>
+                <FlipView.ItemTemplate>
+                    <DataTemplate x:DataType="data:ImageFlipItem">
+                        <Grid>
+                            <ProgressRing Width="48" Height="48" IsActive="{x:Bind IsLoading, Mode=OneWay}" />
+                            <Image Source="{x:Bind ImageData, Mode=OneWay}" />
+                        </Grid>
+                    </DataTemplate>
+                </FlipView.ItemTemplate>
+            </FlipView>
         </Grid>
     </Grid>
 </Page>

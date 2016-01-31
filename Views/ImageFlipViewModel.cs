@@ -1,6 +1,7 @@
 ﻿using favoshelf.Data;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,9 @@ namespace favoshelf.Views
     {
         private IImageFileReader m_reader;
         private LocalDatabase m_db;
-        private int m_index = 0;
+        private int m_index = -1;
         private string m_title;
+        private ObservableCollection<ImageFlipItem> m_itemList = new ObservableCollection<ImageFlipItem>();
 
         /// <summary>
         /// タイトル
@@ -33,10 +35,46 @@ namespace favoshelf.Views
                 }
             }
         }
+        
+        public ObservableCollection<ImageFlipItem> ItemList
+        {
+            get
+            {
+                return m_itemList;
+            }
+            set
+            {
+                if (value != m_itemList)
+                {
+                    m_itemList = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        
+        public int SelectedIndex
+        {
+            get
+            {
+                return m_index;
+            }
+            set
+            {
+                if (value != m_index)
+                {
+                    m_index = value;
+                    updateImage(m_index);
+                    updateImage(m_index + 1);
+                    updateImage(m_index - 1);
+                    clearImage(m_index + 2);
+                    clearImage(m_index - 2);
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public ImageFlipViewModel()
         {
-
         }
 
         public void Init(IImageFileReader reader, LocalDatabase db)
@@ -44,8 +82,41 @@ namespace favoshelf.Views
             m_reader = reader;
             m_db = db;
             this.Title = m_reader.ParentStorage.Name;
+            for (int i=0; i<m_reader.Count; i++)
+            {
+                this.ItemList.Add(new ImageFlipItem());
+            }
+        }
+
+        private void updateImage(int index)
+        {
+            if (!isItemListRange(index))
+            {
+                return;
+            }
+
+            this.ItemList[index].SetImage(m_reader, index);
         }
         
+        private void clearImage(int index)
+        {
+            if (!isItemListRange(index))
+            {
+                return;
+            }
+
+            this.ItemList[index].ClearImage(index);
+        }
+
+        private bool isItemListRange(int index)
+        {
+            if (index < 0 || index >= this.ItemList.Count)
+            {
+                return false;
+            }
+
+            return true;
+        }
         #region INotifyPropertyChanged member
 
         public event PropertyChangedEventHandler PropertyChanged;
