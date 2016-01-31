@@ -89,6 +89,9 @@ namespace favoshelf.Views
         {
             base.OnNavigatedFrom(e);
 
+            //終了処理
+            this.ViewModel.Dispose();
+
             //ナビメニューの表示状態を元に戻す
             AppShell shell = Window.Current.Content as AppShell;
             if (shell != null)
