@@ -105,6 +105,7 @@
 
         <Grid x:Name="mainGrid" Grid.Row="1" EntranceNavigationTransitionInfo.IsTargetElement="True">
             <FlipView x:Name="imageFlipView" 
+                      Loaded="imageFlipView_Loaded"
                       ItemsSource="{x:Bind ViewModel.ItemList, Mode=OneWay}"
                       SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}"
                       FlowDirection="RightToLeft"

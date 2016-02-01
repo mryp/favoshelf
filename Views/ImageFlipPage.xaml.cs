@@ -24,9 +24,14 @@ namespace favoshelf.Views
     public sealed partial class ImageFlipPage : Page
     {
         /// <summary>
-        /// コマンドバー操作リアの高さ
+        /// コマンドバーの高さ
         /// </summary>
-        private const int COMMAND_AREA_HEIGHT = 96;
+        private const int COMMAND_AREA_HEIGHT = 48;
+
+        /// <summary>
+        /// 上部エリアの高さ
+        /// </summary>
+        private const int TOP_AREA_HEIGHT = 96;
 
         /// <summary>
         /// モバイル・PC切り替え判定横幅
@@ -39,6 +44,7 @@ namespace favoshelf.Views
         private enum TouchArea
         {
             CommandArea,
+            Top,
             TopLeft,
             TopRight,
             BottomLeft,
@@ -150,8 +156,8 @@ namespace favoshelf.Views
                 TouchArea area = getTouchArea(point.Position, areaSize);
                 switch (area)
                 {
-                    case TouchArea.CommandArea:
-                        touchEventCommandArea(areaSize);
+                    case TouchArea.Top:
+                        touchEventTop(areaSize);
                         break;
                     case TouchArea.TopLeft:
                         touchEventTopLeft();
@@ -166,7 +172,6 @@ namespace favoshelf.Views
                         touchEventBottomRight();
                         break;
                 }
-                e.Handled = false;
             }
             else if (point.Properties.PointerUpdateKind == PointerUpdateKind.XButton1Released)
             {
@@ -191,11 +196,23 @@ namespace favoshelf.Views
         {
             double splitAreaHeight = (areaSize.Height - COMMAND_AREA_HEIGHT) / 2.0;
             double splitAreaWidth = areaSize.Width / 2.0;
-            if (point.Y < COMMAND_AREA_HEIGHT)
+
+            double topHeight = TOP_AREA_HEIGHT;
+            if (titleOnlyBar.Visibility == Visibility.Collapsed 
+            || topAppBar.Visibility == Visibility.Collapsed)
+            {
+                topHeight = TOP_AREA_HEIGHT + COMMAND_AREA_HEIGHT;
+            }
+
+            if (point.Y < 0)
             {
                 return TouchArea.CommandArea;
             }
-            else if (point.Y < (splitAreaHeight + COMMAND_AREA_HEIGHT))
+            else if (point.Y < topHeight)
+            {
+                return TouchArea.Top;
+            }
+            else if (point.Y < (splitAreaHeight + topHeight))
             {
                 if (point.X < splitAreaWidth)
                 {
@@ -223,7 +240,7 @@ namespace favoshelf.Views
         /// コマンドエリアがタッチされた時の処理を行う
         /// </summary>
         /// <param name="areaSize"></param>
-        private void touchEventCommandArea(Size areaSize)
+        private void touchEventTop(Size areaSize)
         {
             if (areaSize.Height < UI_MODE_MIN_WINDOW_WIDTH)
             {
@@ -281,6 +298,58 @@ namespace favoshelf.Views
         private void touchEventBottomRight()
         {
             this.ViewModel.SelectNext();
+        }
+        
+        /// <summary>
+        /// FlipView読み込み時処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void imageFlipView_Loaded(object sender, RoutedEventArgs e)
+        {
+            hideFlipViewbutton((FlipView)sender, "PreviousButtonHorizontal");
+            hideFlipViewbutton((FlipView)sender, "NextButtonHorizontal");
+            hideFlipViewbutton((FlipView)sender, "PreviousButtonVertical");
+            hideFlipViewbutton((FlipView)sender, "NextButtonVertical");
+        }
+
+        /// <summary>
+        /// FlipViewの左右ボタンを非表示にする
+        /// </summary>
+        /// <param name="f"></param>
+        /// <param name="name"></param>
+        private void  hideFlipViewbutton(FlipView f, string name)
+        {
+            Button b;
+            b = findVisualChild<Button>(f, name);
+            b.Opacity = 0.0;
+            b.IsHitTestVisible = false;
+        }
+
+        /// <summary>
+        /// オブジェクトツリーから指定した名前のアイテムを取得
+        /// 参考：https://social.msdn.microsoft.com/Forums/windowsapps/en-US/0ea7eaf4-3f11-4bcb-93f7-b5f6e6a02418/hiding-the-next-and-previous-buttons-of-a-flipview-programatically?forum=winappswithcsharp
+        /// </summary>
+        /// <typeparam name="childItemType"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private childItemType findVisualChild<childItemType>(DependencyObject obj, string name) where childItemType : FrameworkElement
+        {
+            // Exec
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child is childItemType && ((FrameworkElement)child).Name == name)
+                    return (childItemType)child;
+                else
+                {
+                    childItemType childOfChild = findVisualChild<childItemType>(child, name);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
         }
     }
 }
