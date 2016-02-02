@@ -33,12 +33,10 @@ namespace favoshelf.Views
                     result = true;
                     break;
                 case FolderListItem.FileType.Archive:
- //                   result = frame.Navigate(typeof(ImageMainPage),
                     result = frame.Navigate(typeof(ImageFlipPage), 
                         new ImageNavigateParameter(ImageNavigateParameter.DataType.Archive, item.Path));
                     break;
                 case FolderListItem.FileType.ImageFile:
-//                   result = frame.Navigate(typeof(ImageMainPage),
                     result = frame.Navigate(typeof(ImageFlipPage),
                         new ImageNavigateParameter(ImageNavigateParameter.DataType.ImageFile, item.Path));
                     break;
@@ -66,7 +64,7 @@ namespace favoshelf.Views
 
             MessageDialog dialog = new MessageDialog("しおりが見つかりました。続きから表示しますか？", "確認");
             dialog.Commands.Add(new UICommand("続きから画像を表示", (command) => {
-                frame.Navigate(typeof(ImageMainPage),
+                frame.Navigate(typeof(ImageFlipPage),
                     new ImageNavigateParameter(ImageNavigateParameter.DataType.Folder, item.Path));
             }));
             dialog.Commands.Add(new UICommand("ファイル一覧", (command) => {

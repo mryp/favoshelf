@@ -14,7 +14,7 @@
             <AppBarButton Icon="Attach" Label="スクラップブックに登録">
                 <AppBarButton.Flyout>
                     <MenuFlyout x:Name="scrapbookMenuBottom">
-                        <MenuFlyoutItem Text="新しいスクラップブックを作成" />
+                        <MenuFlyoutItem Text="新しいスクラップブックを作成" Click="NewScrapbookMenuFlyoutItem_Click" />
                         <MenuFlyoutSeparator/>
                     </MenuFlyout>
                 </AppBarButton.Flyout>
@@ -22,7 +22,7 @@
             <AppBarButton Icon="Tag" Label="本棚に登録">
                 <AppBarButton.Flyout>
                     <MenuFlyout x:Name="bookshelfMenuBottom">
-                        <MenuFlyoutItem Text="新しい本棚を作成" />
+                        <MenuFlyoutItem Text="新しい本棚を作成" Click="NewBookShelfMenuFlyoutItem_Click" />
                         <MenuFlyoutSeparator/>
                     </MenuFlyout>
                 </AppBarButton.Flyout>
@@ -68,7 +68,7 @@
             <AppBarButton Icon="Attach" Label="スクラップブックに登録">
                 <AppBarButton.Flyout>
                     <MenuFlyout x:Name="scrapbookMenu">
-                        <MenuFlyoutItem Text="新しいスクラップブックを作成" />
+                        <MenuFlyoutItem Text="新しいスクラップブックを作成" Click="NewScrapbookMenuFlyoutItem_Click"  />
                         <MenuFlyoutSeparator/>
                     </MenuFlyout>
                 </AppBarButton.Flyout>
@@ -76,7 +76,7 @@
             <AppBarButton Icon="Tag" Label="本棚に登録">
                 <AppBarButton.Flyout>
                     <MenuFlyout x:Name="bookshelfMenu">
-                        <MenuFlyoutItem Text="新しい本棚を作成" />
+                        <MenuFlyoutItem Text="新しい本棚を作成" Click="NewBookShelfMenuFlyoutItem_Click" />
                         <MenuFlyoutSeparator/>
                     </MenuFlyout>
                 </AppBarButton.Flyout>

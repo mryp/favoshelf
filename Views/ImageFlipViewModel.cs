@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace favoshelf.Views
 {
@@ -81,6 +83,17 @@ namespace favoshelf.Views
 
                     OnPropertyChanged();
                 }
+            }
+        }
+
+        /// <summary>
+        /// 親ファイル・フォルダ情報
+        /// </summary>
+        public IStorageItem ParentStorage
+        {
+            get
+            {
+                return m_reader.ParentStorage;
             }
         }
 
@@ -213,6 +226,29 @@ namespace favoshelf.Views
             return true;
         }
 
+        /// <summary>
+        /// 指定したカテゴリに登録するためのスクラップブックを作成しオブジェクトを返す
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public async Task<ScrapbookItem> CreateScrapbookItem(ScrapbookCategory category)
+        {
+            string fileName = EnvPath.CreateScrapbookFileName();
+            StorageFolder folder = await EnvPath.GetScrapbookSubFolder(category.FolderName);
+            StorageFile copyFile = await m_reader.CopyFileAsync(this.SelectedIndex, folder, fileName);
+            if (copyFile == null)
+            {
+                return null;
+            }
+
+            return new ScrapbookItem()
+            {
+                ScrapbookCategoryId = category.Id,
+                FileName = Path.GetFileName(copyFile.Path),
+                Uptime = DateTime.Now
+            };
+        }
+        
         /// <summary>
         /// 終了処理
         /// </summary>
