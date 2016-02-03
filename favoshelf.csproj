@@ -144,12 +144,6 @@
       <DependentUpon>ImageFlipPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ImageFlipViewModel.cs" />
-    <Compile Include="Views\ImageMainPage.xaml.cs">
-      <DependentUpon>ImageMainPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ImageFolderViewModel.cs" />
-    <Compile Include="Views\ImageViewModelBase.cs" />
-    <Compile Include="Views\ImageZipViewModel.cs" />
     <Compile Include="Views\InsertBookshelfDialog.xaml.cs">
       <DependentUpon>InsertBookshelfDialog.xaml</DependentUpon>
     </Compile>
@@ -244,10 +238,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ImageFlipPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ImageMainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
