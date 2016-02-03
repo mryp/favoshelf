@@ -9,6 +9,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Input;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -127,6 +128,12 @@ namespace favoshelf.Views
 
             //終了処理
             this.ViewModel.Dispose();
+
+            //フルスクリーンだったら元に戻す
+            if (ApplicationView.GetForCurrentView().IsFullScreenMode)
+            {
+                ApplicationView.GetForCurrentView().ExitFullScreenMode();
+            }
 
             //ナビメニューの表示状態を元に戻す
             AppShell shell = Window.Current.Content as AppShell;
@@ -459,17 +466,19 @@ namespace favoshelf.Views
         /// <param name="areaSize"></param>
         private void touchEventTop(Size areaSize)
         {
-            if (areaSize.Height < UI_MODE_MIN_WINDOW_WIDTH)
+            if (areaSize.Width < UI_MODE_MIN_WINDOW_WIDTH)
             {
                 if (titleOnlyBar.Visibility == Visibility.Visible)
                 {
                     titleOnlyBar.Visibility = Visibility.Collapsed;
                     bottomAppBar.Visibility = Visibility.Collapsed;
+                    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
                 }
                 else
                 {
                     titleOnlyBar.Visibility = Visibility.Visible;
                     bottomAppBar.Visibility = Visibility.Visible;
+                    ApplicationView.GetForCurrentView().ExitFullScreenMode();
                 }
             }
             else
@@ -477,10 +486,12 @@ namespace favoshelf.Views
                 if (topAppBar.Visibility == Visibility.Visible)
                 {
                     topAppBar.Visibility = Visibility.Collapsed;
+                    ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
                 }
                 else
                 {
                     topAppBar.Visibility = Visibility.Visible;
+                    ApplicationView.GetForCurrentView().ExitFullScreenMode();
                 }
             }
         }
