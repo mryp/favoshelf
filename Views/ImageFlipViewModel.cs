@@ -109,8 +109,9 @@ namespace favoshelf.Views
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="db"></param>
-        public void Init(IImageFileReader reader, LocalDatabase db)
+        public async Task Init(IImageFileReader reader, LocalDatabase db)
         {
+            await reader.LoadDataAsync();
             m_reader = reader;
             m_db = db;
 
@@ -149,9 +150,17 @@ namespace favoshelf.Views
                 m_db.InsertBookmark(m_bookmark);
             }
 
-            if (m_bookmark.PageIndex < m_reader.Count)
+            if (m_reader.FirstIndex == -1)
             {
-                this.SelectedIndex = m_bookmark.PageIndex;
+                if (m_bookmark.PageIndex < m_reader.Count)
+                {
+                    this.SelectedIndex = m_bookmark.PageIndex;
+                }
+            }
+            else
+            {
+                //ファイルを選択してきた時はブックマークよりも優先させる
+                this.SelectedIndex = m_reader.FirstIndex;
             }
         }
 

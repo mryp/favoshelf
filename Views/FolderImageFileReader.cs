@@ -39,12 +39,23 @@ namespace favoshelf.Views
         }
 
         /// <summary>
+        /// ファイル選択時の初期表示位置
+        /// フォルダ選択時は常に-1
+        /// </summary>
+        public int FirstIndex
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="param"></param>
         public FolderImageFileReader(ImageNavigateParameter param)
         {
             m_imageParam = param;
+            this.FirstIndex = -1;
         }
 
         /// <summary>
@@ -71,6 +82,22 @@ namespace favoshelf.Views
             foreach (StorageFile file in fileList)
             {
                 m_dataList.Add(file);
+            }
+
+            //ファイル名昇順で並び替え
+            m_dataList.Sort((a, b) =>
+            {
+                return a.Path.CompareTo(b.Path);
+            });
+
+            //遷移時の選択ファイルを取得
+            for (int i=0; i< m_dataList.Count; i++)
+            {
+                if (m_dataList[i].Path == m_imageParam.Path)
+                {
+                    this.FirstIndex = i;
+                    break;
+                }
             }
         }
 

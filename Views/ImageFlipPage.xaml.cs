@@ -108,9 +108,7 @@ namespace favoshelf.Views
             {
                 return;
             }
-
-            await reader.LoadDataAsync();
-            this.ViewModel.Init(reader, m_db);
+            await this.ViewModel.Init(reader, m_db);
 
             initBookCategory();
             initScrapbookCategory();

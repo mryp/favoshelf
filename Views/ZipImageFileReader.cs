@@ -43,12 +43,22 @@ namespace favoshelf.Views
         }
 
         /// <summary>
+        /// 最初の表示位置
+        /// </summary>
+        public int FirstIndex
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="param"></param>
         public ZipImageFileReader(ImageNavigateParameter param)
         {
             m_imageParam = param;
+            this.FirstIndex = -1;
         }
 
         /// <summary>

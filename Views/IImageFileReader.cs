@@ -24,6 +24,11 @@ namespace favoshelf.Views
         IStorageItem ParentStorage { get; }
 
         /// <summary>
+        /// 画像表示の最初の画像（指定されていない時は-1）
+        /// </summary>
+        int FirstIndex { get; }
+
+        /// <summary>
         /// データの初期化を行う
         /// </summary>
         /// <returns></returns>
