@@ -27,6 +27,9 @@
                     </MenuFlyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="ページ移動" Click="JumpPageButton_Click" />
+            </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
     
@@ -81,6 +84,9 @@
                     </MenuFlyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="ページ移動" Click="JumpPageButton_Click" />
+            </CommandBar.SecondaryCommands>
             <CommandBar.Content>
                 <ctl:PageHeader>
                     <ctl:PageHeader.HeaderContent>

@@ -150,6 +150,10 @@
     <Compile Include="Views\InsertScrapbookDialog.xaml.cs">
       <DependentUpon>InsertScrapbookDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\JumpPageDialog.xaml.cs">
+      <DependentUpon>JumpPageDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\JumpPageViewModel.cs" />
     <Compile Include="Views\QuickAccessPage.xaml.cs">
       <DependentUpon>QuickAccessPage.xaml</DependentUpon>
     </Compile>
@@ -246,6 +250,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\InsertScrapbookDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\JumpPageDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

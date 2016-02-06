@@ -25,6 +25,7 @@ namespace favoshelf.Views
     /// </summary>
     public sealed partial class ImageFlipPage : Page
     {
+        #region 定数
         /// <summary>
         /// コマンドバーの高さ
         /// </summary>
@@ -52,7 +53,9 @@ namespace favoshelf.Views
             BottomLeft,
             BottomRight,
         }
+        #endregion
 
+        #region プロパティ
         /// <summary>
         /// ローカルDB
         /// </summary>
@@ -66,6 +69,7 @@ namespace favoshelf.Views
             get;
             private set;
         }
+        #endregion
 
         #region 初期化・画面遷移処理メソッド
         /// <summary>
@@ -580,5 +584,21 @@ namespace favoshelf.Views
             return null;
         }
         #endregion
+
+        /// <summary>
+        /// 移動ボタン押下処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void JumpPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            JumpPageDialog dialog = new JumpPageDialog();
+            await dialog.ShowAsync();
+            if (dialog.ViewModel.SelectedIndex != -1
+            &&  dialog.ViewModel.SelectedIndex != this.ViewModel.SelectedIndex)
+            {
+                this.ViewModel.SelectedIndex = dialog.ViewModel.SelectedIndex;
+            }
+        }
     }
 }

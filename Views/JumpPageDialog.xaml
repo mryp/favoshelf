@@ -1,0 +1,43 @@
+﻿<ContentDialog
+    x:Class="favoshelf.Views.JumpPageDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:favoshelf.Views"
+    xmlns:data="using:favoshelf.Data"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="ページ移動"
+    PrimaryButtonText="移動"
+    SecondaryButtonText="キャンセル"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <ContentDialog.Resources>
+        <DataTemplate x:Key="ImageItemTemplate" x:DataType="data:ImageFlipItem">
+            <StackPanel Background="#FF4B4B4B">
+                <TextBlock>ページ番号</TextBlock>
+                <Image />
+            </StackPanel>
+        </DataTemplate>
+    </ContentDialog.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <RelativePanel Grid.Row="0" Margin="8">
+            <Button x:Name="firstPageButton" Width="100" Margin="0,0,16,0" Click="firstPageButton_Click">先頭</Button>
+            <Button x:Name="lastPageButton" Width="100" Click="lastPageButton_Click"
+                    RelativePanel.RightOf="firstPageButton" 
+                    RelativePanel.AlignTopWith="firstPageButton">
+                最後
+            </Button>    
+        </RelativePanel>
+        <ListView Grid.Row="1" x:Name="imageListView"
+                       ItemsSource="{x:Bind ViewModel.ItemList}" 
+                       ItemTemplate="{StaticResource ImageItemTemplate}"
+                  SelectionMode="Single">
+        </ListView>
+    </Grid>
+</ContentDialog>

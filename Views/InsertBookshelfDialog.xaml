@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="本棚カテゴリ追加"
-    PrimaryButtonText="OK"
+    PrimaryButtonText="追加"
     SecondaryButtonText="キャンセル"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
