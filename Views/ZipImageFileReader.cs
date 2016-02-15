@@ -10,6 +10,7 @@ using System.IO.Compression;
 using favoshelf.Util;
 using Windows.Storage.Streams;
 using System.IO;
+using System.Diagnostics;
 
 namespace favoshelf.Views
 {
@@ -83,7 +84,38 @@ namespace favoshelf.Views
                 {
                     m_dataList.Add(entry);
                 }
-            }            
+            }
+            sortList(m_dataList);
+
+            //名前の順に並び替え
+            foreach (ZipArchiveEntry entry in m_dataList)
+            {
+                Debug.WriteLine(entry.Name);
+            }
+        }
+
+        /// <summary>
+        /// アーカイブファイル名でソートを行う
+        /// </summary>
+        /// <param name="list"></param>
+        private void sortList(List<ZipArchiveEntry> list)
+        {
+            list.Sort((a, b) =>
+            {
+                string aName = Path.GetFileNameWithoutExtension(a.Name);
+                string bName = Path.GetFileNameWithoutExtension(b.Name);
+                int aValue = 0;
+                int bValue = 0;
+                if (int.TryParse(aName, out aValue) && int.TryParse(bName, out bValue))
+                {
+                    //ファイル名が数値の時は0詰めで行う
+                    return string.Format("{0:D6}", aValue).CompareTo(string.Format("{0:D6}", bValue));
+                }
+                else
+                {
+                    return a.Name.CompareTo(b.Name);
+                }
+            });
         }
 
         /// <summary>

@@ -85,10 +85,7 @@ namespace favoshelf.Views
             }
 
             //ファイル名昇順で並び替え
-            m_dataList.Sort((a, b) =>
-            {
-                return a.Path.CompareTo(b.Path);
-            });
+            sortList(m_dataList);
 
             //遷移時の選択ファイルを取得
             for (int i=0; i< m_dataList.Count; i++)
@@ -99,6 +96,30 @@ namespace favoshelf.Views
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// ファイル名でソートを行う
+        /// </summary>
+        /// <param name="list"></param>
+        private void sortList(List<StorageFile> list)
+        {
+            list.Sort((a, b) =>
+            {
+                string aName = Path.GetFileNameWithoutExtension(a.Name);
+                string bName = Path.GetFileNameWithoutExtension(b.Name);
+                int aValue = 0;
+                int bValue = 0;
+                if (int.TryParse(aName, out aValue) && int.TryParse(bName, out bValue))
+                {
+                    //ファイル名が数値の時は0詰めで行う
+                    return string.Format("{0:D6}", aValue).CompareTo(string.Format("{0:D6}", bValue));
+                }
+                else
+                {
+                    return a.Name.CompareTo(b.Name);
+                }
+            });
         }
 
         /// <summary>
