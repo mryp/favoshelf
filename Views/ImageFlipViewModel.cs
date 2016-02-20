@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,9 @@ namespace favoshelf.Views
         private int m_index = -1;
         private string m_title;
         private ObservableCollection<ImageFlipItem> m_itemList = new ObservableCollection<ImageFlipItem>();
+        private string m_pageText;
+        private double m_pageBarWidth;
+        private double m_pageBarMaxWidth;
 
         /// <summary>
         /// タイトル
@@ -74,6 +78,10 @@ namespace favoshelf.Views
                 {
                     m_index = value;
 
+                    //ページ表示更新
+                    updatePageText();
+                    updatePageBar();
+
                     //前後2つを読み込み、その外側はクリアーする
                     updateImage(m_index);
                     updateImage(m_index + 1);
@@ -81,6 +89,44 @@ namespace favoshelf.Views
                     clearImage(m_index + 2);
                     clearImage(m_index - 2);
 
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 現在のページ情報
+        /// </summary>
+        public string PageText
+        {
+            get
+            {
+                return m_pageText;
+            }
+            set
+            {
+                if (value != m_pageText)
+                {
+                    m_pageText = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 現在のページバー
+        /// </summary>
+        public double PageBarWidth
+        {
+            get
+            {
+                return m_pageBarWidth;
+            }
+            set
+            {
+                if (value != m_pageBarWidth)
+                {
+                    m_pageBarWidth = value;
                     OnPropertyChanged();
                 }
             }
@@ -258,6 +304,41 @@ namespace favoshelf.Views
             };
         }
         
+        /// <summary>
+        /// 現在のページ情報を更新する
+        /// </summary>
+        private void updatePageText()
+        {
+            this.PageText = string.Format("{0}/{1}", m_index + 1, m_itemList.Count);
+        }
+
+        /// <summary>
+        /// ページ領域のサイズを設定する
+        /// </summary>
+        /// <param name="maxWidth"></param>
+        public void UpdatePageBarMaxWidth(double maxWidth)
+        {
+            m_pageBarMaxWidth = maxWidth;
+            updatePageBar();
+        }
+
+        /// <summary>
+        /// 現在のページバーを更新する
+        /// </summary>
+        private void updatePageBar()
+        {
+            if (m_pageBarMaxWidth == 0)
+            {
+                return;
+            }
+            if (m_itemList.Count < 1)
+            {
+                return;
+            }
+            double progress = (double)m_index / (double)(m_itemList.Count - 1);
+            this.PageBarWidth = m_pageBarMaxWidth * progress;
+        }
+
         /// <summary>
         /// 終了処理
         /// </summary>

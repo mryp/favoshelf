@@ -130,6 +130,22 @@
                     </DataTemplate>
                 </FlipView.ItemTemplate>
             </FlipView>
+            
+            <Border Background="Black" 
+                    Height="16"  
+                    Opacity="0.5"
+                    VerticalAlignment="Bottom"
+                    SizeChanged="footerPageBackground_SizeChanged">
+                <Grid>
+                    <TextBlock x:Name="footerPageInfoTextBlock" 
+                               FontSize="12"
+                               Margin="8,0,8,0"
+                               Text="{x:Bind ViewModel.PageText, Mode=TwoWay}" />
+                    <Rectangle Fill="{ThemeResource SystemControlHighlightAccentBrush}" 
+                               Width="{x:Bind ViewModel.PageBarWidth, Mode=TwoWay}" 
+                               HorizontalAlignment="Right" />
+                </Grid>
+            </Border>
         </Grid>
     </Grid>
 </Page>

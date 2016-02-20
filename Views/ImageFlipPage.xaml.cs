@@ -600,5 +600,15 @@ namespace favoshelf.Views
                 this.ViewModel.SelectedIndex = dialog.ViewModel.SelectedIndex;
             }
         }
+
+        /// <summary>
+        /// ページ領域フッターの背景サイズ変更
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void footerPageBackground_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            this.ViewModel.UpdatePageBarMaxWidth(e.NewSize.Width);
+        }
     }
 }
