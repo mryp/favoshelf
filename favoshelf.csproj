@@ -135,6 +135,9 @@
     </Compile>
     <Compile Include="Views\CommonPageManager.cs" />
     <Compile Include="Views\FolderImageFileReader.cs" />
+    <Compile Include="Views\FolderRootPage.xaml.cs">
+      <DependentUpon>FolderRootPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FolderSelectPage.xaml.cs">
       <DependentUpon>FolderSelectPage.xaml</DependentUpon>
     </Compile>
@@ -234,6 +237,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BookshelfPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FolderRootPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

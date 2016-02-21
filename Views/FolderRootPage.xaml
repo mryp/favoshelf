@@ -1,5 +1,5 @@
 ﻿<util:LayoutAwarePage
-    x:Class="favoshelf.Views.FolderSelectPage"
+    x:Class="favoshelf.Views.FolderRootPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:top="using:favoshelf"
@@ -37,8 +37,11 @@
     <Page.BottomAppBar>
         <CommandBar x:Name="bottomAppBar" Visibility="Visible" >
             <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="Sort" Label="並び替え" Click="SortButton_Click"/>
+                <AppBarButton Icon="Add" Label="フォルダを登録" Click="AddButton_Click"/>
             </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="全て登録解除" Click="RemoveAllButton_Click" />
+            </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
 
@@ -69,7 +72,7 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
@@ -77,8 +80,10 @@
 
         <!-- タイトルとコマンドボタンを表示するバー -->
         <CommandBar x:Name="topAppBar" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
-            <AppBarButton Icon="Sort" Label="並び替え" Click="SortButton_Click"/>
-
+            <AppBarButton Icon="Add" Label="フォルダを登録" Click="AddButton_Click"/>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="全て登録解除" Click="RemoveAllButton_Click" />
+            </CommandBar.SecondaryCommands>
             <CommandBar.Content>
                 <ctl:PageHeader>
                     <ctl:PageHeader.HeaderContent>

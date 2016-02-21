@@ -36,15 +36,15 @@ namespace favoshelf
                 },
                 new NavMenuItem()
                 {
-                    Symbol = Symbol.Tag,
-                    Label = "本棚",
-                    DestPage = typeof(Views.BookshelfPage),
+                    Symbol = Symbol.MoveToFolder,
+                    Label = "フォルダー",
+                    DestPage = typeof(Views.FolderRootPage),
                 },
                 new NavMenuItem()
                 {
-                    Symbol = Symbol.MoveToFolder,
-                    Label = "フォルダー",
-                    DestPage = typeof(Views.FolderSelectPage),
+                    Symbol = Symbol.Tag,
+                    Label = "本棚",
+                    DestPage = typeof(Views.BookshelfPage),
                 },
                 new NavMenuItem()
                 {

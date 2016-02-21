@@ -4,19 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
-using Windows.UI.Input;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -28,14 +23,19 @@ using Windows.UI.Xaml.Navigation;
 namespace favoshelf.Views
 {
     /// <summary>
-    /// フォルダ一覧表示用ページ
+    /// フォルダルート画面ページ
     /// </summary>
-    public sealed partial class FolderSelectPage : LayoutAwarePage
+    public sealed partial class FolderRootPage : LayoutAwarePage
     {
         /// <summary>
         /// スクロール位置状態保存用キー
         /// </summary>
         private const string KEY_SCROLL_POS = "m_scrollPosition";
+
+        /// <summary>
+        /// ナビゲーションデータ
+        /// </summary>
+        private INavigateParameter m_naviParam;
 
         /// <summary>
         /// スクロール位置
@@ -45,7 +45,7 @@ namespace favoshelf.Views
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public FolderSelectPage()
+        public FolderRootPage()
         {
             this.InitializeComponent();
             this.ViewModel = new FolderSelectViewModel();
@@ -68,18 +68,14 @@ namespace favoshelf.Views
         protected override void LoadState(object navigationParameter, Dictionary<string, object> pageState)
         {
             base.LoadState(navigationParameter, pageState);
-            
+
             if (pageState != null && pageState.ContainsKey(KEY_SCROLL_POS))
             {
                 m_scrollPosition = pageState[KEY_SCROLL_POS] as double?;
             }
 
-            INavigateParameter param = navigationParameter as INavigateParameter;
-            if (param == null)
-            {
-                param = new FolderRootNavigateParameter();
-            }
-            ViewModel.Init(param);
+            m_naviParam = new FolderRootNavigateParameter();
+            ViewModel.Init(m_naviParam);
         }
 
         /// <summary>
@@ -167,14 +163,35 @@ namespace favoshelf.Views
         {
             CommonPageManager.OnGridPointerReleased(this.Frame, e);
         }
-
+        
         /// <summary>
-        /// 並び替えボタン押下処理
+        /// フォルダを登録する
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SortButton_Click(object sender, RoutedEventArgs e)
+        private async void AddButton_Click(object sender, RoutedEventArgs e)
         {
+            StorageFolder folder = await selectFolder();
+            if (folder == null)
+            {
+                return; //未選択
+            }
+
+            StorageHistoryManager.AddStorage(folder, StorageHistoryManager.DataType.Folder);
+            ViewModel.Init(m_naviParam);
         }
+        
+        /// <summary>
+        /// フォルダの登録を全て解除する
+        /// </summary>
+        private async void RemoveAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageDialog dialog = new MessageDialog("全てのフォルダ登録を解除しますか？（中のファイルなどは削除しません）", "確認");
+            dialog.Commands.Add(new UICommand("OK", (command) => {
+                StorageHistoryManager.RemoveAll(StorageHistoryManager.DataType.Folder);
+                ViewModel.Init(m_naviParam);
+            }));
+            dialog.Commands.Add(new UICommand("キャンセル"));
+            dialog.DefaultCommandIndex = 1;
+            await dialog.ShowAsync();
+        }        
     }
 }
