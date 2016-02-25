@@ -24,7 +24,7 @@
                     <TextBlock Text="{x:Bind Name, Mode=OneWay}" 
                                Style="{StaticResource BaseTextBlockStyle}" 
                                FontSize="{x:Bind TextSize, Mode=OneWay}"
-                               VerticalAlignment="Center"
+                               VerticalAlignment="Top"
                                Margin="8,2,0,0"
                                TextWrapping="Wrap" />
                 </Border>
