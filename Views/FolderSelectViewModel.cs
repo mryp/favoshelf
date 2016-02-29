@@ -26,6 +26,9 @@ namespace favoshelf.Views
         /// </summary>
         private ObservableCollection<FolderListItem> m_itemList = new ObservableCollection<FolderListItem>();
 
+        /// <summary>
+        /// タイトル
+        /// </summary>
         private string m_titleName = "";
 
         /// <summary>
@@ -47,6 +50,9 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// タイトル
+        /// </summary>
         public string TitleName
         {
             get

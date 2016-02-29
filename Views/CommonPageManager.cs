@@ -18,6 +18,12 @@ namespace favoshelf.Views
     /// </summary>
     public class CommonPageManager
     {
+        /// <summary>
+        /// フォルダ・ファイルアイテムをクリックした時の遷移処理
+        /// </summary>
+        /// <param name="frame"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         public static bool OnGridViewItemClick(Frame frame, FolderListItem item)
         {
             if (item == null)
@@ -48,6 +54,11 @@ namespace favoshelf.Views
             return result;
         }
         
+        /// <summary>
+        /// フォルダー用遷移処理
+        /// </summary>
+        /// <param name="frame"></param>
+        /// <param name="item"></param>
         private static async void navigateFolder(Frame frame, FolderListItem item)
         {
             if (item.Type != FolderListItem.FileType.Folder)
@@ -74,6 +85,11 @@ namespace favoshelf.Views
             await dialog.ShowAsync();
         }
         
+        /// <summary>
+        /// グリッド更新処理
+        /// </summary>
+        /// <param name="listItem"></param>
+        /// <param name="inRecycleQueue"></param>
         public static void OnGridContentChanging(FolderListItem listItem, bool inRecycleQueue)
         {
             if (listItem != null)
@@ -90,6 +106,11 @@ namespace favoshelf.Views
             }
         }
 
+        /// <summary>
+        /// グリッド内のボタン処理
+        /// </summary>
+        /// <param name="frame"></param>
+        /// <param name="e"></param>
         public static void OnGridPointerReleased(Frame frame, PointerRoutedEventArgs e)
         {
             Pointer pointer = e.Pointer;

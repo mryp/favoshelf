@@ -12,6 +12,9 @@ using Windows.Storage;
 
 namespace favoshelf.Views
 {
+    /// <summary>
+    /// 画像表示画面のビューモデル
+    /// </summary>
     public class ImageFlipViewModel : INotifyPropertyChanged, IDisposable
     {
         private IImageFileReader m_reader;
@@ -88,7 +91,7 @@ namespace favoshelf.Views
                     updateImage(m_index - 1);
                     clearImage(m_index + 2);
                     clearImage(m_index - 2);
-
+                    
                     OnPropertyChanged();
                 }
             }

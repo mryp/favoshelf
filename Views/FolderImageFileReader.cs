@@ -13,6 +13,9 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace favoshelf.Views
 {
+    /// <summary>
+    /// フォルダ内画像表示用リーダークラス
+    /// </summary>
     public class FolderImageFileReader : IImageFileReader, IDisposable
     {
         private ImageNavigateParameter m_imageParam;
