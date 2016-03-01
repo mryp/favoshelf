@@ -216,29 +216,31 @@ namespace favoshelf.Views
         /// <summary>
         /// 次の画像を表示する
         /// </summary>
-        public void SelectNext()
+        public bool SelectNext()
         {
             int index = this.SelectedIndex;
             if (!isItemListRange(index + 1))
             {
-                return;
+                return false;
             }
 
             this.SelectedIndex = index + 1;
+            return true;
         }
 
         /// <summary>
         /// 前の画像を表示する
         /// </summary>
-        public void SelectPrev()
+        public bool SelectPrev()
         {
             int index = this.SelectedIndex;
             if (!isItemListRange(index - 1))
             {
-                return;
+                return false;
             }
 
             this.SelectedIndex = index - 1;
+            return true;
         }
 
         /// <summary>
@@ -282,6 +284,15 @@ namespace favoshelf.Views
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// 最後のページかどうか
+        /// </summary>
+        /// <returns></returns>
+        public bool IsLastPage()
+        {
+            return m_index == this.ItemList.Count - 1;
         }
 
         /// <summary>

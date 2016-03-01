@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace favoshelf.Views
 {
+    /// <summary>
+    /// ページ選択画面用ビューモデル
+    /// </summary>
     public class JumpPageViewModel : INotifyPropertyChanged
     {
         private int m_index = -1;

@@ -9,6 +9,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Input;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -511,7 +512,11 @@ namespace favoshelf.Views
         /// </summary>
         private void touchEventTopRight()
         {
-            this.ViewModel.SelectNext();
+            bool changeSuccess = this.ViewModel.SelectNext();
+            if (!changeSuccess && this.ViewModel.IsLastPage())
+            {
+                showDialogLastPage();
+            }
         }
 
         /// <summary>
@@ -527,7 +532,28 @@ namespace favoshelf.Views
         /// </summary>
         private void touchEventBottomRight()
         {
-            this.ViewModel.SelectNext();
+            bool changeSuccess = this.ViewModel.SelectNext();
+            if (!changeSuccess && this.ViewModel.IsLastPage())
+            {
+                showDialogLastPage();
+            }
+        }
+
+        /// <summary>
+        /// 最後のページ到達したことをダイアログで表示する
+        /// </summary>
+        private async void showDialogLastPage()
+        {
+            MessageDialog dialog = new MessageDialog("最後のページです。一覧に戻りますか？", "確認");
+            dialog.Commands.Add(new UICommand("OK", (command) => {
+                if (this.Frame.CanGoBack)
+                {
+                    this.Frame.GoBack();
+                }
+            }));
+            dialog.Commands.Add(new UICommand("キャンセル"));
+            dialog.DefaultCommandIndex = 1;
+            await dialog.ShowAsync();
         }
         #endregion
 
