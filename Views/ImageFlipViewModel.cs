@@ -82,7 +82,6 @@ namespace favoshelf.Views
                     m_index = value;
 
                     //ページ表示更新
-                    updatePageText();
                     updatePageBar();
 
                     //前後2つを読み込み、その外側はクリアーする
@@ -351,6 +350,7 @@ namespace favoshelf.Views
             }
             double progress = (double)m_index / (double)(m_itemList.Count - 1);
             this.PageBarWidth = m_pageBarMaxWidth * progress;
+            updatePageText();
         }
 
         /// <summary>
