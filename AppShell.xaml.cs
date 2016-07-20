@@ -1,6 +1,7 @@
 ﻿using favoshelf.Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -251,7 +252,50 @@ namespace favoshelf
             ((Page)sender).Focus(FocusState.Programmatic);
             ((Page)sender).Loaded -= Page_Loaded;
             this.CheckTogglePaneButtonSizeChanged();
+
+            initVisualStateFromWindowSize();
         }
+
+        private void initVisualStateFromWindowSize()
+        {
+            //現在のサイズによって設定する
+            if (Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().VisibleBounds.Width >= 720)
+            {
+                setVisualSate("CompactInline");
+            }
+            else
+            {
+                setVisualSate("Overlay");
+            }
+
+            //動的に変更するイベントをセットする
+            var groups = VisualStateManager.GetVisualStateGroups(this.RootGrid);
+            groups[0].CurrentStateChanged += AppShell_VisualStateCurrentStateChanged;
+        }
+
+        private void AppShell_VisualStateCurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+        {
+            setVisualSate(e.NewState.Name);
+        }
+
+        private void setVisualSate(string stateName)
+        {
+            if (TogglePaneButton.Visibility == Visibility.Collapsed)
+            {
+                //何もしない
+                return;
+            }
+            if (stateName == "Overlay")
+            {
+                RootSplitView.DisplayMode = SplitViewDisplayMode.Overlay;
+            }
+            else if (stateName == "CompactInline")
+            {
+                RootSplitView.DisplayMode = SplitViewDisplayMode.CompactInline;
+                RootSplitView.IsPaneOpen = true;
+            }
+        }
+
 
         #endregion
 
